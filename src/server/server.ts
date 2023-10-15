@@ -14,6 +14,7 @@ export class Server {
     this.app = express();
 
     this.setupMiddleware();
+    this.setupRoutes();
   }
 
   private setupMiddleware() {
@@ -23,6 +24,12 @@ export class Server {
 
     this.config.middlewares?.forEach((handler) => {
       this.app.use(handler);
+    });
+  }
+
+  private setupRoutes() {
+    this.config.routes?.forEach((requestHandler) => {
+      this.app.use(requestHandler);
     });
   }
 
