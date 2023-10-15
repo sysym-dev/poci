@@ -28,4 +28,13 @@ program.command('migrate').action(async () => {
   }, 'migrated');
 });
 
+program.command('migrate:rollback').action(async () => {
+  await execute(async () => {
+    await db.migrate.rollback({
+      directory: migrationDirectory,
+      extension: 'ts',
+    });
+  }, 'rollback');
+});
+
 program.parse();
