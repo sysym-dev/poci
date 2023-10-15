@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import { createErrorHandler } from './error-handler';
 
 export class Server {
   private app: express.Application;
@@ -15,6 +16,7 @@ export class Server {
 
     this.setupMiddleware();
     this.setupRoutes();
+    this.setupErrorHandler();
   }
 
   private setupMiddleware() {
@@ -33,6 +35,10 @@ export class Server {
     this.config.routes?.forEach((requestHandler) => {
       this.app.use(requestHandler);
     });
+  }
+
+  private setupErrorHandler() {
+    this.app.use(createErrorHandler());
   }
 
   listen(cb?: (port: number) => void) {
