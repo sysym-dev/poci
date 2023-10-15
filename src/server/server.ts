@@ -1,5 +1,8 @@
 import { ServerConfig } from './config';
 import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import helmet from 'helmet';
 
 export class Server {
   private app: express.Application;
@@ -9,6 +12,14 @@ export class Server {
     this.config = config;
 
     this.app = express();
+
+    this.setupMiddleware();
+  }
+
+  private setupMiddleware() {
+    this.app.use(cors());
+    this.app.use(helmet());
+    this.app.use(morgan('tiny'));
   }
 
   listen(cb?: (port: number) => void) {

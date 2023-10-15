@@ -6,5 +6,5 @@ import { Server } from './src/server/server';
 const server = new Server(serverConfig);
 
 server.listen((port: number) => {
-  console.log(`Server listening at ${port}`);
+  console.log(`server listening at ${port}`);
 });
