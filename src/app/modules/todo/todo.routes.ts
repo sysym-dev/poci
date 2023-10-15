@@ -2,7 +2,7 @@ import { createRouter } from '../../router/router';
 import { TodoHandler } from './todo.handler';
 import { TodoRepository } from './todo.repository';
 
-const router = createRouter('/todo');
+const router = createRouter('/todos');
 const todoHandler = new TodoHandler(new TodoRepository());
 
 router.handle({
