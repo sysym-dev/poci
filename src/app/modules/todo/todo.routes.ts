@@ -1,13 +1,14 @@
 import { createRouter } from '../../router/router';
 import { TodoHandler } from './todo.handler';
+import { TodoRepository } from './todo.repository';
 
 const router = createRouter('/todo');
-const todoHandler = new TodoHandler();
+const todoHandler = new TodoHandler(new TodoRepository());
 
 router.handle({
   path: '/',
   method: 'get',
-  handler: todoHandler.getAll,
+  handler: (context) => todoHandler.getAll(context),
 });
 
 export const todoRoutes = router.make();
