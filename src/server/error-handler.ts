@@ -7,9 +7,12 @@ export function createErrorHandler(): ErrorRequestHandler {
       return res.status(err.status).json(err);
     }
 
+    console.log(err);
+
     const internalServerError = new HttpError({
       name: 'Internal Server Error',
-      message: 'Internal Server Error',
+      message: err?.message,
+      details: err,
     });
 
     return res.status(internalServerError.status).json(internalServerError);

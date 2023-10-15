@@ -11,9 +11,12 @@ export type HttpErrorNames =
 
 export class HttpError extends BaseError<HttpErrorNames> {
   status: number;
+  details: any;
 
-  constructor(error: ErrorPayload<HttpErrorNames>) {
+  constructor(error: ErrorPayload<HttpErrorNames> & { details?: any }) {
     super(error);
+
+    this.details = error.details;
 
     this.setStatus();
   }
