@@ -7,4 +7,10 @@ export class TodoHandler {
   async getAll(context?: RouterContext) {
     return await this.todoRepository.read();
   }
+
+  async create(context?: RouterContext) {
+    return await this.todoRepository.store(null, {
+      name: 'Again',
+    });
+  }
 }

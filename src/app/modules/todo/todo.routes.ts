@@ -8,7 +8,13 @@ const todoHandler = new TodoHandler(new TodoRepository());
 router.handle({
   path: '/',
   method: 'get',
-  handler: (context) => todoHandler.getAll(context),
+  handler: async (context) => await todoHandler.getAll(context),
+});
+
+router.handle({
+  path: '/',
+  method: 'post',
+  handler: async (context) => await todoHandler.create(context),
 });
 
 export const todoRoutes = router.make();

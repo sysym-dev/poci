@@ -1,4 +1,8 @@
-export interface Todo {
+import { Entity, EntityAttributes } from '../../../db/entity';
+
+export interface Todo extends Entity {
   name: string;
-  doneAt: Date;
+  done_at: Date;
 }
+
+export type TodoAttributes = EntityAttributes<Todo>;
