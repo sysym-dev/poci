@@ -20,6 +20,10 @@ export class Server {
     this.app.use(cors());
     this.app.use(helmet());
     this.app.use(morgan('tiny'));
+
+    this.config.middlewares?.forEach((handler) => {
+      this.app.use(handler);
+    });
   }
 
   listen(cb?: (port: number) => void) {
