@@ -1,4 +1,6 @@
+import { createRequestValidatorMiddleware } from '../../middlewares/request-validator.middleware';
 import { createRouter } from '../../router/router';
+import { CreateTodoRequest } from './requests/create.request';
 import { TodoHandler } from './todo.handler';
 import { TodoRepository } from './todo.repository';
 
@@ -14,6 +16,7 @@ router.handle({
 router.handle({
   path: '/',
   method: 'post',
+  middlewares: [createRequestValidatorMiddleware(CreateTodoRequest)],
   handler: async (context) => await todoHandler.create(context),
 });
 

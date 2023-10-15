@@ -1,4 +1,4 @@
-import { RequestHandler, Router as ExpressRouter } from 'express';
+import { RequestHandler, Router as ExpressRouter, Handler } from 'express';
 
 export interface RouterContext {
   params: Record<string, any>;
@@ -8,6 +8,7 @@ export interface RouterContext {
 export interface RouteHandler<P = any> {
   path: string;
   method: 'get' | 'post' | 'patch' | 'delete';
+  middlewares?: Handler[];
   handler: (context?: RouterContext) => P | Promise<P>;
 }
 
@@ -43,7 +44,10 @@ class Router {
         }
       };
 
-      baseRoute[routeHandle.method](requestHandler);
+      baseRoute[routeHandle.method]([
+        ...(routeHandle.middlewares ? routeHandle.middlewares : []),
+        requestHandler,
+      ]);
     });
 
     return this.router;

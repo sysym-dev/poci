@@ -10,7 +10,7 @@ export class TodoHandler {
 
   async create(context?: RouterContext) {
     return await this.todoRepository.store(null, {
-      name: 'Again',
+      name: context?.body.name,
     });
   }
 }
