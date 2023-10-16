@@ -10,6 +10,10 @@ export class TodoHandler {
         size: 2,
         number: 2,
       },
+      filter: {
+        isDone: false,
+        toDate: new Date(),
+      },
     });
   }
 
