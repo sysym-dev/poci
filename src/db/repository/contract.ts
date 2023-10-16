@@ -6,9 +6,11 @@ export interface ReadOptions {
   filter?: Record<string, any>;
   sort?: Record<string, 'asc' | 'desc'>;
   first?: boolean;
+  failOnNull?: boolean;
 }
 export interface ReadRowOptions {
   filter: Record<string, any>;
+  failOrNull?: boolean;
 }
 export interface ReadRowsOptions {
   page: {

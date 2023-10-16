@@ -24,6 +24,7 @@ export class TodoHandler {
         id: context?.params.id,
       },
       first: true,
+      failOnNull: true,
     });
   }
 

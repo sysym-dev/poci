@@ -1,9 +1,14 @@
 import { ErrorRequestHandler } from 'express';
 import { HttpError } from './errors/http.error';
+import { QueryError } from '../db/errors/query.error';
 
 export function createErrorHandler(): ErrorRequestHandler {
   return (err: any, req, res, next) => {
     if (err instanceof HttpError) {
+      return res.status(err.status).json(err);
+    }
+
+    if (err instanceof QueryError) {
       return res.status(err.status).json(err);
     }
 

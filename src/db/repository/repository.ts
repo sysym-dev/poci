@@ -11,6 +11,7 @@ import {
   ReadRowOptions,
   ReadRowsOptions,
 } from './contract';
+import { QueryError } from '../errors/query.error';
 
 export abstract class Repository<T extends Entity> {
   abstract table: string;
@@ -21,6 +22,7 @@ export abstract class Repository<T extends Entity> {
     if (options?.first) {
       return await this.readRow({
         filter: options?.filter ?? {},
+        failOrNull: options?.failOnNull,
       });
     }
 
@@ -60,9 +62,18 @@ export abstract class Repository<T extends Entity> {
   }
 
   async readRow(options: ReadRowOptions): Promise<T> {
-    return await db(this.table)
+    const row = await db(this.table)
       .where(this.filter(options?.filter ?? {}))
       .first();
+
+    if (options.failOrNull && row === undefined) {
+      throw new QueryError({
+        name: 'RowNotFound',
+        message: 'Row Not Found',
+      });
+    }
+
+    return row;
   }
 
   async readMeta(options: ReadMetaOptions): Promise<ReadMetaResult> {
