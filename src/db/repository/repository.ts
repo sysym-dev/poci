@@ -1,7 +1,9 @@
+import { Knex } from 'knex';
 import { db } from '../db';
 import { Entity, EntityAttributes, EntityId } from '../entity';
 import { parsePaginate } from '../paginate';
 import {
+  CountOptions,
   ReadMetaOptions,
   ReadMetaResult,
   ReadOptions,
@@ -12,6 +14,8 @@ import {
 export abstract class Repository<T extends Entity> {
   abstract table: string;
 
+  abstract filter(values: Record<string, any>): Knex.QueryCallback;
+
   async read(options?: ReadOptions): Promise<ReadResult<T>> {
     const page = parsePaginate(options?.page?.size, options?.page?.number);
 
@@ -21,18 +25,21 @@ export abstract class Repository<T extends Entity> {
           size: page.limit,
           number: page.number,
         },
+        filter: options?.filter ?? {},
       }),
       rows: await this.readRows({
         page: {
           limit: page.limit,
           offset: page.offset,
         },
+        filter: options?.filter ?? {},
       }),
     };
   }
 
   async readRows(options: ReadRowsOptions): Promise<T[]> {
     return await db(this.table)
+      .where(this.filter(options?.filter ?? {}))
       .limit(options.page.limit)
       .offset(options.page.offset)
       .select();
@@ -44,13 +51,18 @@ export abstract class Repository<T extends Entity> {
         number: options.page.number,
         size: options.page.size,
       },
-      total: await this.count(),
+      total: await this.count({
+        filter: options.filter,
+      }),
     };
   }
 
-  async count(): Promise<number> {
+  async count(options: CountOptions): Promise<number> {
     return (
-      (await db(this.table).count('* as total').first()) as { total: number }
+      (await db(this.table)
+        .where(this.filter(options?.filter ?? {}))
+        .count('* as total')
+        .first()) as { total: number }
     ).total;
   }
 

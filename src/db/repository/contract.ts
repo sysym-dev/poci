@@ -3,18 +3,24 @@ export interface ReadOptions {
     size?: number;
     number?: number;
   };
+  filter?: Record<string, any>;
 }
 export interface ReadRowsOptions {
   page: {
     limit: number;
     offset: number;
   };
+  filter: Record<string, any>;
 }
 export interface ReadMetaOptions {
   page: {
     size: number;
     number: number;
   };
+  filter: Record<string, any>;
+}
+export interface CountOptions {
+  filter: Record<string, any>;
 }
 
 export interface ReadMetaResult {
