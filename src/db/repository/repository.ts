@@ -33,15 +33,22 @@ export abstract class Repository<T extends Entity> {
           offset: page.offset,
         },
         filter: options?.filter ?? {},
+        sort: options?.sort ?? {},
       }),
     };
   }
 
   async readRows(options: ReadRowsOptions): Promise<T[]> {
+    const sortValues = Object.entries(options.sort).map(([column, order]) => ({
+      column,
+      order,
+    }));
+
     return await db(this.table)
       .where(this.filter(options?.filter ?? {}))
       .limit(options.page.limit)
       .offset(options.page.offset)
+      .orderBy(sortValues)
       .select();
   }
 

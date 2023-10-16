@@ -4,6 +4,7 @@ export interface ReadOptions {
     number?: number;
   };
   filter?: Record<string, any>;
+  sort?: Record<string, 'asc' | 'desc'>;
 }
 export interface ReadRowsOptions {
   page: {
@@ -11,6 +12,7 @@ export interface ReadRowsOptions {
     offset: number;
   };
   filter: Record<string, any>;
+  sort: Record<string, 'asc' | 'desc'>;
 }
 export interface ReadMetaOptions {
   page: {

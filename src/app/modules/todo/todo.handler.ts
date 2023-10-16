@@ -6,14 +6,15 @@ export class TodoHandler {
 
   async getAll(context?: RouterContext) {
     return await this.todoRepository.read({
-      page: {
-        size: 2,
-        number: 2,
-      },
-      filter: {
-        isDone: false,
-        toDate: new Date(),
-      },
+      // page: {
+      //   size: 2,
+      //   number: 2,
+      // },
+      // filter: {
+      //   isDone: false,
+      //   toDate: new Date(),
+      // },
+      sort: {},
     });
   }
 
