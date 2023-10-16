@@ -15,6 +15,7 @@ export class TodoHandler {
       //   toDate: new Date(),
       // },
       sort: {},
+      filter: {},
     });
   }
 
@@ -29,8 +30,10 @@ export class TodoHandler {
   }
 
   async create(context?: RouterContext) {
-    return await this.todoRepository.store(null, {
-      name: context?.body.name,
+    return await this.todoRepository.store({
+      values: {
+        name: context?.body.name,
+      },
     });
   }
 }

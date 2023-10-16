@@ -10,6 +10,7 @@ import {
   ReadResult,
   ReadRowOptions,
   ReadRowsOptions,
+  StoreOptions,
 } from './contract';
 import { QueryError } from '../errors/query.error';
 
@@ -18,7 +19,7 @@ export abstract class Repository<T extends Entity> {
 
   abstract filter(values: Record<string, any>): Knex.QueryCallback;
 
-  async read(options?: ReadOptions): Promise<ReadResult<T>> {
+  async read(options?: ReadOptions<T>): Promise<ReadResult<T>> {
     if (options?.first) {
       return await this.readRow({
         filter: options?.filter ?? {},
@@ -47,7 +48,7 @@ export abstract class Repository<T extends Entity> {
     };
   }
 
-  async readRows(options: ReadRowsOptions): Promise<T[]> {
+  async readRows(options: ReadRowsOptions<T>): Promise<T[]> {
     const sortValues = Object.entries(options.sort).map(([column, order]) => ({
       column,
       order,
@@ -61,7 +62,7 @@ export abstract class Repository<T extends Entity> {
       .select();
   }
 
-  async readRow(options: ReadRowOptions): Promise<T> {
+  async readRow(options: ReadRowOptions<T>): Promise<T> {
     const row = await db(this.table)
       .where(this.filter(options?.filter ?? {}))
       .first();
@@ -76,7 +77,7 @@ export abstract class Repository<T extends Entity> {
     return row;
   }
 
-  async readMeta(options: ReadMetaOptions): Promise<ReadMetaResult> {
+  async readMeta(options: ReadMetaOptions<T>): Promise<ReadMetaResult> {
     return {
       page: {
         number: options.page.number,
@@ -88,7 +89,7 @@ export abstract class Repository<T extends Entity> {
     };
   }
 
-  async count(options: CountOptions): Promise<number> {
+  async count(options: CountOptions<T>): Promise<number> {
     return (
       (await db(this.table)
         .where(this.filter(options?.filter ?? {}))
@@ -97,11 +98,14 @@ export abstract class Repository<T extends Entity> {
     ).total;
   }
 
-  async store(id: EntityId | null, todo: Partial<EntityAttributes<T>>) {
-    if (id) {
-      await db(this.table).where('id', id).update(todo);
-    } else {
-      await db(this.table).insert(todo);
-    }
+  async store(options: StoreOptions<T>): Promise<T> {
+    const [id] = await db(this.table).insert(options.values);
+
+    return (await this.read({
+      filter: {
+        id,
+      },
+      first: true,
+    })) as T;
   }
 }

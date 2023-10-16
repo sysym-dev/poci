@@ -1,34 +1,39 @@
-export interface ReadOptions {
+import { EntityAttributes } from '../entity';
+
+export interface ReadOptions<T = {}> {
   page?: {
     size?: number;
     number?: number;
   };
-  filter?: Record<string, any>;
-  sort?: Record<string, 'asc' | 'desc'>;
+  filter?: Partial<T> | Record<string, any>;
+  sort?: Record<keyof T, 'asc' | 'desc'> | Record<string, 'asc' | 'desc'>;
   first?: boolean;
   failOnNull?: boolean;
 }
-export interface ReadRowOptions {
-  filter: Record<string, any>;
+export interface ReadRowOptions<T = {}> {
+  filter: Partial<T> | Record<string, any>;
   failOrNull?: boolean;
 }
-export interface ReadRowsOptions {
+export interface ReadRowsOptions<T = {}> {
   page: {
     limit: number;
     offset: number;
   };
-  filter: Record<string, any>;
-  sort: Record<string, 'asc' | 'desc'>;
+  filter: Partial<T> | Record<string, any>;
+  sort: Record<keyof T, 'asc' | 'desc'> | Record<string, 'asc' | 'desc'>;
 }
-export interface ReadMetaOptions {
+export interface ReadMetaOptions<T = {}> {
   page: {
     size: number;
     number: number;
   };
-  filter: Record<string, any>;
+  filter: Partial<T> | Record<string, any>;
 }
-export interface CountOptions {
-  filter: Record<string, any>;
+export interface CountOptions<T = {}> {
+  filter: Partial<T> | Record<string, any>;
+}
+export interface StoreOptions<T = {}> {
+  values: Partial<EntityAttributes<T>>;
 }
 
 export interface ReadMetaResult {
