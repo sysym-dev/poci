@@ -18,6 +18,15 @@ export class TodoHandler {
     });
   }
 
+  async getOne(context?: RouterContext) {
+    return await this.todoRepository.read({
+      filter: {
+        id: context?.params.id,
+      },
+      first: true,
+    });
+  }
+
   async create(context?: RouterContext) {
     return await this.todoRepository.store(null, {
       name: context?.body.name,

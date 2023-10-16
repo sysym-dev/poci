@@ -14,6 +14,12 @@ router.handle({
 });
 
 router.handle({
+  path: '/:id',
+  method: 'get',
+  handler: async (context) => await todoHandler.getOne(context),
+});
+
+router.handle({
   path: '/',
   method: 'post',
   middlewares: [createRequestValidatorMiddleware(CreateTodoRequest)],

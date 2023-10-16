@@ -26,8 +26,6 @@ class Router {
   }
 
   make(): RequestHandler {
-    const baseRoute = this.router.route(this.basePath);
-
     this.routeHandlers.forEach((routeHandle) => {
       const requestHandler: RequestHandler = async (req, res, next) => {
         try {
@@ -44,7 +42,7 @@ class Router {
         }
       };
 
-      baseRoute[routeHandle.method]([
+      this.router[routeHandle.method](`${this.basePath}${routeHandle.path}`, [
         ...(routeHandle.middlewares ? routeHandle.middlewares : []),
         requestHandler,
       ]);

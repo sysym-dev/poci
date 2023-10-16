@@ -5,6 +5,10 @@ export interface ReadOptions {
   };
   filter?: Record<string, any>;
   sort?: Record<string, 'asc' | 'desc'>;
+  first?: boolean;
+}
+export interface ReadRowOptions {
+  filter: Record<string, any>;
 }
 export interface ReadRowsOptions {
   page: {
@@ -32,7 +36,9 @@ export interface ReadMetaResult {
   };
   total: number;
 }
-export interface ReadResult<T> {
-  rows: T[];
-  meta: ReadMetaResult;
-}
+export type ReadResult<T> =
+  | {
+      rows: T[];
+      meta: ReadMetaResult;
+    }
+  | T;

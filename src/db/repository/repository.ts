@@ -8,6 +8,7 @@ import {
   ReadMetaResult,
   ReadOptions,
   ReadResult,
+  ReadRowOptions,
   ReadRowsOptions,
 } from './contract';
 
@@ -17,6 +18,12 @@ export abstract class Repository<T extends Entity> {
   abstract filter(values: Record<string, any>): Knex.QueryCallback;
 
   async read(options?: ReadOptions): Promise<ReadResult<T>> {
+    if (options?.first) {
+      return await this.readRow({
+        filter: options?.filter ?? {},
+      });
+    }
+
     const page = parsePaginate(options?.page?.size, options?.page?.number);
 
     return {
@@ -50,6 +57,12 @@ export abstract class Repository<T extends Entity> {
       .offset(options.page.offset)
       .orderBy(sortValues)
       .select();
+  }
+
+  async readRow(options: ReadRowOptions): Promise<T> {
+    return await db(this.table)
+      .where(this.filter(options?.filter ?? {}))
+      .first();
   }
 
   async readMeta(options: ReadMetaOptions): Promise<ReadMetaResult> {

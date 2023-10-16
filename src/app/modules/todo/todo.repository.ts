@@ -8,6 +8,10 @@ export class TodoRepository extends Repository<Todo> {
 
   filter(values: Record<string, any>): Knex.QueryCallback {
     return (builder: Knex.QueryBuilder) => {
+      if (hasOwnProperty(values, 'id')) {
+        builder.where('id', values.id);
+      }
+
       if (hasOwnProperty(values, 'isDone')) {
         values.isDone
           ? builder.whereNotNull('done_at')
