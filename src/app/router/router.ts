@@ -9,7 +9,7 @@ export interface RouteHandler<P = any> {
   path: string;
   method: 'get' | 'post' | 'patch' | 'delete';
   middlewares?: Handler[];
-  handler: (context?: RouterContext) => P | Promise<P>;
+  handler: (context: RouterContext) => P | Promise<P>;
 }
 
 class Router {

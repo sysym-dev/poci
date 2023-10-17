@@ -1,6 +1,7 @@
 import { createRequestValidatorMiddleware } from '../../middlewares/request-validator.middleware';
 import { createRouter } from '../../router/router';
 import { CreateTodoRequest } from './requests/create.request';
+import { UpdateTodoRequest } from './requests/update.request';
 import { TodoHandler } from './todo.handler';
 import { TodoRepository } from './todo.repository';
 
@@ -24,6 +25,13 @@ router.handle({
   method: 'post',
   middlewares: [createRequestValidatorMiddleware(CreateTodoRequest)],
   handler: async (context) => await todoHandler.create(context),
+});
+
+router.handle({
+  path: '/:id',
+  method: 'patch',
+  middlewares: [createRequestValidatorMiddleware(UpdateTodoRequest)],
+  handler: async (context) => await todoHandler.update(context),
 });
 
 export const todoRoutes = router.make();
