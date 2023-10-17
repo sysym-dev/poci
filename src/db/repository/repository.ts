@@ -5,6 +5,7 @@ import { parsePaginate } from '../paginate';
 import {
   CountOptions,
   CreateOptions,
+  DeleteOptions,
   ExistsOptions,
   ReadMetaOptions,
   ReadMetaResult,
@@ -149,5 +150,21 @@ export abstract class Repository<T extends Entity> {
     return await this.create({
       values: options.values,
     });
+  }
+
+  async delete(options: DeleteOptions<T>): Promise<void> {
+    if (
+      options.failOrNull &&
+      !(await this.exists({ filter: options?.filter ?? {} }))
+    ) {
+      throw new QueryError({
+        name: 'RowNotFound',
+        message: 'RowNotFound',
+      });
+    }
+
+    await db(this.table)
+      .where(this.filter(options?.filter ?? {}))
+      .delete();
   }
 }

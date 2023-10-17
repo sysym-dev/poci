@@ -48,6 +48,10 @@ export interface UpdateOptions<T = {}> {
 export interface CreateOptions<T = {}> {
   values: Partial<EntityAttributes<T>>;
 }
+export interface DeleteOptions<T = {}> {
+  filter?: Partial<T> | Record<string, any>;
+  failOrNull?: boolean;
+}
 
 export interface ReadMetaResult {
   page: {
