@@ -38,10 +38,12 @@
     "*.{js,ts,css,md}": "prettier --write"
   },
   "dependencies": {
+    "commander": "^11.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "galat": "^1.0.3",
     "helmet": "^7.0.0",
+    "joi": "^17.11.0",
     "knex": "^3.0.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.6.2"
