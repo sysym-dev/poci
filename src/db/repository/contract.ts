@@ -1,12 +1,16 @@
 import { EntityAttributes } from '../entity';
 
+export type SortValues<T = {}> =
+  | Record<keyof T, 'asc' | 'desc'>
+  | Record<string, 'asc' | 'desc'>;
+
 export interface ReadOptions<T = {}> {
   page?: {
     size?: number;
     number?: number;
   };
   filter?: Partial<T> | Record<string, any>;
-  sort?: Record<keyof T, 'asc' | 'desc'> | Record<string, 'asc' | 'desc'>;
+  sort?: SortValues<T>;
   first?: boolean;
   failOnNull?: boolean;
 }
@@ -20,7 +24,7 @@ export interface ReadRowsOptions<T = {}> {
     offset: number;
   };
   filter: Partial<T> | Record<string, any>;
-  sort: Record<keyof T, 'asc' | 'desc'> | Record<string, 'asc' | 'desc'>;
+  sort: SortValues<T>;
 }
 export interface ReadMetaOptions<T = {}> {
   page: {

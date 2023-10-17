@@ -1,4 +1,5 @@
 import { createRequestValidatorMiddleware } from '../../middlewares/request-validator.middleware';
+import { createReadAllResourceMiddleware } from '../../middlewares/resource-query.middleware';
 import { createRouter } from '../../router/router';
 import { CreateTodoRequest } from './requests/create.request';
 import { UpdateTodoRequest } from './requests/update.request';
@@ -11,6 +12,7 @@ const todoHandler = new TodoHandler(new TodoRepository());
 router.handle({
   path: '/',
   method: 'get',
+  middlewares: [createReadAllResourceMiddleware()],
   handler: async (context) => await todoHandler.getAll(context),
 });
 

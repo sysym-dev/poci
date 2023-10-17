@@ -5,20 +5,7 @@ export class TodoHandler {
   constructor(private todoRepository: TodoRepository) {}
 
   async getAll(context?: RouterContext) {
-    return await this.todoRepository.read({
-      // page: {
-      //   size: 2,
-      //   number: 2,
-      // },
-      // filter: {
-      //   isDone: false,
-      //   toDate: new Date(),
-      // },
-      // sort: {},
-      // filter: {
-      //   is_done: true,
-      // },
-    });
+    return await this.todoRepository.read(context?.query);
   }
 
   async getOne(context?: RouterContext) {
