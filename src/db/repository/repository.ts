@@ -4,6 +4,8 @@ import { Entity, EntityAttributes, EntityId } from '../entity';
 import { parsePaginate } from '../paginate';
 import {
   CountOptions,
+  CreateOptions,
+  ExistsOptions,
   ReadMetaOptions,
   ReadMetaResult,
   ReadOptions,
@@ -11,6 +13,7 @@ import {
   ReadRowOptions,
   ReadRowsOptions,
   StoreOptions,
+  UpdateOptions,
 } from './contract';
 import { QueryError } from '../errors/query.error';
 
@@ -98,7 +101,11 @@ export abstract class Repository<T extends Entity> {
     ).total;
   }
 
-  async store(options: StoreOptions<T>): Promise<T> {
+  async exists(options: ExistsOptions<T>): Promise<boolean> {
+    return !!(await this.count(options));
+  }
+
+  async create(options: CreateOptions<T>): Promise<T> {
     const [id] = await db(this.table).insert(options.values);
 
     return (await this.read({
@@ -107,5 +114,40 @@ export abstract class Repository<T extends Entity> {
       },
       first: true,
     })) as T;
+  }
+
+  async update(options: UpdateOptions<T>): Promise<T> {
+    if (
+      options.failOrNull &&
+      !(await this.exists({ filter: options.filter }))
+    ) {
+      throw new QueryError({
+        name: 'RowNotFound',
+        message: 'RowNotFound',
+      });
+    }
+
+    await db(this.table)
+      .where(this.filter(options.filter))
+      .update(options.values);
+
+    return (await this.read({
+      filter: options.filter,
+      first: true,
+    })) as T;
+  }
+
+  async store(options: StoreOptions<T>): Promise<T> {
+    if (options.filter) {
+      return await this.update({
+        filter: options.filter,
+        failOrNull: options.failOrNull,
+        values: options.values,
+      });
+    }
+
+    return await this.create({
+      values: options.values,
+    });
   }
 }

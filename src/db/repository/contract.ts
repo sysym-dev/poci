@@ -32,7 +32,20 @@ export interface ReadMetaOptions<T = {}> {
 export interface CountOptions<T = {}> {
   filter: Partial<T> | Record<string, any>;
 }
+export interface ExistsOptions<T = {}> {
+  filter: Partial<T> | Record<string, any>;
+}
 export interface StoreOptions<T = {}> {
+  values: Partial<EntityAttributes<T>>;
+  filter?: Partial<T> | Record<string, any>;
+  failOrNull?: boolean;
+}
+export interface UpdateOptions<T = {}> {
+  values: Partial<EntityAttributes<T>>;
+  filter: Partial<T> | Record<string, any>;
+  failOrNull?: boolean;
+}
+export interface CreateOptions<T = {}> {
   values: Partial<EntityAttributes<T>>;
 }
 
