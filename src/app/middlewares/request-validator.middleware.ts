@@ -2,11 +2,17 @@ import Joi from 'joi';
 import { HttpError } from '../../server/errors/http.error';
 import { Handler } from 'express';
 
+export type RequestValidatorPath = 'params' | 'query' | 'body';
+
 export abstract class RequestValidator {
   abstract authorize(): boolean;
   abstract schema(): Joi.Schema;
 
-  path: 'params' | 'query' | 'body' = 'body';
+  transform(values: Record<string, any>): Record<string, any> {
+    return values;
+  }
+
+  path: RequestValidatorPath = 'body';
 }
 
 export function mapSchemaError(
@@ -24,7 +30,7 @@ export async function validateRequest<T = Record<string, any>>(
   try {
     const validated = await validator.schema().validateAsync(values);
 
-    return validated;
+    return validator.transform(validated) as T;
   } catch (err) {
     throw err instanceof Joi.ValidationError ? mapSchemaError(err) : err;
   }
