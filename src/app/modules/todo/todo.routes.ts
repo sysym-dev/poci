@@ -34,4 +34,10 @@ router.handle({
   handler: async (context) => await todoHandler.update(context),
 });
 
+router.handle({
+  path: '/:id',
+  method: 'delete',
+  handler: async (context) => await todoHandler.delete(context),
+});
+
 export const todoRoutes = router.make();

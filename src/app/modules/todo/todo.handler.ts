@@ -14,10 +14,10 @@ export class TodoHandler {
       //   isDone: false,
       //   toDate: new Date(),
       // },
-      sort: {},
-      filter: {
-        is_done: true,
-      },
+      // sort: {},
+      // filter: {
+      //   is_done: true,
+      // },
     });
   }
 
@@ -45,6 +45,15 @@ export class TodoHandler {
         id: context?.params.id,
       },
       values: context.body,
+      failOrNull: true,
+    });
+  }
+
+  async delete(context: RouterContext) {
+    return await this.todoRepository.delete({
+      filter: {
+        id: context?.params.id,
+      },
       failOrNull: true,
     });
   }
