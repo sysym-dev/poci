@@ -17,11 +17,15 @@ function parseSort(sort: string): SortValues {
   );
 }
 
-class ReadAllRequest extends RequestValidator {
+export class ReadAllRequest extends RequestValidator {
   path: RequestValidatorPath = 'query';
 
   authorize(): boolean {
     return true;
+  }
+
+  filter(): Joi.ObjectSchema {
+    return Joi.object().optional();
   }
 
   schema(): Schema {
@@ -30,7 +34,7 @@ class ReadAllRequest extends RequestValidator {
         size: Joi.number().positive().optional(),
         number: Joi.number().positive().optional(),
       }).optional(),
-      filter: Joi.object().optional(),
+      filter: this.filter(),
       sort: Joi.string().optional(),
     });
   }
@@ -47,6 +51,8 @@ class ReadAllRequest extends RequestValidator {
   }
 }
 
-export function createReadAllResourceMiddleware(): Handler {
-  return createRequestValidatorMiddleware(ReadAllRequest);
+export function createReadAllResourceMiddleware(
+  requestClass?: new () => ReadAllRequest,
+): Handler {
+  return createRequestValidatorMiddleware(requestClass ?? ReadAllRequest);
 }
