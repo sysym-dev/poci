@@ -9,6 +9,7 @@ export class CreateTodoRequest extends RequestValidator {
   schema(): Schema {
     return Joi.object({
       name: Joi.string().required(),
+      due_at: Joi.date().required(),
     });
   }
 }
