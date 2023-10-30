@@ -28,7 +28,9 @@ export async function validateRequest<T = Record<string, any>>(
   values: Record<string, any>,
 ): Promise<T> {
   try {
-    const validated = await validator.schema().validateAsync(values);
+    const validated = await validator.schema().validateAsync(values, {
+      convert: true,
+    });
 
     return validator.transform(validated) as T;
   } catch (err) {

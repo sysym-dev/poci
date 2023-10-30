@@ -2,6 +2,7 @@ import { createRequestValidatorMiddleware } from '../../middlewares/request-vali
 import { createReadAllResourceMiddleware } from '../../middlewares/resource-query.middleware';
 import { createRouter } from '../../router/router';
 import { CreateTodoRequest } from './requests/create.request';
+import { ReadAllTodoRequest } from './requests/read-all.request';
 import { UpdateTodoRequest } from './requests/update.request';
 import { TodoHandler } from './todo.handler';
 import { TodoRepository } from './todo.repository';
@@ -12,7 +13,7 @@ const todoHandler = new TodoHandler(new TodoRepository());
 router.handle({
   path: '/',
   method: 'get',
-  middlewares: [createReadAllResourceMiddleware()],
+  middlewares: [createReadAllResourceMiddleware(ReadAllTodoRequest)],
   handler: async (context) => await todoHandler.getAll(context),
 });
 
