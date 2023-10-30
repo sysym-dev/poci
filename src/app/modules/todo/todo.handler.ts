@@ -22,6 +22,7 @@ export class TodoHandler {
     return await this.todoRepository.store({
       values: {
         name: context?.body.name,
+        due_at: context?.body.due_at,
       },
     });
   }
