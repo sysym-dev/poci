@@ -25,6 +25,10 @@ export class TodoRepository extends Repository<Todo> {
       if (hasOwnProperty(values, 'due_at_to')) {
         builder.where('due_at', '<', values.due_at_to);
       }
+
+      if (hasOwnProperty(values, 'search')) {
+        builder.whereILike('name', `%${values.search}%`);
+      }
     };
   }
 }
