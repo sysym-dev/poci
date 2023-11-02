@@ -128,9 +128,11 @@ export abstract class Repository<T extends Entity> {
       });
     }
 
-    await db(this.table)
-      .where(this.filter(options.filter))
-      .update(options.values);
+    if (Object.keys(options.values).length) {
+      await db(this.table)
+        .where(this.filter(options.filter))
+        .update(options.values);
+    }
 
     return (await this.read({
       filter: options.filter,
