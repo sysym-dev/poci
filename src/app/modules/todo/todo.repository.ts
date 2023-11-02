@@ -18,6 +18,13 @@ export class TodoRepository extends Repository<Todo> {
           : builder.whereNull('done_at');
       }
 
+      if (hasOwnProperty(values, 'is_late')) {
+        if (values.is_late) {
+          builder.whereNull('done_at');
+          builder.where('due_at', '<', new Date());
+        }
+      }
+
       if (hasOwnProperty(values, 'due_at_from')) {
         builder.where('due_at', '>', values.due_at_from);
       }
