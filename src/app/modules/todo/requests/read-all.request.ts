@@ -10,6 +10,7 @@ export class ReadAllTodoRequest extends ReadAllRequest {
       search: Joi.string().optional(),
       done_at_from: Joi.date().optional(),
       done_at_to: Joi.date().optional(),
+      is_late: Joi.boolean().optional(),
     }).optional();
   }
 }
