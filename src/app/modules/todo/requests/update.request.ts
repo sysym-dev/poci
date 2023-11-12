@@ -10,7 +10,7 @@ export class UpdateTodoRequest extends RequestValidator {
     return Joi.object({
       name: Joi.string().optional(),
       due_at: Joi.date().optional(),
-      done_at: Joi.date().optional(),
+      done_at: Joi.date().allow(null).optional(),
     });
   }
 }
