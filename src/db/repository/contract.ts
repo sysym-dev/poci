@@ -34,7 +34,7 @@ export interface ReadMetaOptions<T = {}> {
   filter: Partial<T> | Record<string, any>;
 }
 export interface CountOptions<T = {}> {
-  filter: Partial<T> | Record<string, any>;
+  filter?: Partial<T> | Record<string, any>;
 }
 export interface ExistsOptions<T = {}> {
   filter: Partial<T> | Record<string, any>;
