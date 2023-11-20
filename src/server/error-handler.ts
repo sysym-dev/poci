@@ -1,6 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 import { HttpError } from './errors/http.error';
 import { QueryError } from '../db/errors/query.error';
+import { AuthError } from 'otentikasi';
 
 export function createErrorHandler(): ErrorRequestHandler {
   return (err: any, req, res, next) => {
@@ -10,6 +11,10 @@ export function createErrorHandler(): ErrorRequestHandler {
 
     if (err instanceof QueryError) {
       return res.status(err.status).json(err);
+    }
+
+    if (err instanceof AuthError) {
+      return res.status(401).json(err);
     }
 
     console.log(err);
