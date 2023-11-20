@@ -14,10 +14,13 @@ export function createErrorHandler(): ErrorRequestHandler {
     }
 
     if (err instanceof AuthError) {
-      return res.status(401).json({
-        name: err.name,
+      const authError = new HttpError({
+        name: 'Unauthorized',
         message: err.message,
+        details: err.cause,
       });
+
+      return res.status(authError.status).json(authError);
     }
 
     console.log(err);
