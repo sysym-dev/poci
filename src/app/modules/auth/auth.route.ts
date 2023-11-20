@@ -1,3 +1,4 @@
+import { createAuthMiddleware } from '../../middlewares/auth.middleware';
 import { createRequestValidatorMiddleware } from '../../middlewares/request-validator.middleware';
 import { createRouter } from '../../router/router';
 import { UserRepository } from '../user/user.repository';
@@ -7,7 +8,9 @@ import { LoginRequest } from './requests/login.request';
 import { RegisterRequest } from './requests/register.request';
 
 const router = createRouter('/auth');
-const handler = new AuthHandler(new AuthService(new UserRepository()));
+
+const authService = new AuthService(new UserRepository());
+const handler = new AuthHandler(authService);
 
 router.handle({
   path: '/login',
@@ -24,6 +27,15 @@ router.handle({
   middlewares: [createRequestValidatorMiddleware(RegisterRequest)],
   async handler(context) {
     return await handler.register(context);
+  },
+});
+
+router.handle({
+  path: '/me',
+  method: 'get',
+  middlewares: [createAuthMiddleware(authService)],
+  handler(context) {
+    return handler.getMe(context);
   },
 });
 

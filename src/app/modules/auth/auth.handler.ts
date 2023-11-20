@@ -22,4 +22,8 @@ export class AuthHandler {
 
     return await res.getToken();
   }
+
+  async getMe(context: RouterContext) {
+    return context.user;
+  }
 }
