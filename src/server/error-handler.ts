@@ -14,7 +14,10 @@ export function createErrorHandler(): ErrorRequestHandler {
     }
 
     if (err instanceof AuthError) {
-      return res.status(401).json(err);
+      return res.status(401).json({
+        name: err.name,
+        message: err.message,
+      });
     }
 
     console.log(err);

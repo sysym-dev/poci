@@ -17,6 +17,7 @@ export interface ReadOptions<T = {}> {
 export interface ReadRowOptions<T = {}> {
   filter: Partial<T> | Record<string, any>;
   failOrNull?: boolean;
+  removeColumns?: string[];
 }
 export interface ReadRowsOptions<T = {}> {
   page: {

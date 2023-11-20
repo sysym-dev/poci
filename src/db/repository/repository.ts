@@ -78,6 +78,12 @@ export abstract class Repository<T extends Entity> {
       });
     }
 
+    if (options.removeColumns) {
+      options.removeColumns.forEach((column) => {
+        delete row[column];
+      });
+    }
+
     return row;
   }
 
