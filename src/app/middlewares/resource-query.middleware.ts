@@ -7,7 +7,7 @@ import {
 import { Handler } from 'express';
 import { SortValues } from '../../db/repository/contract';
 import { hasOwnProperty } from '../utils/object';
-import { RouterContext } from '../router/router';
+import { RouterContext } from '../router/router.context';
 
 function parseSort(sort: string): SortValues {
   return Object.fromEntries(

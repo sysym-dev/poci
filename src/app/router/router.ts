@@ -6,13 +6,8 @@ import {
   Response,
 } from 'express';
 import { User } from '../modules/user/user.entity';
+import { RouterContext } from './router.context';
 
-export interface RouterContext {
-  params: Record<string, any>;
-  query: Record<string, any>;
-  body: Record<string, any>;
-  user?: User;
-}
 export interface RouteHandler<P = any> {
   path: string;
   method: 'get' | 'post' | 'patch' | 'delete';

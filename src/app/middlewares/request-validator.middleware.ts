@@ -1,7 +1,8 @@
 import Joi from 'joi';
 import { HttpError } from '../../server/errors/http.error';
 import { Handler } from 'express';
-import { RouterContext, RouterRequest } from '../router/router';
+import { RouterContext } from '../router/router.context';
+import { RouterRequest } from '../router/router';
 
 export type RequestValidatorPath = 'params' | 'query' | 'body';
 

@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from 'joi';
 import { ReadAllRequest } from '../../../middlewares/resource-query.middleware';
-import { RouterContext } from '../../../router/router';
+import { RouterContext } from '../../../router/router.context';
 import { hasOwnProperty } from '../../../utils/object';
 
 export class ReadAllTodoRequest extends ReadAllRequest {

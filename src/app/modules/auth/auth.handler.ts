@@ -1,4 +1,4 @@
-import { RouterContext } from '../../router/router';
+import { RouterContext } from '../../router/router.context';
 import { AuthService } from './auth.service';
 
 export class AuthHandler {
