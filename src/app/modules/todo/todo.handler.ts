@@ -1,14 +1,14 @@
-import { RouterContext } from '../../router/router.context';
+import { RouteContext } from '../../router/route.context';
 import { TodoRepository } from './todo.repository';
 
 export class TodoHandler {
   constructor(private todoRepository: TodoRepository) {}
 
-  async getAll(context?: RouterContext) {
+  async getAll(context?: RouteContext) {
     return await this.todoRepository.read(context?.query);
   }
 
-  async getOne(context?: RouterContext) {
+  async getOne(context?: RouteContext) {
     return await this.todoRepository.read({
       filter: {
         id: context?.params.id,
@@ -18,7 +18,7 @@ export class TodoHandler {
     });
   }
 
-  async create(context?: RouterContext) {
+  async create(context?: RouteContext) {
     return await this.todoRepository.store({
       values: {
         name: context?.body.name,
@@ -27,7 +27,7 @@ export class TodoHandler {
     });
   }
 
-  async update(context: RouterContext) {
+  async update(context: RouteContext) {
     return await this.todoRepository.store({
       filter: {
         id: context?.params.id,
@@ -37,7 +37,7 @@ export class TodoHandler {
     });
   }
 
-  async delete(context: RouterContext) {
+  async delete(context: RouteContext) {
     return await this.todoRepository.delete({
       filter: {
         id: context?.params.id,

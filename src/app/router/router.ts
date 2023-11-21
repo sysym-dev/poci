@@ -2,21 +2,10 @@ import {
   RequestHandler,
   Router as ExpressRouter,
   Handler,
-  Request,
   Response,
 } from 'express';
-import { User } from '../modules/user/user.entity';
-import { RouterContext } from './router.context';
-
-export interface RouteHandler<P = any> {
-  path: string;
-  method: 'get' | 'post' | 'patch' | 'delete';
-  middlewares?: Handler[];
-  handler: (context: RouterContext) => P | Promise<P>;
-}
-export interface RouterRequest extends Request {
-  user?: User;
-}
+import { RouteHandler } from './route.handler';
+import { Request } from './request/request';
 
 class Router {
   private router: ExpressRouter = ExpressRouter();
@@ -35,7 +24,7 @@ class Router {
   make(): RequestHandler {
     this.routeHandlers.forEach((routeHandle) => {
       const requestHandler: RequestHandler = async (
-        req: RouterRequest,
+        req: Request,
         res: Response,
         next,
       ) => {

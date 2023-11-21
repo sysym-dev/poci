@@ -1,10 +1,10 @@
 import { Handler } from 'express';
-import { RouterRequest } from '../router/router';
+import { Request } from '../router/request/request';
 import { AuthService } from '../modules/auth/auth.service';
 import { HttpError } from '../../server/errors/http.error';
 
 export function createAuthMiddleware(authService: AuthService): Handler {
-  return async (req: RouterRequest, res, next) => {
+  return async (req: Request, res, next) => {
     try {
       const accessToken = req.headers.authorization;
 

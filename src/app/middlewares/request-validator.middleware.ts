@@ -1,13 +1,13 @@
 import Joi from 'joi';
 import { HttpError } from '../../server/errors/http.error';
 import { Handler } from 'express';
-import { RouterContext } from '../router/router.context';
-import { RouterRequest } from '../router/router';
+import { RouteContext } from '../router/route.context';
+import { Request } from '../router/request/request';
 
 export type RequestValidatorPath = 'params' | 'query' | 'body';
 
 export abstract class RequestValidator {
-  abstract authorize(context: RouterContext): Promise<boolean> | boolean;
+  abstract authorize(context: RouteContext): Promise<boolean> | boolean;
   abstract schema(): Joi.Schema;
 
   transform(values: Record<string, any>): Record<string, any> {
@@ -55,7 +55,7 @@ export function createRequestValidatorMiddleware(
 ): Handler {
   const validator = new validatorClass();
 
-  return async (req: RouterRequest, res, next) => {
+  return async (req: Request, res, next) => {
     try {
       const isAuthorized = await validator.authorize({
         body: req.body,

@@ -1,10 +1,10 @@
 import Joi, { ObjectSchema } from 'joi';
 import { ReadAllRequest } from '../../../middlewares/resource-query.middleware';
-import { RouterContext } from '../../../router/router.context';
+import { RouteContext } from '../../../router/route.context';
 import { hasOwnProperty } from '../../../utils/object';
 
 export class ReadAllTodoRequest extends ReadAllRequest {
-  authorize(context: RouterContext): boolean {
+  authorize(context: RouteContext): boolean {
     if (!hasOwnProperty(context.query?.filter ?? {}, 'user_id')) {
       return false;
     }
