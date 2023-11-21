@@ -1,6 +1,9 @@
+import { createAuthMiddleware } from '../../middlewares/auth.middleware';
 import { createRequestValidatorMiddleware } from '../../middlewares/request-validator.middleware';
 import { createReadAllResourceMiddleware } from '../../middlewares/resource-query.middleware';
 import { createRouter } from '../../router/router';
+import { AuthService } from '../auth/auth.service';
+import { UserRepository } from '../user/user.repository';
 import { CreateTodoRequest } from './requests/create.request';
 import { ReadAllTodoRequest } from './requests/read-all.request';
 import { UpdateTodoRequest } from './requests/update.request';
@@ -9,6 +12,10 @@ import { TodoRepository } from './todo.repository';
 
 const router = createRouter('/todos');
 const todoHandler = new TodoHandler(new TodoRepository());
+
+router.addMiddleware(
+  createAuthMiddleware(new AuthService(new UserRepository())),
+);
 
 router.handle({
   path: '/',
