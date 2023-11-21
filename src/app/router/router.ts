@@ -27,6 +27,7 @@ class Router {
   private router: ExpressRouter = ExpressRouter();
   private routeHandlers: RouteHandler[] = [];
   private basePath: string;
+  private middlewares: Handler[] = [];
 
   constructor(basePath: string) {
     this.basePath = basePath;
@@ -59,12 +60,17 @@ class Router {
       };
 
       this.router[routeHandle.method](`${this.basePath}${routeHandle.path}`, [
+        ...this.middlewares,
         ...(routeHandle.middlewares ? routeHandle.middlewares : []),
         requestHandler,
       ]);
     });
 
     return this.router;
+  }
+
+  addMiddleware(handler: Handler) {
+    this.middlewares.push(handler);
   }
 }
 
