@@ -7,6 +7,7 @@ import {
 import { Handler } from 'express';
 import { SortValues } from '../../db/repository/contract';
 import { hasOwnProperty } from '../utils/object';
+import { RouterContext } from '../router/router';
 
 function parseSort(sort: string): SortValues {
   return Object.fromEntries(
@@ -20,7 +21,7 @@ function parseSort(sort: string): SortValues {
 export class ReadAllRequest extends RequestValidator {
   path: RequestValidatorPath = 'query';
 
-  authorize(): boolean {
+  authorize(context: RouterContext): boolean {
     return true;
   }
 
