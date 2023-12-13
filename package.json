@@ -29,5 +29,8 @@
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
