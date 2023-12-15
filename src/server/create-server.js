@@ -9,6 +9,8 @@ exports.createServer = function (options) {
   const config = parseConfig(options);
   const resources = options.resources;
 
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: true }));
   server.use(morgan(config.logFormat));
   server.use(createResourcesRoute(resources));
   server.use(createErrorHandler());
