@@ -4,11 +4,11 @@ if (process.env.NODE_ENV === 'development') {
 
 const { createServer } = require('./src/server/create-server.js');
 const { TodoResource } = require('./src/modules/todo/todo.resource.js');
-const { sequelize } = require('./src/db/sequelize.js');
+const { connect } = require('./src/db/connect.js');
 
 async function start() {
   try {
-    await sequelize.authenticate();
+    await connect();
 
     const server = createServer({
       port: 3000,
