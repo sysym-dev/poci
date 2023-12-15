@@ -1,4 +1,7 @@
 const { Router } = require('express');
+const {
+  ResourceNotFoundException,
+} = require('./exceptions/resource-not-found.exception');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -8,7 +11,20 @@ exports.createResourcesRoute = function (resourceClasses) {
 
     router.get(`${resource.url}`, async (req, res, next) => {
       try {
-        const data = await resource.model.findAll();
+        return res.json({
+          data: await resource.model.findAll(),
+        });
+      } catch (err) {
+        return next(err);
+      }
+    });
+    router.get(`${resource.url}/:id`, async (req, res, next) => {
+      try {
+        const data = await resource.model.findByPk(req.params.id);
+
+        if (data === null) {
+          throw new ResourceNotFoundException();
+        }
 
         return res.json({
           data,
@@ -17,9 +33,6 @@ exports.createResourcesRoute = function (resourceClasses) {
         return next(err);
       }
     });
-    router.get(`${resource.url}/:id`, (req, res) =>
-      res.json(`Detail ${resource.url}`),
-    );
     router.post(`${resource.url}`, (req, res) =>
       res.json(`Create ${resource.url}`),
     );
