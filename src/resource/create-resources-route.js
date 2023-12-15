@@ -2,6 +2,9 @@ const { Router } = require('express');
 const {
   ResourceNotFoundException,
 } = require('./exceptions/resource-not-found.exception');
+const {
+  createRequestValidation,
+} = require('./request/create-request-validation.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -33,8 +36,16 @@ exports.createResourcesRoute = function (resourceClasses) {
         return next(err);
       }
     });
-    router.post(`${resource.url}`, (req, res) =>
-      res.json(`Create ${resource.url}`),
+    router.post(
+      `${resource.url}`,
+      createRequestValidation(resource.schema, { path: 'body' }),
+      async (req, res, next) => {
+        try {
+          return res.json({ data: await resource.model.create(req.body) });
+        } catch (err) {
+          return next(err);
+        }
+      },
     );
     router.patch(`${resource.url}/:id`, (req, res) =>
       res.json(`Update ${resource.url}`),
