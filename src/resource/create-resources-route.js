@@ -1,19 +1,33 @@
 const { Router } = require('express');
 
-exports.createResourcesRoute = function (resources) {
+exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
 
-  resources.forEach((resource) => {
-    router.get(`/${resource}`, (req, res) => res.json(`All ${resource}`));
-    router.get(`/${resource}/:id`, (req, res) =>
-      res.json(`Detail ${resource}`),
+  resourceClasses.forEach((resourceClass) => {
+    const resource = new resourceClass();
+
+    router.get(`${resource.url}`, async (req, res, next) => {
+      try {
+        const data = await resource.model.findAll();
+
+        return res.json({
+          data,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    });
+    router.get(`${resource.url}/:id`, (req, res) =>
+      res.json(`Detail ${resource.url}`),
     );
-    router.post(`/${resource}`, (req, res) => res.json(`Create ${resource}`));
-    router.patch(`/${resource}/:id`, (req, res) =>
-      res.json(`Update ${resource}`),
+    router.post(`${resource.url}`, (req, res) =>
+      res.json(`Create ${resource.url}`),
     );
-    router.delete(`/${resource}/:id`, (req, res) =>
-      res.json(`Delete ${resource}`),
+    router.patch(`${resource.url}/:id`, (req, res) =>
+      res.json(`Update ${resource.url}`),
+    );
+    router.delete(`${resource.url}/:id`, (req, res) =>
+      res.json(`Delete ${resource.url}`),
     );
   });
 
