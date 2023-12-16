@@ -21,10 +21,10 @@ exports.TodoResource = class {
   }
 
   filterables() {
-    return Joi.object({
+    return {
       search: Joi.string().optional(),
       status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
-    });
+    };
   }
 
   filter(query) {

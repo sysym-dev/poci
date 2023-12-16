@@ -20,7 +20,7 @@ exports.createResourcesRoute = function (resourceClasses) {
     router.get(
       `${resource.url}`,
       createGetAllQueryValidation({
-        filter: resource.filterables(),
+        filterables: resource.filterables(),
         sortables: resource.sortables(),
       }),
       createDataResponse(async ({ req }) => {
