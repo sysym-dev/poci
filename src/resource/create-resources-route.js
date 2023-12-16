@@ -1,8 +1,5 @@
 const { Router } = require('express');
 const {
-  createRequestValidation,
-} = require('./handlers/create-request-validation.js');
-const {
   createEnsureResourceExists,
 } = require('./handlers/create-ensure-resource-exists.js');
 const { createDataResponse } = require('./handlers/create-data-response.js');
@@ -10,6 +7,9 @@ const { parseGetAllQuery } = require('./helpers/parse-get-all-query.js');
 const {
   createGetAllQueryValidation,
 } = require('./handlers/create-get-all-query-validation.js');
+const {
+  createSchemaBodyValidation,
+} = require('./handlers/create-schema-body-validation.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -52,9 +52,7 @@ exports.createResourcesRoute = function (resourceClasses) {
     );
     router.post(
       `${resource.url}`,
-      createRequestValidation(resource.schema({ isUpdating: false }), {
-        path: 'body',
-      }),
+      createSchemaBodyValidation(resource.schema({ isUpdating: false })),
       createDataResponse(
         async ({ req }) => await resource.model.create(req.body),
       ),
@@ -62,9 +60,7 @@ exports.createResourcesRoute = function (resourceClasses) {
     router.patch(
       `${resource.url}/:id`,
       createEnsureResourceExists(resource),
-      createRequestValidation(resource.schema({ isUpdating: true }), {
-        path: 'body',
-      }),
+      createSchemaBodyValidation(resource.schema({ isUpdating: true })),
       createDataResponse(async ({ req }) => {
         await req.resource.update(req.body);
 

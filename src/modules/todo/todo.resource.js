@@ -7,7 +7,7 @@ exports.TodoResource = class {
   model = Todo;
 
   schema(options) {
-    return Joi.object({
+    return {
       name: options.isUpdating
         ? Joi.string().optional()
         : Joi.string().required(),
@@ -17,7 +17,7 @@ exports.TodoResource = class {
             status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
           }
         : {}),
-    });
+    };
   }
 
   filterables() {
