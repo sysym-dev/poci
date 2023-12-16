@@ -10,5 +10,6 @@ exports.parseGetAllQuery = function (rawQuery) {
 
   return {
     page,
+    filter: rawQuery.filter ?? {},
   };
 };
