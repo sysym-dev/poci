@@ -1,11 +1,13 @@
 const { Router } = require('express');
 const {
   createRequestValidation,
-} = require('./handler/create-request-validation.js');
+} = require('./handlers/create-request-validation.js');
 const {
   createEnsureResourceExists,
-} = require('./handler/create-ensure-resource-exists.js');
-const { createDataResponse } = require('./handler/create-data-response.js');
+} = require('./handlers/create-ensure-resource-exists.js');
+const { createDataResponse } = require('./handlers/create-data-response.js');
+const { GetAllQuerySchema } = require('./schemas/get-all-query.schema.js');
+const { parseGetAllQuery } = require('./helpers/parse-get-all-query.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -15,7 +17,22 @@ exports.createResourcesRoute = function (resourceClasses) {
 
     router.get(
       `${resource.url}`,
-      createDataResponse(async () => await resource.model.findAll()),
+      createRequestValidation(GetAllQuerySchema, { path: 'query' }),
+      createDataResponse(async ({ req }) => {
+        const query = parseGetAllQuery(req.query);
+
+        const { count, rows } = await resource.model.findAndCountAll({
+          limit: query.page.size,
+        });
+
+        return {
+          meta: {
+            count,
+            page: query.page,
+          },
+          rows,
+        };
+      }),
     );
     router.get(
       `${resource.url}/:id`,
