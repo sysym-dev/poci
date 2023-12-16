@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const { Todo } = require('./todo.model.js');
 const { Op } = require('sequelize');
+const { optionalProperty } = require('../../utils/object.js');
 
 exports.TodoResource = class {
   url = '/todos';
@@ -12,11 +13,9 @@ exports.TodoResource = class {
         ? Joi.string().optional()
         : Joi.string().required(),
       description: Joi.string().optional(),
-      ...(options.isUpdating
-        ? {
-            status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
-          }
-        : {}),
+      ...optionalProperty(options.isUpdating, {
+        status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
+      }),
     };
   }
 
@@ -27,24 +26,20 @@ exports.TodoResource = class {
     };
   }
 
-  filter(query) {
-    return {
-      ...(query.search
-        ? {
-            name: {
-              [Op.substring]: query.search,
-            },
-          }
-        : {}),
-      ...(query.status
-        ? {
-            status: query.status,
-          }
-        : {}),
-    };
-  }
-
   sortables() {
     return ['name'];
+  }
+
+  filter(query) {
+    return {
+      ...optionalProperty(query.search, {
+        name: {
+          [Op.substring]: query.search,
+        },
+      }),
+      ...optionalProperty(query.status, {
+        status: query.status,
+      }),
+    };
   }
 };
