@@ -4,7 +4,7 @@ const {
 } = require('./handler/create-request-validation.js');
 const {
   createEnsureResourceExists,
-} = require('./handler/ensure-resource-exists.js');
+} = require('./handler/create-ensure-resource-exists.js');
 const { createDataResponse } = require('./handler/create-data-response.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
