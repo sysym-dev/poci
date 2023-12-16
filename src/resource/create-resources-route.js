@@ -21,6 +21,7 @@ exports.createResourcesRoute = function (resourceClasses) {
       `${resource.url}`,
       createGetAllQueryValidation({
         filter: resource.filterables(),
+        sortables: resource.sortables(),
       }),
       createDataResponse(async ({ req }) => {
         const query = parseGetAllQuery(req.query);
@@ -29,6 +30,7 @@ exports.createResourcesRoute = function (resourceClasses) {
           where: resource.filter(query.filter),
           limit: query.page.size,
           offset: query.page.offset,
+          order: [query.sort],
         });
 
         return {

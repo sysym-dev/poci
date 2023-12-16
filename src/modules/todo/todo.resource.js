@@ -43,4 +43,8 @@ exports.TodoResource = class {
         : {}),
     };
   }
+
+  sortables() {
+    return ['name'];
+  }
 };
