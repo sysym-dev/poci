@@ -5,6 +5,9 @@ const {
 const {
   createRequestValidation,
 } = require('./request/create-request-validation.js');
+const {
+  createEnsureResourceExists,
+} = require('./request/ensure-resource-exists.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -21,24 +24,16 @@ exports.createResourcesRoute = function (resourceClasses) {
         return next(err);
       }
     });
-    router.get(`${resource.url}/:id`, async (req, res, next) => {
-      try {
-        const data = await resource.model.findByPk(req.params.id);
-
-        if (data === null) {
-          throw new ResourceNotFoundException();
-        }
-
-        return res.json({
-          data,
-        });
-      } catch (err) {
-        return next(err);
-      }
-    });
+    router.get(
+      `${resource.url}/:id`,
+      createEnsureResourceExists(resource),
+      (req, res) => res.json({ data: req.resource }),
+    );
     router.post(
       `${resource.url}`,
-      createRequestValidation(resource.schema, { path: 'body' }),
+      createRequestValidation(resource.schema({ isUpdating: false }), {
+        path: 'body',
+      }),
       async (req, res, next) => {
         try {
           return res.json({ data: await resource.model.create(req.body) });
@@ -47,8 +42,21 @@ exports.createResourcesRoute = function (resourceClasses) {
         }
       },
     );
-    router.patch(`${resource.url}/:id`, (req, res) =>
-      res.json(`Update ${resource.url}`),
+    router.patch(
+      `${resource.url}/:id`,
+      createEnsureResourceExists(resource),
+      createRequestValidation(resource.schema({ isUpdating: true }), {
+        path: 'body',
+      }),
+      async (req, res, next) => {
+        try {
+          await req.resource.update(req.body);
+
+          return res.json({ data: req.resource });
+        } catch (err) {
+          return next(err);
+        }
+      },
     );
     router.delete(`${resource.url}/:id`, (req, res) =>
       res.json(`Delete ${resource.url}`),
