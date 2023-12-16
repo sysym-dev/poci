@@ -23,12 +23,16 @@ exports.createResourcesRoute = function (resourceClasses) {
 
         const { count, rows } = await resource.model.findAndCountAll({
           limit: query.page.size,
+          offset: query.page.offset,
         });
 
         return {
           meta: {
             count,
-            page: query.page,
+            page: {
+              size: query.page.size,
+              number: query.page.number,
+            },
           },
           rows,
         };
