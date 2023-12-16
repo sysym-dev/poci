@@ -58,8 +58,18 @@ exports.createResourcesRoute = function (resourceClasses) {
         }
       },
     );
-    router.delete(`${resource.url}/:id`, (req, res) =>
-      res.json(`Delete ${resource.url}`),
+    router.delete(
+      `${resource.url}/:id`,
+      createEnsureResourceExists(resource),
+      async (req, res, next) => {
+        try {
+          await req.resource.destroy();
+
+          return res.json({ data: req.resource });
+        } catch (err) {
+          return next(err);
+        }
+      },
     );
   });
 
