@@ -1,13 +1,11 @@
 const { Router } = require('express');
 const {
-  ResourceNotFoundException,
-} = require('./exceptions/resource-not-found.exception');
-const {
   createRequestValidation,
-} = require('./request/create-request-validation.js');
+} = require('./handler/create-request-validation.js');
 const {
   createEnsureResourceExists,
-} = require('./request/ensure-resource-exists.js');
+} = require('./handler/ensure-resource-exists.js');
+const { createDataResponse } = require('./handler/create-data-response.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -15,32 +13,23 @@ exports.createResourcesRoute = function (resourceClasses) {
   resourceClasses.forEach((resourceClass) => {
     const resource = new resourceClass();
 
-    router.get(`${resource.url}`, async (req, res, next) => {
-      try {
-        return res.json({
-          data: await resource.model.findAll(),
-        });
-      } catch (err) {
-        return next(err);
-      }
-    });
+    router.get(
+      `${resource.url}`,
+      createDataResponse(async () => await resource.model.findAll()),
+    );
     router.get(
       `${resource.url}/:id`,
       createEnsureResourceExists(resource),
-      (req, res) => res.json({ data: req.resource }),
+      createDataResponse(({ req }) => req.resource),
     );
     router.post(
       `${resource.url}`,
       createRequestValidation(resource.schema({ isUpdating: false }), {
         path: 'body',
       }),
-      async (req, res, next) => {
-        try {
-          return res.json({ data: await resource.model.create(req.body) });
-        } catch (err) {
-          return next(err);
-        }
-      },
+      createDataResponse(
+        async ({ req }) => await resource.model.create(req.body),
+      ),
     );
     router.patch(
       `${resource.url}/:id`,
@@ -48,28 +37,20 @@ exports.createResourcesRoute = function (resourceClasses) {
       createRequestValidation(resource.schema({ isUpdating: true }), {
         path: 'body',
       }),
-      async (req, res, next) => {
-        try {
-          await req.resource.update(req.body);
+      createDataResponse(async ({ req }) => {
+        await req.resource.update(req.body);
 
-          return res.json({ data: req.resource });
-        } catch (err) {
-          return next(err);
-        }
-      },
+        return req.resource;
+      }),
     );
     router.delete(
       `${resource.url}/:id`,
       createEnsureResourceExists(resource),
-      async (req, res, next) => {
-        try {
-          await req.resource.destroy();
+      createDataResponse(async ({ req }) => {
+        await req.resource.destroy();
 
-          return res.json({ data: req.resource });
-        } catch (err) {
-          return next(err);
-        }
-      },
+        return req.resource;
+      }),
     );
   });
 
