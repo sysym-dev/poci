@@ -1,11 +1,11 @@
 const Joi = require('joi');
-const { Todo } = require('./todo.model.js');
+const { Task } = require('./task.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../utils/object.js');
 
-exports.TodoResource = class {
-  url = '/todos';
-  model = Todo;
+exports.TaskResource = class {
+  url = '/tasks';
+  model = Task;
 
   schema(options) {
     return {
@@ -14,7 +14,7 @@ exports.TodoResource = class {
         : Joi.string().required(),
       description: Joi.string().optional(),
       ...optionalProperty(options.isUpdating, {
-        status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
+        status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
     };
   }
@@ -22,7 +22,10 @@ exports.TodoResource = class {
   filterables() {
     return {
       search: Joi.string().optional(),
-      status: Joi.string().valid('todo', 'inprogress', 'done').optional(),
+      status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
+      status_in: Joi.array()
+        .items(Joi.string().valid('todo', 'in-progress', 'done'))
+        .optional(),
     };
   }
 
@@ -39,6 +42,11 @@ exports.TodoResource = class {
       }),
       ...optionalProperty(query.status, {
         status: query.status,
+      }),
+      ...optionalProperty(query.status_in, {
+        status: {
+          [Op.in]: query.status_in,
+        },
       }),
     };
   }

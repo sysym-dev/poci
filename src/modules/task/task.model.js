@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../db/sequelize.js');
 
-exports.Todo = sequelize.define(
-  'Todo',
+exports.Task = sequelize.define(
+  'Task',
   {
     name: {
       type: DataTypes.STRING,
@@ -14,13 +14,13 @@ exports.Todo = sequelize.define(
     },
     status: {
       type: DataTypes.ENUM,
-      values: ['todo', 'inprogress', 'done'],
+      values: ['todo', 'in-progress', 'done'],
       defaultValue: 'todo',
       allowNull: false,
     },
   },
   {
-    tableName: 'todos',
+    tableName: 'tasks',
     underscored: true,
   },
 );
