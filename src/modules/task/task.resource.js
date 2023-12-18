@@ -33,6 +33,7 @@ exports.TaskResource = class {
       status_in: Joi.array()
         .items(Joi.string().valid('todo', 'in-progress', 'done'))
         .optional(),
+      task_category_id: Joi.number().positive(),
     };
   }
 
@@ -54,6 +55,9 @@ exports.TaskResource = class {
         status: {
           [Op.in]: query.status_in,
         },
+      }),
+      ...optionalProperty(query.task_category_id, {
+        task_category_id: query.task_category_id,
       }),
     };
   }
