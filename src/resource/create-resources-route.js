@@ -22,6 +22,7 @@ exports.createResourcesRoute = function (resourceClasses) {
       createGetAllQueryValidation({
         filterables: resource.filterables(),
         sortables: resource.sortables(),
+        relations: resource.relations(),
       }),
       createDataResponse(async ({ req }) => {
         const query = parseGetAllQuery(req.query);
@@ -31,6 +32,7 @@ exports.createResourcesRoute = function (resourceClasses) {
           limit: query.page.size,
           offset: query.page.offset,
           order: [query.sort],
+          include: query.include,
         });
 
         return {
