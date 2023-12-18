@@ -30,6 +30,7 @@ Task.belongsTo(TaskCategory, {
   foreignKey: {
     field: 'task_category_id',
     allowNull: false,
+    name: 'task_category_id',
   },
 });
 

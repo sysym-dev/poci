@@ -2,6 +2,10 @@ const Joi = require('joi');
 const { Task } = require('./task.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../utils/object.js');
+const {
+  createExistsValidation,
+} = require('../../resource/schema/validations/create-exists-validation.js');
+const { TaskCategory } = require('../task-category/task-category.model.js');
 
 exports.TaskResource = class {
   url = '/tasks';
@@ -16,6 +20,9 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
+      task_category_id: Joi.number()
+        .required()
+        .external(createExistsValidation({ model: TaskCategory, field: 'id' })),
     };
   }
 
