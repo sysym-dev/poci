@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../db/sequelize.js');
+const { TaskCategory } = require('../task-category/task-category.model.js');
 
-exports.Task = sequelize.define(
+const Task = sequelize.define(
   'Task',
   {
     name: {
@@ -24,3 +25,12 @@ exports.Task = sequelize.define(
     underscored: true,
   },
 );
+
+Task.belongsTo(TaskCategory, {
+  foreignKey: {
+    field: 'task_category_id',
+    allowNull: false,
+  },
+});
+
+exports.Task = Task;
