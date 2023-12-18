@@ -41,6 +41,10 @@ exports.TaskResource = class {
     return ['name'];
   }
 
+  relations() {
+    return ['task_category'];
+  }
+
   filter(query) {
     return {
       ...optionalProperty(query.search, {

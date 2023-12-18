@@ -26,6 +26,10 @@ exports.TaskCategoryResource = class {
     return ['name'];
   }
 
+  relations() {
+    return [];
+  }
+
   filter(query) {
     return {
       ...optionalProperty(query.search, {

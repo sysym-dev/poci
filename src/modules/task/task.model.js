@@ -32,6 +32,7 @@ Task.belongsTo(TaskCategory, {
     allowNull: false,
     name: 'task_category_id',
   },
+  as: 'task_category',
 });
 
 exports.Task = Task;
