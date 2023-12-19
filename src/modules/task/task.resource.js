@@ -1,11 +1,13 @@
 const Joi = require('joi');
-const { Task } = require('./task.model.js');
+const { Task } = require('./model/task.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../utils/object.js');
 const {
   createExistsValidation,
 } = require('../../resource/schema/validations/create-exists-validation.js');
-const { TaskCategory } = require('../task-category/task-category.model.js');
+const {
+  TaskCategory,
+} = require('../task-category/model/task-category.model.js');
 
 exports.TaskResource = class {
   url = '/tasks';

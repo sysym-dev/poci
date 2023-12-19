@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../db/sequelize.js');
+const { sequelize } = require('../../../db/sequelize.js');
 
-exports.TaskCategory = sequelize.define(
-  'TaskCategory',
+const TaskCategoryDefiniton = sequelize.define(
+  'task_categories',
   {
     name: {
       type: DataTypes.STRING,
@@ -18,3 +18,5 @@ exports.TaskCategory = sequelize.define(
     underscored: true,
   },
 );
+
+exports.TaskCategoryDefiniton = TaskCategoryDefiniton;

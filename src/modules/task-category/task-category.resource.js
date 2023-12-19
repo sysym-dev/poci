@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { TaskCategory } = require('./task-category.model.js');
+const { TaskCategory } = require('./model/task-category.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../utils/object.js');
 
