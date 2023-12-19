@@ -7,6 +7,10 @@ exports.TaskCategoryResource = class {
   url = '/task-categories';
   model = TaskCategory;
 
+  attributes() {
+    return ['id', 'name', 'description', 'createdAt', 'updatedAt'];
+  }
+
   schema(options) {
     return {
       name: options.isUpdating
@@ -24,10 +28,6 @@ exports.TaskCategoryResource = class {
 
   sortables() {
     return ['name'];
-  }
-
-  relations() {
-    return [];
   }
 
   filter(query) {

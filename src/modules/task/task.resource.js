@@ -11,6 +11,10 @@ exports.TaskResource = class {
   url = '/tasks';
   model = Task;
 
+  attributes() {
+    return ['id', 'name', 'description', 'status', 'createdAt', 'updatedAt'];
+  }
+
   schema(options) {
     return {
       name: options.isUpdating

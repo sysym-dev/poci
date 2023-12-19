@@ -22,7 +22,7 @@ exports.createResourcesRoute = function (resourceClasses) {
       createGetAllQueryValidation({
         filterables: resource.filterables(),
         sortables: resource.sortables(),
-        relations: resource.relations(),
+        relations: resource.relations ? resource.relations() : [],
       }),
       createDataResponse(async ({ req }) => {
         const query = parseGetAllQuery(req.query);
@@ -33,6 +33,7 @@ exports.createResourcesRoute = function (resourceClasses) {
           offset: query.page.offset,
           order: [query.sort],
           include: query.include,
+          attributes: resource.attributes(),
         });
 
         return {
