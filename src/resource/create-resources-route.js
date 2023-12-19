@@ -10,6 +10,12 @@ const {
 const {
   createSchemaBodyValidation,
 } = require('./handlers/create-schema-body-validation.js');
+const {
+  createResourceAttributesQuery,
+} = require('./query/create-resource-attributes-query.js');
+const {
+  createResourceIncludeQuery,
+} = require('./query/create-resource-include-query.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -32,8 +38,8 @@ exports.createResourcesRoute = function (resourceClasses) {
           limit: query.page.size,
           offset: query.page.offset,
           order: [query.sort],
-          include: query.include,
-          attributes: resource.attributes(),
+          include: createResourceIncludeQuery(resource, query),
+          attributes: createResourceAttributesQuery(resource, query),
         });
 
         return {
