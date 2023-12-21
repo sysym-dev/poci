@@ -34,12 +34,11 @@ Attributes
 Filters:
 
 - name (like)
-- status (array in)
+- status
+- status_in (array)
 - task_category_id
 - pagination
 
 Sort:
 
 - id
-- status
-
