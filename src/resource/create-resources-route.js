@@ -8,6 +8,9 @@ const {
   createGetAllQueryValidation,
 } = require('./handlers/create-get-all-query-validation.js');
 const {
+  createGetOneQueryValidation,
+} = require('./handlers/create-get-one-query-validation.js');
+const {
   createSchemaBodyValidation,
 } = require('./handlers/create-schema-body-validation.js');
 const {
@@ -56,6 +59,9 @@ exports.createResourcesRoute = function (resourceClasses) {
     );
     router.get(
       `${resource.url}/:id`,
+      createGetOneQueryValidation({
+        relations: resource.relations ? resource.relations() : [],
+      }),
       createEnsureResourceExists(resource),
       createDataResponse(({ req }) => req.resource),
     );
