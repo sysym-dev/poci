@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { createRequestValidation } = require('./create-request-validation');
 
 exports.createGetAllQueryValidation = function (options) {
-  const { filterables = {}, sortables = [] } = options;
+  const { filterables = {}, sortables = [], relations = [] } = options;
 
   const schema = Joi.object({
     page: Joi.object({
@@ -16,6 +16,9 @@ exports.createGetAllQueryValidation = function (options) {
         .optional(),
       direction: Joi.string().valid('asc', 'desc').optional(),
     },
+    include: Joi.array()
+      .items(Joi.string().valid(...relations))
+      .optional(),
   });
 
   return createRequestValidation(schema, {

@@ -8,8 +8,17 @@ const {
   createGetAllQueryValidation,
 } = require('./handlers/create-get-all-query-validation.js');
 const {
+  createGetOneQueryValidation,
+} = require('./handlers/create-get-one-query-validation.js');
+const {
   createSchemaBodyValidation,
 } = require('./handlers/create-schema-body-validation.js');
+const {
+  createResourceAttributesQuery,
+} = require('./query/create-resource-attributes-query.js');
+const {
+  createResourceIncludeQuery,
+} = require('./query/create-resource-include-query.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();
@@ -22,6 +31,7 @@ exports.createResourcesRoute = function (resourceClasses) {
       createGetAllQueryValidation({
         filterables: resource.filterables(),
         sortables: resource.sortables(),
+        relations: resource.relations ? resource.relations() : [],
       }),
       createDataResponse(async ({ req }) => {
         const query = parseGetAllQuery(req.query);
@@ -31,6 +41,8 @@ exports.createResourcesRoute = function (resourceClasses) {
           limit: query.page.size,
           offset: query.page.offset,
           order: [query.sort],
+          include: createResourceIncludeQuery(resource, query),
+          attributes: createResourceAttributesQuery(resource, query),
         });
 
         return {
@@ -47,6 +59,9 @@ exports.createResourcesRoute = function (resourceClasses) {
     );
     router.get(
       `${resource.url}/:id`,
+      createGetOneQueryValidation({
+        relations: resource.relations ? resource.relations() : [],
+      }),
       createEnsureResourceExists(resource),
       createDataResponse(({ req }) => req.resource),
     );

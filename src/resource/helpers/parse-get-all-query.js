@@ -4,6 +4,7 @@ exports.parseGetAllQuery = function (rawQuery) {
   const filter = rawQuery.filter || {};
   const sortColumn = rawQuery.sort?.column || 'id';
   const sortDirection = rawQuery.sort?.direction || 'asc';
+  const include = rawQuery.include ?? [];
 
   const page = {
     size: pageSize,
@@ -16,5 +17,6 @@ exports.parseGetAllQuery = function (rawQuery) {
     page,
     filter,
     sort,
+    include,
   };
 };

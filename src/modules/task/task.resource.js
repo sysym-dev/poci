@@ -1,11 +1,21 @@
 const Joi = require('joi');
-const { Task } = require('./task.model.js');
+const { Task } = require('./model/task.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../utils/object.js');
+const {
+  createExistsValidation,
+} = require('../../resource/schema/validations/create-exists-validation.js');
+const {
+  TaskCategory,
+} = require('../task-category/model/task-category.model.js');
 
 exports.TaskResource = class {
   url = '/tasks';
   model = Task;
+
+  attributes() {
+    return ['id', 'name', 'description', 'status', 'createdAt', 'updatedAt'];
+  }
 
   schema(options) {
     return {
@@ -16,6 +26,9 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
+      task_category_id: Joi.number()
+        .required()
+        .external(createExistsValidation({ model: TaskCategory, field: 'id' })),
     };
   }
 
@@ -26,11 +39,16 @@ exports.TaskResource = class {
       status_in: Joi.array()
         .items(Joi.string().valid('todo', 'in-progress', 'done'))
         .optional(),
+      task_category_id: Joi.number().positive(),
     };
   }
 
   sortables() {
     return ['name'];
+  }
+
+  relations() {
+    return ['task_category'];
   }
 
   filter(query) {
@@ -47,6 +65,9 @@ exports.TaskResource = class {
         status: {
           [Op.in]: query.status_in,
         },
+      }),
+      ...optionalProperty(query.task_category_id, {
+        task_category_id: query.task_category_id,
       }),
     };
   }

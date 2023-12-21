@@ -3,8 +3,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const { createServer } = require('./src/server/create-server.js');
-const { TaskResource } = require('./src/modules/task/task.resource.js');
 const { connect } = require('./src/db/connect.js');
+const { TaskResource } = require('./src/modules/task/task.resource.js');
+const {
+  TaskCategoryResource,
+} = require('./src/modules/task-category/task-category.resource.js');
 
 async function start() {
   try {
@@ -12,7 +15,7 @@ async function start() {
 
     const server = createServer({
       port: 3000,
-      resources: [TaskResource],
+      resources: [TaskResource, TaskCategoryResource],
     });
 
     server.listen();
