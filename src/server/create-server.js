@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const { parseConfig } = require('./helpers/parse-config');
 const { createResourcesRoute } = require('../resource/create-resources-route');
 const { createErrorHandler } = require('./handlers/create-error-handler.js');
@@ -9,6 +10,7 @@ exports.createServer = function (options) {
   const config = parseConfig(options);
   const resources = options.resources;
 
+  server.use(cors());
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
   server.use(morgan(config.logFormat));

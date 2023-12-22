@@ -32,6 +32,7 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "joi": "^17.11.0",
     "morgan": "^1.10.0",
