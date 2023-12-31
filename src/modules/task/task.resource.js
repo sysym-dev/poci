@@ -22,18 +22,18 @@ exports.TaskResource = class {
       name: options.isUpdating
         ? Joi.string().optional()
         : Joi.string().required(),
-      description: Joi.string().optional(),
+      description: Joi.string().optional().allow('', null),
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
       task_category_id: options.isUpdating
         ? Joi.number()
-            .required()
+            .optional()
             .external(
               createExistsValidation({ model: TaskCategory, field: 'id' }),
             )
         : Joi.number()
-            .optional()
+            .required()
             .external(
               createExistsValidation({ model: TaskCategory, field: 'id' }),
             ),
