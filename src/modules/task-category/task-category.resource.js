@@ -46,7 +46,7 @@ exports.TaskCategoryResource = class {
 
   filterables() {
     return {
-      search: Joi.string().optional(),
+      search: Joi.string().optional().allow(null, ''),
     };
   }
 
