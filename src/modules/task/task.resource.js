@@ -26,15 +26,23 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
-      task_category_id: Joi.number()
-        .required()
-        .external(createExistsValidation({ model: TaskCategory, field: 'id' })),
+      task_category_id: options.isUpdating
+        ? Joi.number()
+            .required()
+            .external(
+              createExistsValidation({ model: TaskCategory, field: 'id' }),
+            )
+        : Joi.number()
+            .optional()
+            .external(
+              createExistsValidation({ model: TaskCategory, field: 'id' }),
+            ),
     };
   }
 
   filterables() {
     return {
-      search: Joi.string().optional(),
+      search: Joi.string().optional().allow(null, ''),
       status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       status_in: Joi.array()
         .items(Joi.string().valid('todo', 'in-progress', 'done'))
