@@ -1,6 +1,6 @@
 {
   "name": "todo-node",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Todo API Code",
   "main": "index.js",
   "scripts": {
