@@ -40,7 +40,7 @@ exports.TaskCategoryResource = class {
       name: options.isUpdating
         ? Joi.string().optional()
         : Joi.string().required(),
-      description: Joi.string().optional(),
+      description: Joi.string().optional().allow('', null),
     };
   }
 
