@@ -14,7 +14,15 @@ exports.TaskResource = class {
   model = Task;
 
   attributes() {
-    return ['id', 'name', 'description', 'status', 'createdAt', 'updatedAt'];
+    return [
+      'id',
+      'name',
+      'description',
+      'status',
+      'due_at',
+      'createdAt',
+      'updatedAt',
+    ];
   }
 
   schema(options) {
@@ -26,6 +34,7 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
+      due_at: Joi.date().optional().allow(null),
       task_category_id: options.isUpdating
         ? Joi.number()
             .optional()
@@ -48,6 +57,8 @@ exports.TaskResource = class {
         .items(Joi.string().valid('todo', 'in-progress', 'done'))
         .optional(),
       task_category_id: Joi.number().positive(),
+      due_at_from: Joi.date().optional(),
+      due_at_to: Joi.date().optional(),
     };
   }
 
@@ -76,6 +87,16 @@ exports.TaskResource = class {
       }),
       ...optionalProperty(query.task_category_id, {
         task_category_id: query.task_category_id,
+      }),
+      ...optionalProperty(query.due_at_from || query.due_at_to, {
+        due_at: {
+          ...optionalProperty(query.due_at_from, {
+            [Op.gt]: query.due_at_from,
+          }),
+          ...optionalProperty(query.due_at_to, {
+            [Op.lt]: query.due_at_to,
+          }),
+        },
       }),
     };
   }

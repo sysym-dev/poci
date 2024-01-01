@@ -18,6 +18,10 @@ const TaskDefinition = sequelize.define(
       defaultValue: 'todo',
       allowNull: false,
     },
+    due_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     tableName: 'tasks',
