@@ -57,6 +57,8 @@ exports.TaskResource = class {
         .items(Joi.string().valid('todo', 'in-progress', 'done'))
         .optional(),
       task_category_id: Joi.number().positive(),
+      due_at_from: Joi.date().optional(),
+      due_at_to: Joi.date().optional(),
     };
   }
 
@@ -85,6 +87,16 @@ exports.TaskResource = class {
       }),
       ...optionalProperty(query.task_category_id, {
         task_category_id: query.task_category_id,
+      }),
+      ...optionalProperty(query.due_at_from || query.due_at_to, {
+        due_at: {
+          ...optionalProperty(query.due_at_from, {
+            [Op.gt]: query.due_at_from,
+          }),
+          ...optionalProperty(query.due_at_to, {
+            [Op.lt]: query.due_at_to,
+          }),
+        },
       }),
     };
   }
