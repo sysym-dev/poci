@@ -14,7 +14,15 @@ exports.TaskResource = class {
   model = Task;
 
   attributes() {
-    return ['id', 'name', 'description', 'status', 'createdAt', 'updatedAt'];
+    return [
+      'id',
+      'name',
+      'description',
+      'status',
+      'due_at',
+      'createdAt',
+      'updatedAt',
+    ];
   }
 
   schema(options) {
@@ -26,6 +34,7 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
+      due_at: Joi.date().optional().allow(null),
       task_category_id: options.isUpdating
         ? Joi.number()
             .optional()
