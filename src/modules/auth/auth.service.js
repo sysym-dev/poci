@@ -59,7 +59,7 @@ class AuthService {
         userId: user.id,
       },
       config.secret,
-      { expiresIn: '15m' },
+      { expiresIn: config.expiresIn },
     );
 
     return {
@@ -68,7 +68,7 @@ class AuthService {
     };
   }
 
-  async generateMe(user) {
+  generateMe(user) {
     return {
       id: user.id,
       name: user.name,
