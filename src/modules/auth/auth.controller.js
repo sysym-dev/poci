@@ -4,4 +4,7 @@ exports.AuthController = class {
   async register({ body }) {
     return await AuthService.register(body);
   }
+  async login({ body }) {
+    return await AuthService.login(body);
+  }
 };

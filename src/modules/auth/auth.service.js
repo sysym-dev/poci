@@ -1,6 +1,8 @@
 const { User } = require('../user/model/user.model');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
+const { AuthException } = require('./exceptions/auth.exception');
 
 class AuthService {
   async register(payload) {
@@ -11,6 +13,34 @@ class AuthService {
     });
 
     return await this.generateAuthResult(user);
+  }
+
+  async login(payload) {
+    const user = await this.findUserByEmail(payload.email);
+
+    await this.verifyUserPassword(payload.password, user);
+
+    return await this.generateAuthResult(user);
+  }
+
+  async findUserByEmail(email) {
+    const user = await User.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new AuthException('User with the email is not found');
+    }
+
+    return user;
+  }
+
+  async verifyUserPassword(plain, user) {
+    if (!(await bcrypt.compare(plain, user.password))) {
+      throw new AuthException('Password incorrect');
+    }
   }
 
   async generateAuthResult(user) {
