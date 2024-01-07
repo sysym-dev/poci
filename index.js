@@ -8,6 +8,7 @@ const { TaskResource } = require('./src/modules/task/task.resource.js');
 const {
   TaskCategoryResource,
 } = require('./src/modules/task-category/task-category.resource.js');
+const { routes: authRoutes } = require('./src/modules/auth/auth.routes.js');
 
 async function start() {
   try {
@@ -16,6 +17,7 @@ async function start() {
     const server = createServer({
       port: 3000,
       resources: [TaskResource, TaskCategoryResource],
+      routes: [authRoutes],
     });
 
     server.listen();
