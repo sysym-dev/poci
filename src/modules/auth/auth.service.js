@@ -37,6 +37,16 @@ class AuthService {
     return user;
   }
 
+  async findUserById(id) {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      throw new AuthException('User with the id is not found');
+    }
+
+    return user;
+  }
+
   async verifyUserPassword(plain, user) {
     if (!(await bcrypt.compare(plain, user.password))) {
       throw new AuthException('Password incorrect');
@@ -53,13 +63,28 @@ class AuthService {
     );
 
     return {
-      me: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
+      me: this.generateMe(user),
       accessToken,
     };
+  }
+
+  async generateMe(user) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+  }
+
+  async verifyToken(token) {
+    try {
+      const payload = await jwt.verify(token, config.secret);
+      const user = await this.findUserById(payload.userId);
+
+      return user;
+    } catch (err) {
+      throw new AuthException(err.message);
+    }
   }
 }
 
