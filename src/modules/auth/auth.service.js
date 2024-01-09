@@ -86,6 +86,16 @@ class AuthService {
       throw new AuthException(err.message);
     }
   }
+
+  async updateMe(me, body) {
+    await me.update(body);
+
+    return this.generateMe(me);
+  }
+
+  async updatePassword(me, password) {
+    await me.update({ password });
+  }
 }
 
 exports.AuthService = new AuthService();

@@ -10,4 +10,10 @@ exports.AuthController = class {
   me({ me }) {
     return AuthService.generateMe(me);
   }
+  async updateMe({ body, me }) {
+    return await AuthService.updateMe(me, body);
+  }
+  async updatePassword({ body, me }) {
+    await AuthService.updatePassword(me, body.password);
+  }
 };
