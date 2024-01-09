@@ -10,4 +10,7 @@ exports.AuthController = class {
   me({ me }) {
     return AuthService.generateMe(me);
   }
+  async updateMe({ body, me }) {
+    return await AuthService.updateMe(me, body);
+  }
 };
