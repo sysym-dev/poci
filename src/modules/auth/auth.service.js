@@ -92,6 +92,10 @@ class AuthService {
 
     return this.generateMe(me);
   }
+
+  async updatePassword(me, password) {
+    await me.update({ password });
+  }
 }
 
 exports.AuthService = new AuthService();
