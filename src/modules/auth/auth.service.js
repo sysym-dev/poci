@@ -86,6 +86,12 @@ class AuthService {
       throw new AuthException(err.message);
     }
   }
+
+  async updateMe(me, body) {
+    await me.update(body);
+
+    return this.generateMe(me);
+  }
 }
 
 exports.AuthService = new AuthService();

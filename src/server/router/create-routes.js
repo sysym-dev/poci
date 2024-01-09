@@ -34,6 +34,21 @@ exports.createRoutes = function (controllerClass, handler) {
         }
       });
     },
+    patch(path, options) {
+      router.patch(path, options.middleware, async (req, res, next) => {
+        try {
+          const handler = controller[options.handler];
+          const data = await handler({
+            body: req.body,
+            me: req.me,
+          });
+
+          return res.json({ data });
+        } catch (err) {
+          return next(err);
+        }
+      });
+    },
   });
 
   return router;
