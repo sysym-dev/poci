@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../../db/sequelize');
 const bcrypt = require('bcrypt');
+const { getUploadedFileUrl } = require('../../../core/storage/storage.helper');
 
 const UserDefinition = sequelize.define(
   'users',
@@ -18,6 +19,16 @@ const UserDefinition = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    photo_filename: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    photo_url: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return getUploadedFileUrl('users', 'photo', this.photo_filename);
+      },
+    },
   },
   {
     tableName: 'users',
@@ -26,7 +37,9 @@ const UserDefinition = sequelize.define(
 );
 
 UserDefinition.beforeSave(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
+  if (user.changed('password')) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
 });
 
 exports.UserDefinition = UserDefinition;

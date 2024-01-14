@@ -41,6 +41,7 @@ exports.createRoutes = function (controllerClass, handler) {
           const data = await handler({
             body: req.body,
             me: req.me,
+            file: req.file,
           });
 
           return res.json({ data });
