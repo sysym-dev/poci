@@ -4,6 +4,7 @@ const cors = require('cors');
 const { parseConfig } = require('./helpers/parse-config');
 const { createResourcesRoute } = require('../resource/create-resources-route');
 const { createErrorHandler } = require('./handlers/create-error-handler.js');
+const { config: storageConfig } = require('../core/storage/storage.config.js');
 
 exports.createServer = function (options) {
   const server = express();
@@ -11,6 +12,7 @@ exports.createServer = function (options) {
   const resources = options.resources;
   const routes = options.routes;
 
+  server.use('/public', express.static(storageConfig.publicPath));
   server.use(cors());
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
