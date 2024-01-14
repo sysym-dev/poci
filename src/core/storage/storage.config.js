@@ -1,5 +1,7 @@
 const path = require('path');
 
-exports.storageConfig = {
-  uploadPath: path.join(__dirname, '../../../uploads'),
+exports.config = {
+  publicPath: path.join(__dirname, '../../../storage/public'),
+  uploadPath: path.join(__dirname, '../../../storage/public/uploads'),
+  baseUrl: `${process.env.APP_URL}/public`,
 };

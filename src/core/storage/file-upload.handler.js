@@ -1,14 +1,10 @@
 const multer = require('multer');
 const path = require('path');
-const { storageConfig } = require('./storage.config');
+const { config } = require('./storage.config');
 const { FileUploadException } = require('./file-upload.exception');
 
 exports.createFileUploadHanlder = function (field, options) {
-  const destination = path.join(
-    storageConfig.uploadPath,
-    options.directory,
-    field,
-  );
+  const destination = path.join(config.uploadPath, options.directory, field);
   const storage = multer.diskStorage({
     destination,
     filename: (req, file, cb) => {

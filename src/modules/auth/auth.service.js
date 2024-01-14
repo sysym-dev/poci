@@ -73,7 +73,7 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      photo_filename: user.photo_filename,
+      photo_url: user.photo_url,
     };
   }
 
