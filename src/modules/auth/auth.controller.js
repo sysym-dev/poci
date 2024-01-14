@@ -16,14 +16,9 @@ exports.AuthController = class {
   async updatePassword({ body, me }) {
     await AuthService.updatePassword(me, body.password);
   }
-  async updatePhoto({ file }) {
-    return {
-      fieldname: file.fieldname,
-      mimetype: file.mimetype,
-      originalname: file.originalname,
-      size: file.size,
-      uploadedName: file.uploadedName,
-      uploadedPath: file.uploadedPath,
-    };
+  async updatePhoto({ file, me }) {
+    return await AuthService.updateMe(me, {
+      photo_filename: file.uploadedName,
+    });
   }
 };

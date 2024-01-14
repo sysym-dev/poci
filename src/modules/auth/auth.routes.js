@@ -39,6 +39,7 @@ exports.routes = createRoutes(AuthController, (router) => {
   router.patch('/me/photo', {
     handler: 'updatePhoto',
     middleware: [
+      createAuthMiddleware(),
       createFileUploadHanlder('photo', {
         mimetypes: ['image/jpg', 'image/png', 'image/jpeg', 'image/svg'],
         directory: 'users',
