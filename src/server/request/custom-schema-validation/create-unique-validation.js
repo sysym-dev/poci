@@ -15,8 +15,7 @@ exports.createUniqueValidation = function (options) {
 
     if (exists) {
       throw new UnprocessableEntityException(null, {
-        [helpers.state.path]:
-          `${helpers.state.path} with value ${value} already exists`,
+        [helpers.state.path]: `${helpers.state.path} already exists`,
       });
     }
   };

@@ -18,6 +18,10 @@ const UserDefinition = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    photo_filename: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: 'users',
@@ -26,7 +30,9 @@ const UserDefinition = sequelize.define(
 );
 
 UserDefinition.beforeSave(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
+  if (user.changed('password')) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
 });
 
 exports.UserDefinition = UserDefinition;
