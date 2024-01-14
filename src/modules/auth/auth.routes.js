@@ -8,6 +8,9 @@ const { RegisterSchema } = require('./schemas/register.schema');
 const { LoginSchema } = require('./schemas/login.schema');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
 const { UpdatePasswordSchema } = require('./schemas/update-password.schema');
+const {
+  createFileUploadHanlder,
+} = require('../../core/storage/file-upload.handler');
 
 exports.routes = createRoutes(AuthController, (router) => {
   router.post('/register', {
@@ -31,6 +34,16 @@ exports.routes = createRoutes(AuthController, (router) => {
     middleware: [
       createAuthMiddleware(),
       createBodyValidation(UpdatePasswordSchema),
+    ],
+  });
+  router.patch('/me/photo', {
+    handler: 'updatePhoto',
+    middleware: [
+      createFileUploadHanlder('photo', {
+        mimetypes: ['image/jpg', 'image/png', 'image/jpeg', 'image/svg'],
+        directory: 'users',
+        limit: 1048600,
+      }),
     ],
   });
 });
