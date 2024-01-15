@@ -26,6 +26,10 @@ const UserDefinition = sequelize.define(
     photo_url: {
       type: DataTypes.VIRTUAL,
       get() {
+        if (!this.photo_filename) {
+          return this.photo_filename;
+        }
+
         return getUploadedFileUrl('users', 'photo', this.photo_filename);
       },
     },
