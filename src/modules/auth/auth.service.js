@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
 const { AuthException } = require('./exceptions/auth.exception');
+const {
+  RefreshTokenService,
+} = require('../../features/refresh-token/refresh-token.service');
 
 class AuthService {
   async register(payload) {
@@ -61,10 +64,14 @@ class AuthService {
       config.secret,
       { expiresIn: config.expiresIn },
     );
+    const refreshToken = await RefreshTokenService.generateRefreshToken(user);
 
     return {
       me: this.generateMe(user),
-      accessToken,
+      token: {
+        accessToken,
+        refreshToken: refreshToken.token,
+      },
     };
   }
 
