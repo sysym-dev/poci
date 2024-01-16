@@ -8,7 +8,7 @@ exports.RefreshTokenDefinition = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    expires_in: {
+    expiresIn: {
       type: DataTypes.DATE,
       allowNull: false,
     },

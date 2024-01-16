@@ -1,5 +1,8 @@
 const crypto = require('crypto');
 const dayjs = require('dayjs');
+const { RefreshToken } = require('./model/refresh-token.model');
+const { Op } = require('sequelize');
+const { RefreshTokenException } = require('./refresh-token.exception');
 
 exports.RefreshTokenService = new (class {
   async generateRefreshToken(user) {
@@ -11,7 +14,23 @@ exports.RefreshTokenService = new (class {
 
     return await user.createRefreshToken({
       token: crypto.randomBytes(20).toString('hex'),
-      expires_in: dayjs().add(1, 'month'),
+      expiresIn: dayjs().add(1, 'month'),
     });
+  }
+  async findByToken(token) {
+    const refreshToken = await RefreshToken.findOne({
+      where: {
+        token,
+        expiresIn: {
+          [Op.gt]: new Date(),
+        },
+      },
+    });
+
+    if (!refreshToken) {
+      throw new RefreshTokenException();
+    }
+
+    return refreshToken;
   }
 })();

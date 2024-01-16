@@ -21,4 +21,7 @@ exports.AuthController = class {
       photo_filename: file.uploadedName,
     });
   }
+  async refreshToken({ body }) {
+    return await AuthService.refreshToken(body.token);
+  }
 };

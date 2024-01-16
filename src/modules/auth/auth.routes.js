@@ -8,6 +8,7 @@ const { RegisterSchema } = require('./schemas/register.schema');
 const { LoginSchema } = require('./schemas/login.schema');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
 const { UpdatePasswordSchema } = require('./schemas/update-password.schema');
+const { RefreshTokenSchema } = require('./schemas/refresh-token.schema');
 const {
   createFileUploadHanlder,
 } = require('../../core/storage/file-upload.handler');
@@ -46,5 +47,9 @@ exports.routes = createRoutes(AuthController, (router) => {
         limit: 1048600,
       }),
     ],
+  });
+  router.post('/refresh-token', {
+    handler: 'refreshToken',
+    middleware: [createBodyValidation(RefreshTokenSchema)],
   });
 });
