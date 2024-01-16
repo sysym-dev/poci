@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { getUploadedFileUrl } = require('../../../core/storage/storage.helper');
 
 const UserDefinition = sequelize.define(
-  'users',
+  'User',
   {
     name: {
       type: DataTypes.STRING,
