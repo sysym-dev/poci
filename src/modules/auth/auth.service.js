@@ -34,7 +34,9 @@ class AuthService {
       const refreshTokenRow = await RefreshTokenService.findByToken(token);
       const user = await this.findUserById(refreshTokenRow.UserId);
 
-      return await this.generateAccessToken(user);
+      return {
+        accessToken: await this.generateAccessToken(user),
+      };
     } catch (err) {
       if (err instanceof NotFoundException) {
         throw new AuthException('Refresh token invalid');
@@ -108,7 +110,7 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      photo_url: user.photo_url,
+      photoUrl: user.photoUrl,
     };
   }
 

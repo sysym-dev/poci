@@ -19,18 +19,18 @@ const UserDefinition = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    photo_filename: {
+    photoFilename: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    photo_url: {
+    photoUrl: {
       type: DataTypes.VIRTUAL,
       get() {
-        if (!this.photo_filename) {
-          return this.photo_filename;
+        if (!this.photoFilename) {
+          return null;
         }
 
-        return getUploadedFileUrl('users', 'photo', this.photo_filename);
+        return getUploadedFileUrl('users', 'photo', this.photoFilename);
       },
     },
   },
