@@ -7,6 +7,9 @@ const {
   RefreshTokenService,
 } = require('../../features/refresh-token/refresh-token.service');
 const {
+  EmailVerificationService,
+} = require('../../features/email-verification/email-verification.service');
+const {
   NotFoundException,
 } = require('../../server/exceptions/not-found.exception');
 
@@ -126,9 +129,7 @@ class AuthService {
   }
 
   async updateMe(me, body) {
-    await me.update(body);
-
-    return this.generateMe(me);
+    await EmailVerificationService.createForUser(me, body.email);
   }
 
   async updatePassword(me, password) {

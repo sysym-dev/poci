@@ -22,7 +22,7 @@ exports.AuthController = class {
     });
   }
   async updateEmail({ body, me }) {
-    return await AuthService.updateMe(me, body);
+    await AuthService.updateMe(me, body);
   }
   async refreshToken({ body }) {
     return await AuthService.refreshToken(body.token);
