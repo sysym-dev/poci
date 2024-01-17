@@ -20,8 +20,8 @@ exports.TaskResource = class {
       'description',
       'status',
       'due_at',
-      'createdAt',
-      'updatedAt',
+      'created_at',
+      'updated_at',
     ];
   }
 
@@ -34,18 +34,21 @@ exports.TaskResource = class {
       ...optionalProperty(options.isUpdating, {
         status: Joi.string().valid('todo', 'in-progress', 'done').optional(),
       }),
-      due_at: Joi.date().optional().allow(null),
-      task_category_id: options.isUpdating
-        ? Joi.number()
-            .optional()
-            .external(
-              createExistsValidation({ model: TaskCategory, field: 'id' }),
-            )
-        : Joi.number()
-            .required()
-            .external(
-              createExistsValidation({ model: TaskCategory, field: 'id' }),
-            ),
+      due_at: [Joi.date().optional().allow(null), 'dueAt'],
+      task_category_id: [
+        options.isUpdating
+          ? Joi.number()
+              .optional()
+              .external(
+                createExistsValidation({ model: TaskCategory, field: 'id' }),
+              )
+          : Joi.number()
+              .required()
+              .external(
+                createExistsValidation({ model: TaskCategory, field: 'id' }),
+              ),
+        'taskCategoryId',
+      ],
     };
   }
 
@@ -67,7 +70,7 @@ exports.TaskResource = class {
   }
 
   relations() {
-    return ['task_category'];
+    return ['TaskCategory'];
   }
 
   filter(query) {
@@ -89,7 +92,7 @@ exports.TaskResource = class {
         task_category_id: query.task_category_id,
       }),
       ...optionalProperty(query.due_at_from || query.due_at_to, {
-        due_at: {
+        dueAt: {
           ...optionalProperty(query.due_at_from, {
             [Op.gt]: query.due_at_from,
           }),

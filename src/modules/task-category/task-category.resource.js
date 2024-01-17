@@ -15,16 +15,16 @@ exports.TaskCategoryResource = class {
       'id',
       'name',
       'description',
-      'createdAt',
-      'updatedAt',
+      'created_at',
+      'updated_at',
       createCountRelationAttribute({
-        table: 'task_categories',
+        model: this.model,
         relation: 'tasks',
         foreignKey: 'task_category_id',
         as: 'tasks_count',
       }),
       createCountRelationAttribute({
-        table: 'task_categories',
+        model: this.model,
         relation: 'tasks',
         foreignKey: 'task_category_id',
         where: {

@@ -3,6 +3,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
 const { AuthException } = require('./exceptions/auth.exception');
+const {
+  RefreshTokenService,
+} = require('../../features/refresh-token/refresh-token.service');
+const {
+  NotFoundException,
+} = require('../../server/exceptions/not-found.exception');
 
 class AuthService {
   async register(payload) {
@@ -21,6 +27,23 @@ class AuthService {
     await this.verifyUserPassword(payload.password, user);
 
     return await this.generateAuthResult(user);
+  }
+
+  async refreshToken(token) {
+    try {
+      const refreshTokenRow = await RefreshTokenService.findByToken(token);
+      const user = await this.findUserById(refreshTokenRow.UserId);
+
+      return {
+        accessToken: await this.generateAccessToken(user),
+      };
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        throw new AuthException('Refresh token invalid');
+      }
+
+      throw err;
+    }
   }
 
   async findUserByEmail(email) {
@@ -54,18 +77,32 @@ class AuthService {
   }
 
   async generateAuthResult(user) {
-    const accessToken = await jwt.sign(
-      {
-        userId: user.id,
-      },
-      config.secret,
-      { expiresIn: config.expiresIn },
-    );
-
     return {
       me: this.generateMe(user),
-      accessToken,
+      token: await this.generateToken(user),
     };
+  }
+
+  async generateToken(user) {
+    const accessToken = await this.generateAccessToken(user);
+    const refreshToken = await RefreshTokenService.generateRefreshToken(user);
+
+    return {
+      accessToken,
+      refreshToken: refreshToken.token,
+    };
+  }
+
+  async generateAccessToken(user) {
+    {
+      return await jwt.sign(
+        {
+          userId: user.id,
+        },
+        config.secret,
+        { expiresIn: config.expiresIn },
+      );
+    }
   }
 
   generateMe(user) {
@@ -73,7 +110,7 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      photo_url: user.photo_url,
+      photo_url: user.photoUrl,
     };
   }
 
