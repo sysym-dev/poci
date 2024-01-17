@@ -110,7 +110,7 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      photoUrl: user.photoUrl,
+      photo_url: user.photoUrl,
     };
   }
 
