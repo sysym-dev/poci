@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const { randomToken } = require('../../utils/string');
 const dayjs = require('dayjs');
 const { RefreshToken } = require('./model/refresh-token.model');
 const { Op } = require('sequelize');
@@ -13,7 +13,7 @@ exports.RefreshTokenService = new (class {
     }
 
     return await user.createRefreshToken({
-      token: crypto.randomBytes(20).toString('hex'),
+      token: randomToken(),
       expiresIn: dayjs().add(1, 'month'),
     });
   }
