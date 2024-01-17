@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../../db/sequelize');
 
 const TaskDefinition = sequelize.define(
-  'tasks',
+  'Task',
   {
     name: {
       type: DataTypes.STRING,
@@ -18,8 +18,12 @@ const TaskDefinition = sequelize.define(
       defaultValue: 'todo',
       allowNull: false,
     },
-    due_at: {
+    dueAt: {
       type: DataTypes.DATE,
+      allowNull: true,
+    },
+    taskCategoryId: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
   },

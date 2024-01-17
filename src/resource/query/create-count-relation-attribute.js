@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 
 exports.createCountRelationAttribute = function (config) {
   const where = [
-    `${config.table}.id = ${config.relation}.${config.foreignKey}`,
+    `${config.model.name}.id = ${config.relation}.${config.foreignKey}`,
   ];
 
   if (config.where) {

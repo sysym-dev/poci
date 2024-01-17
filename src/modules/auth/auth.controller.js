@@ -18,7 +18,10 @@ exports.AuthController = class {
   }
   async updatePhoto({ file, me }) {
     return await AuthService.updateMe(me, {
-      photo_filename: file.uploadedName,
+      photoFilename: file.uploadedName,
     });
+  }
+  async refreshToken({ body }) {
+    return await AuthService.refreshToken(body.token);
   }
 };
