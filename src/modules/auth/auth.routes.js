@@ -9,6 +9,7 @@ const { LoginSchema } = require('./schemas/login.schema');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
 const { UpdatePasswordSchema } = require('./schemas/update-password.schema');
 const { RefreshTokenSchema } = require('./schemas/refresh-token.schema');
+const { UpdateEmailSchema } = require('./schemas/update-email.schema');
 const {
   createFileUploadHanlder,
 } = require('../../core/storage/file-upload.handler');
@@ -46,6 +47,13 @@ exports.routes = createRoutes(AuthController, (router) => {
         directory: 'users',
         limit: 1048600,
       }),
+    ],
+  });
+  router.patch('/me/email', {
+    handler: 'updateEmail',
+    middleware: [
+      createAuthMiddleware(),
+      createBodyValidation(UpdateEmailSchema),
     ],
   });
   router.post('/refresh-token', {
