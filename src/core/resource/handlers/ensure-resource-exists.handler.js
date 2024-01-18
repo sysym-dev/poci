@@ -4,10 +4,10 @@ const {
 const { parseGetOneQuery } = require('../helpers/parse-get-one-query');
 const {
   createResourceAttributesQuery,
-} = require('../query/create-resource-attributes-query');
+} = require('../queries/resource-attributes.query');
 const {
   createResourceIncludeQuery,
-} = require('../query/create-resource-include-query');
+} = require('../queries/resource-include.query');
 
 exports.createEnsureResourceExists = function (resource) {
   return async (req, res, next) => {

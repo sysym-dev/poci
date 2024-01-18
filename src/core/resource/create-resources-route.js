@@ -1,24 +1,26 @@
 const { Router } = require('express');
 const {
   createEnsureResourceExists,
-} = require('./handlers/create-ensure-resource-exists.js');
-const { createDataResponse } = require('./handlers/create-data-response.js');
+} = require('./handlers/ensure-resource-exists.handler.js');
+const {
+  createDataResponse,
+} = require('../server/handlers/data-response.handler.js');
 const { parseGetAllQuery } = require('./helpers/parse-get-all-query.js');
 const {
   createGetAllQueryValidation,
-} = require('./handlers/create-get-all-query-validation.js');
+} = require('./handlers/get-all-query-validation.handler.js');
 const {
   createGetOneQueryValidation,
-} = require('./handlers/create-get-one-query-validation.js');
+} = require('./handlers/get-one-query-validation.handler.js');
 const {
   createSchemaBodyValidation,
-} = require('./handlers/create-schema-body-validation.js');
+} = require('./handlers/schema-body-validation.handler.js');
 const {
   createResourceAttributesQuery,
-} = require('./query/create-resource-attributes-query.js');
+} = require('./queries/resource-attributes.query.js');
 const {
   createResourceIncludeQuery,
-} = require('./query/create-resource-include-query.js');
+} = require('./queries/resource-include.query.js');
 
 exports.createResourcesRoute = function (resourceClasses) {
   const router = Router();

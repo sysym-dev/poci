@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 const { optionalProperty } = require('../../core/utils/object.js');
 const {
   createCountRelationAttribute,
-} = require('../../core/resource/query/create-count-relation-attribute.js');
+} = require('../../core/resource/queries/count-relation-attribute.query.js');
 
 exports.TaskCategoryResource = class {
   url = '/task-categories';
