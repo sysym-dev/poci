@@ -8,7 +8,7 @@ const { TaskResource } = require('./src/modules/task/task.resource.js');
 const {
   TaskCategoryResource,
 } = require('./src/modules/task-category/task-category.resource.js');
-const { routes: authRoutes } = require('./src/modules/auth/auth.routes.js');
+const { routes: authRoutes } = require('./src/features/auth/auth.routes.js');
 const {
   routes: emailVerificationRoutes,
 } = require('./src/features/email-verification/email-verification.routes.js');
