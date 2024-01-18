@@ -4,7 +4,7 @@ const cors = require('cors');
 const { parseConfig } = require('./helpers/parse-config');
 const {
   createResourcesRoute,
-} = require('../../resource/create-resources-route.js');
+} = require('../resource/create-resources-route.js');
 const { createErrorHandler } = require('./handlers/error.handler.js');
 const { config: storageConfig } = require('../storage/storage.config.js');
 

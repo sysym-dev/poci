@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 const { optionalProperty } = require('../../core/utils/object.js');
 const {
   createExistsValidation,
-} = require('../../resource/schema/validations/create-exists-validation.js');
+} = require('../../core/resource/schema/validations/create-exists-validation.js');
 const {
   TaskCategory,
 } = require('../task-category/model/task-category.model.js');
