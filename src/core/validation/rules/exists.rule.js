@@ -1,8 +1,8 @@
 const {
-  ResourceUnprocessableEntityException,
-} = require('../../exceptions/resource-unprocessable-entity.exception');
+  UnprocessableEntityException,
+} = require('../../server/exceptions/unprocessable-entity.exception');
 
-exports.createExistsValidation = function (options) {
+exports.createExistsRule = function (options) {
   const model = options.model;
   const field = options.field;
 
@@ -12,7 +12,7 @@ exports.createExistsValidation = function (options) {
     });
 
     if (!exists) {
-      throw new ResourceUnprocessableEntityException(null, {
+      throw new UnprocessableEntityException(null, {
         [helpers.state.path]:
           `${helpers.state.path} with value ${value} doesn't exists`,
       });

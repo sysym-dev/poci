@@ -3,8 +3,8 @@ const { Task } = require('./model/task.model.js');
 const { Op } = require('sequelize');
 const { optionalProperty } = require('../../core/utils/object.js');
 const {
-  createExistsValidation,
-} = require('../../core/resource/schema/validations/create-exists-validation.js');
+  createExistsRule,
+} = require('../../core/validation/rules/exists.rule.js');
 const {
   TaskCategory,
 } = require('../task-category/model/task-category.model.js');
@@ -39,14 +39,10 @@ exports.TaskResource = class {
         options.isUpdating
           ? Joi.number()
               .optional()
-              .external(
-                createExistsValidation({ model: TaskCategory, field: 'id' }),
-              )
+              .external(createExistsRule({ model: TaskCategory, field: 'id' }))
           : Joi.number()
               .required()
-              .external(
-                createExistsValidation({ model: TaskCategory, field: 'id' }),
-              ),
+              .external(createExistsRule({ model: TaskCategory, field: 'id' })),
         'taskCategoryId',
       ],
     };
