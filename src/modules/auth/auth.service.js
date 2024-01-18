@@ -114,6 +114,7 @@ class AuthService {
       name: user.name,
       email: user.email,
       photo_url: user.photoUrl,
+      is_email_verified: user.isEmailVerified,
     };
   }
 

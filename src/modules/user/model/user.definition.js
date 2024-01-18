@@ -37,6 +37,12 @@ const UserDefinition = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    isEmailVerified: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return !!this.emailVerifiedAt;
+      },
+    },
   },
   {
     tableName: 'users',
