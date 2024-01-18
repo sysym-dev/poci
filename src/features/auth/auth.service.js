@@ -1,4 +1,4 @@
-const { User } = require('../../modules/user/model/user.model');
+const { User } = require('../user/model/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
@@ -74,6 +74,17 @@ class AuthService {
     }
 
     return user;
+  }
+
+  async verifyToken(token) {
+    try {
+      const payload = await jwt.verify(token, config.secret);
+      const user = await this.findUserById(payload.userId);
+
+      return user;
+    } catch (err) {
+      throw new AuthException(err.message);
+    }
   }
 
   async verifyUserPassword(plain, user) {
