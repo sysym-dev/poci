@@ -1,4 +1,4 @@
-const { randomToken } = require('../../utils/string');
+const { randomToken } = require('../../core/utils/string');
 const dayjs = require('dayjs');
 const { RefreshToken } = require('./model/refresh-token.model');
 const { Op } = require('sequelize');

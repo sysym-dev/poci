@@ -1,5 +1,5 @@
 const dayjs = require('dayjs');
-const { randomToken } = require('../../utils/string');
+const { randomToken } = require('../../core/utils/string');
 const { EmailVerification } = require('./model/email-verification.model');
 const { Op } = require('sequelize');
 const {

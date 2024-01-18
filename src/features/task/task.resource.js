@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { Task } = require('./model/task.model.js');
 const { Op } = require('sequelize');
-const { optionalProperty } = require('../../utils/object.js');
+const { optionalProperty } = require('../../core/utils/object.js');
 const {
   createExistsValidation,
 } = require('../../resource/schema/validations/create-exists-validation.js');
