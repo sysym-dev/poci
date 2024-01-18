@@ -12,6 +12,7 @@ const {
 const {
   NotFoundException,
 } = require('../../server/exceptions/not-found.exception');
+const { MeService } = require('../../features/me/me.service');
 
 class AuthService {
   async register(payload) {
@@ -83,7 +84,7 @@ class AuthService {
 
   async generateAuthResult(user) {
     return {
-      me: this.generateMe(user),
+      me: MeService.generateMe(user),
       token: await this.generateToken(user),
     };
   }
@@ -108,41 +109,6 @@ class AuthService {
         { expiresIn: config.expiresIn },
       );
     }
-  }
-
-  generateMe(user) {
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      photo_url: user.photoUrl,
-      is_email_verified: user.isEmailVerified,
-    };
-  }
-
-  async verifyToken(token) {
-    try {
-      const payload = await jwt.verify(token, config.secret);
-      const user = await this.findUserById(payload.userId);
-
-      return user;
-    } catch (err) {
-      throw new AuthException(err.message);
-    }
-  }
-
-  async updateMe(me, body) {
-    await me.update(body);
-
-    return this.generateMe(me);
-  }
-
-  async updateEmail(me, email) {
-    await EmailVerificationService.createForUser(me, email);
-  }
-
-  async updatePassword(me, password) {
-    await me.update({ password });
   }
 }
 

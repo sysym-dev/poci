@@ -12,6 +12,7 @@ const { routes: authRoutes } = require('./src/modules/auth/auth.routes.js');
 const {
   routes: emailVerificationRoutes,
 } = require('./src/features/email-verification/email-verification.routes.js');
+const { routes: meRoutes } = require('./src/features/me/me.routes.js');
 
 async function start() {
   try {
@@ -20,7 +21,7 @@ async function start() {
     const server = createServer({
       port: 3000,
       resources: [TaskResource, TaskCategoryResource],
-      routes: [authRoutes, emailVerificationRoutes],
+      routes: [authRoutes, meRoutes, emailVerificationRoutes],
     });
 
     server.listen();

@@ -2,7 +2,7 @@ const Joi = require('joi');
 const {
   createUniqueRole,
 } = require('../../../core/validation/rules/unique.rule');
-const { User } = require('../../user/model/user.model');
+const { User } = require('../../../modules/user/model/user.model');
 
 exports.UpdateEmailSchema = {
   email: Joi.string()
