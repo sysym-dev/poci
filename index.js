@@ -4,10 +4,10 @@ if (process.env.NODE_ENV === 'development') {
 
 const { createServer } = require('./src/server/create-server.js');
 const { connect } = require('./src/db/connect.js');
-const { TaskResource } = require('./src/modules/task/task.resource.js');
+const { TaskResource } = require('./src/features/task/task.resource.js');
 const {
   TaskCategoryResource,
-} = require('./src/modules/task-category/task-category.resource.js');
+} = require('./src/features/task-category/task-category.resource.js');
 const { routes: authRoutes } = require('./src/features/auth/auth.routes.js');
 const {
   routes: emailVerificationRoutes,
