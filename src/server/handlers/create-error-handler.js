@@ -1,7 +1,9 @@
 const {
   ResourceException,
 } = require('../../resource/exceptions/resource.exception');
-const { HttpException } = require('../exceptions/http.exception');
+const {
+  HttpException,
+} = require('../../core/server/exceptions/http.exception');
 
 exports.createErrorHandler = function () {
   return (err, req, res, next) => {

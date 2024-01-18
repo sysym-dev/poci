@@ -1,13 +1,5 @@
-exports.HttpException = class extends Error {
-  status;
-  name;
-  details;
+const {
+  HttpException: CoreHttpException,
+} = require('../../core/server/exceptions/http.exception');
 
-  constructor(status, name, message, details) {
-    super(message);
-
-    this.name = name;
-    this.status = status;
-    this.details = details;
-  }
-};
+exports.HttpException = class extends CoreHttpException {};

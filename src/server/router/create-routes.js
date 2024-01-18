@@ -26,6 +26,7 @@ exports.createRoutes = function (controllerClass, handler) {
           const data = await handler({
             body: req.body,
             me: req.me,
+            query: req.query,
           });
 
           return res.json({ data });
