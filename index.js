@@ -2,7 +2,7 @@ if (process.env.NODE_ENV === 'development') {
   require('dotenv/config');
 }
 
-const { createServer } = require('./src/server/create-server.js');
+const { createServer } = require('./src/core/server/create-server.js');
 const { connect } = require('./src/core/db/connect.js');
 const { TaskResource } = require('./src/features/task/task.resource.js');
 const {

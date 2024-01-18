@@ -1,8 +1,8 @@
 const {
   createBodyValidation,
-} = require('../../server/request/create-body-validation');
+} = require('../../core/server/handlers/body-validation.handler');
 const { createAuthMiddleware } = require('../auth/middlewares/auth.middleware');
-const { createRoutes } = require('../../server/router/create-routes');
+const { createRoutes } = require('../../core/server/create-routes');
 const { MeController } = require('./me.controller');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
 const { UpdatePasswordSchema } = require('./schemas/update-password.schema');

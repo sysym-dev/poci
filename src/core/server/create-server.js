@@ -2,11 +2,11 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const { parseConfig } = require('./helpers/parse-config');
-const { createResourcesRoute } = require('../resource/create-resources-route');
 const {
-  createErrorHandler,
-} = require('../core/server/handlers/error.handler.js');
-const { config: storageConfig } = require('../core/storage/storage.config.js');
+  createResourcesRoute,
+} = require('../../resource/create-resources-route.js');
+const { createErrorHandler } = require('./handlers/error.handler.js');
+const { config: storageConfig } = require('../storage/storage.config.js');
 
 exports.createServer = function (options) {
   const server = express();

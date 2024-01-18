@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const {
-  createUniqueValidation,
-} = require('../../../server/request/custom-schema-validation/create-unique-validation');
+  createUniqueRule,
+} = require('../../../core/validation/rules/unique.rule');
 const { User } = require('../..//user/model/user.model');
 
 exports.RegisterSchema = {
@@ -10,7 +10,7 @@ exports.RegisterSchema = {
     .email()
     .required()
     .external(
-      createUniqueValidation({
+      createUniqueRule({
         model: User,
         field: 'email',
       }),

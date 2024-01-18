@@ -2,7 +2,7 @@ const {
   UnprocessableEntityException,
 } = require('../../server/exceptions/unprocessable-entity.exception');
 
-exports.createUniqueRole = function (options) {
+exports.createUniqueRule = function (options) {
   const model = options.model;
   const field = options.field;
 

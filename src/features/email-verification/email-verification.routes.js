@@ -1,7 +1,7 @@
 const {
   createRequestValidation,
 } = require('../../core/server/handlers/request-validation.handler');
-const { createRoutes } = require('../../server/router/create-routes');
+const { createRoutes } = require('../../core/server/create-routes');
 const {
   EmailVerificationController,
 } = require('./email-verification.controller');

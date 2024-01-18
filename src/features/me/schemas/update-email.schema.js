@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const {
-  createUniqueRole,
+  createUniqueRule,
 } = require('../../../core/validation/rules/unique.rule');
 const { User } = require('../../user/model/user.model');
 
@@ -9,7 +9,7 @@ exports.UpdateEmailSchema = {
     .email()
     .required()
     .external(
-      createUniqueRole({
+      createUniqueRule({
         model: User,
         field: 'email',
       }),
