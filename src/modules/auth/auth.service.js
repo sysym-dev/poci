@@ -129,7 +129,13 @@ class AuthService {
   }
 
   async updateMe(me, body) {
-    await EmailVerificationService.createForUser(me, body.email);
+    await me.update(body);
+
+    return this.generateMe(me);
+  }
+
+  async updateEmail(me, email) {
+    await EmailVerificationService.createForUser(me, email);
   }
 
   async updatePassword(me, password) {

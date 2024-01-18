@@ -9,6 +9,9 @@ const {
   TaskCategoryResource,
 } = require('./src/modules/task-category/task-category.resource.js');
 const { routes: authRoutes } = require('./src/modules/auth/auth.routes.js');
+const {
+  routes: emailVerificationRoutes,
+} = require('./src/features/email-verification/email-verification.routes.js');
 
 async function start() {
   try {
@@ -17,7 +20,7 @@ async function start() {
     const server = createServer({
       port: 3000,
       resources: [TaskResource, TaskCategoryResource],
-      routes: [authRoutes],
+      routes: [authRoutes, emailVerificationRoutes],
     });
 
     server.listen();
