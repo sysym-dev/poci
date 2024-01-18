@@ -1,5 +1,7 @@
 const Joi = require('joi');
-const { createRequestValidation } = require('./create-request-validation');
+const {
+  createRequestValidation,
+} = require('../../server/handlers/request-validation.handler');
 
 exports.createGetAllQueryValidation = function (options) {
   const { filterables = {}, sortables = [], relations = [] } = options;

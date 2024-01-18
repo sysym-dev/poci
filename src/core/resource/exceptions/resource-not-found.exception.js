@@ -1,7 +1,9 @@
-const { ResourceException } = require('./resource.exception');
+const {
+  NotFoundException,
+} = require('../../server/exceptions/not-found.exception');
 
-exports.ResourceNotFoundException = class extends ResourceException {
+exports.ResourceNotFoundException = class extends NotFoundException {
   constructor(message = 'Resource not found') {
-    super(404, 'Not Found', message ?? 'Resource not found');
+    super(message ?? 'Resource not found');
   }
 };
