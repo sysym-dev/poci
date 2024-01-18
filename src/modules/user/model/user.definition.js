@@ -33,6 +33,10 @@ const UserDefinition = sequelize.define(
         return getUploadedFileUrl('users', 'photo', this.photoFilename);
       },
     },
+    emailVerifiedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     tableName: 'users',
@@ -43,6 +47,12 @@ const UserDefinition = sequelize.define(
 UserDefinition.beforeSave(async (user) => {
   if (user.changed('password')) {
     user.password = await bcrypt.hash(user.password, 10);
+  }
+});
+
+UserDefinition.beforeUpdate((user) => {
+  if (user.changed('email')) {
+    user.emailVerifiedAt = new Date();
   }
 });
 
