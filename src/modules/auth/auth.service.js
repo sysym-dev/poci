@@ -21,6 +21,8 @@ class AuthService {
       password: payload.password,
     });
 
+    await EmailVerificationService.createForUser(user, user.email);
+
     return await this.generateAuthResult(user);
   }
 

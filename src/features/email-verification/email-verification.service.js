@@ -37,6 +37,7 @@ exports.EmailVerificationService = new (class {
 
     await emailVerification.User.update({
       email: emailVerification.email,
+      emailVerifiedAt: new Date(),
     });
     await emailVerification.destroy();
   }

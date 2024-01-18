@@ -56,10 +56,4 @@ UserDefinition.beforeSave(async (user) => {
   }
 });
 
-UserDefinition.beforeUpdate((user) => {
-  if (user.changed('email')) {
-    user.emailVerifiedAt = new Date();
-  }
-});
-
 exports.UserDefinition = UserDefinition;
