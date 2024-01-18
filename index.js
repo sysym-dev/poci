@@ -3,7 +3,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const { createServer } = require('./src/server/create-server.js');
-const { connect } = require('./src/db/connect.js');
+const { connect } = require('./src/core/db/connect.js');
 const { TaskResource } = require('./src/features/task/task.resource.js');
 const {
   TaskCategoryResource,

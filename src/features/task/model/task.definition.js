@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../../db/sequelize');
+const { db } = require('../../../core/db/db');
 
-const TaskDefinition = sequelize.define(
+const TaskDefinition = db.define(
   'Task',
   {
     name: {

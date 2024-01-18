@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../../db/sequelize.js');
+const { db } = require('../../../core/db/db.js');
 
-const TaskCategoryDefiniton = sequelize.define(
+const TaskCategoryDefiniton = db.define(
   'TaskCategory',
   {
     name: {

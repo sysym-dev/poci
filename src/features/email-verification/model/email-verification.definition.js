@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../../db/sequelize');
+const { db } = require('../../../core/db/db');
 
-exports.EmailVerificationDefinition = sequelize.define(
+exports.EmailVerificationDefinition = db.define(
   'EmailVerification',
   {
     email: {

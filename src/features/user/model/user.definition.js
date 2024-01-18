@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../../db/sequelize');
+const { db } = require('../../../core/db/db');
 const bcrypt = require('bcrypt');
 const { getUploadedFileUrl } = require('../../../core/storage/storage.helper');
 
-const UserDefinition = sequelize.define(
+const UserDefinition = db.define(
   'User',
   {
     name: {

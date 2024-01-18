@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../../db/sequelize');
+const { db } = require('../../../core/db/db');
 
-exports.RefreshTokenDefinition = sequelize.define(
+exports.RefreshTokenDefinition = db.define(
   'RefreshToken',
   {
     token: {

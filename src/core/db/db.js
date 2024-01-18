@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const { config } = require('./config.js');
 
-exports.sequelize = new Sequelize({
+exports.db = new Sequelize({
   dialect: 'mysql',
   host: config.host,
   port: config.port,
