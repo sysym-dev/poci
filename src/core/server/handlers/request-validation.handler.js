@@ -1,7 +1,7 @@
 const { ValidationError } = require('joi');
 const {
   UnprocessableEntityException,
-} = require('../exceptions/unprocessable-entity.exception');
+} = require('../../../core/server/exceptions/unprocessable-entity.exception');
 const Joi = require('joi');
 
 exports.createRequestValidation = function (schema, options) {

@@ -1,6 +1,6 @@
 const {
   UnprocessableEntityException,
-} = require('../../exceptions/unprocessable-entity.exception');
+} = require('../../../core/server/exceptions/unprocessable-entity.exception');
 
 exports.createUniqueValidation = function (options) {
   const model = options.model;

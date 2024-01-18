@@ -1,8 +1,6 @@
 const {
   UnauthorizedException,
-} = require('../../../server/exceptions/unauthorized.exception');
-const jwt = require('jsonwebtoken');
-const { config } = require('../auth.config');
+} = require('../../../core/server/exceptions/unauthorized.exception');
 const { AuthService } = require('../auth.service');
 
 exports.createAuthMiddleware = function () {

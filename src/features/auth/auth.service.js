@@ -11,7 +11,7 @@ const {
 } = require('../../features/email-verification/email-verification.service');
 const {
   NotFoundException,
-} = require('../../server/exceptions/not-found.exception');
+} = require('../../core/server/exceptions/not-found.exception');
 const { MeService } = require('../../features/me/me.service');
 
 class AuthService {

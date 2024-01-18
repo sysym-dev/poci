@@ -1,5 +1,5 @@
 const {
   NotFoundException,
-} = require('../../server/exceptions/not-found.exception');
+} = require('../../core/server/exceptions/not-found.exception');
 
 exports.RefreshTokenException = class extends NotFoundException {};

@@ -1,5 +1,5 @@
 const {
   UnauthorizedException,
-} = require('../../../server/exceptions/unauthorized.exception');
+} = require('../../../core/server/exceptions/unauthorized.exception');
 
 exports.AuthException = class extends UnauthorizedException {};
