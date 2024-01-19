@@ -1,20 +1,20 @@
 const { Router } = require('express');
 const {
   createEnsureResourceExists,
-} = require('./handlers/ensure-resource-exists.handler.js');
+} = require('./middlewares/ensure-resource-exists.middleware.js');
 const {
   createDataResponse,
 } = require('../server/handlers/data-response.handler.js');
 const { parseGetAllQuery } = require('./helpers/parse-get-all-query.js');
 const {
   createGetAllQueryValidation,
-} = require('./handlers/get-all-query-validation.handler.js');
+} = require('./middlewares/get-all-query-validation.middleware.js');
 const {
   createGetOneQueryValidation,
-} = require('./handlers/get-one-query-validation.handler.js');
+} = require('./middlewares/get-one-query-validation.middleware.js');
 const {
   createSchemaBodyValidation,
-} = require('./handlers/schema-body-validation.handler.js');
+} = require('./middlewares/schema-body-validation.middleware.js');
 const {
   createResourceAttributesQuery,
 } = require('./queries/resource-attributes.query.js');

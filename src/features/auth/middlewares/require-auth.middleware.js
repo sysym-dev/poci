@@ -3,7 +3,7 @@ const {
 } = require('../../../core/server/exceptions/unauthorized.exception');
 const { AuthService } = require('../auth.service');
 
-exports.createAuthMiddleware = function () {
+exports.createRequireAuth = function () {
   return async (req, res, next) => {
     try {
       const token = req.headers.authorization;

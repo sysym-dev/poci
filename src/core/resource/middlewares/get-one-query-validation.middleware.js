@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const {
   createRequestValidation,
-} = require('../../server/handlers/request-validation.handler');
+} = require('../../server/middlewares/request-validation.middleware');
 
 exports.createGetOneQueryValidation = function (options) {
   const { relations = [] } = options;

@@ -1,6 +1,6 @@
 const {
   createRequestValidation,
-} = require('../../core/server/handlers/request-validation.handler');
+} = require('../../core/server/middlewares/request-validation.middleware');
 const { createRoutes } = require('../../core/server/create-routes');
 const {
   EmailVerificationController,

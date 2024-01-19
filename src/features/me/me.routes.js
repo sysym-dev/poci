@@ -1,7 +1,9 @@
 const {
   createBodyValidation,
-} = require('../../core/server/handlers/body-validation.handler');
-const { createAuthMiddleware } = require('../auth/middlewares/auth.middleware');
+} = require('../../core/server/middlewares/body-validation.middleware');
+const {
+  createRequireAuth,
+} = require('../auth/middlewares/require-auth.middleware');
 const { createRoutes } = require('../../core/server/create-routes');
 const { MeController } = require('./me.controller');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
@@ -14,23 +16,23 @@ const {
 exports.routes = createRoutes(MeController, (router) => {
   router.get('/me', {
     handler: 'me',
-    middleware: [createAuthMiddleware()],
+    middleware: [createRequireAuth()],
   });
   router.patch('/me', {
     handler: 'updateMe',
-    middleware: [createAuthMiddleware(), createBodyValidation(UpdateMeSchema)],
+    middleware: [createRequireAuth(), createBodyValidation(UpdateMeSchema)],
   });
   router.patch('/me/password', {
     handler: 'updatePassword',
     middleware: [
-      createAuthMiddleware(),
+      createRequireAuth(),
       createBodyValidation(UpdatePasswordSchema),
     ],
   });
   router.patch('/me/photo', {
     handler: 'updatePhoto',
     middleware: [
-      createAuthMiddleware(),
+      createRequireAuth(),
       createFileUploadHanlder('photo', {
         mimetypes: ['image/jpg', 'image/png', 'image/jpeg', 'image/svg'],
         directory: 'users',
@@ -40,9 +42,6 @@ exports.routes = createRoutes(MeController, (router) => {
   });
   router.patch('/me/email', {
     handler: 'updateEmail',
-    middleware: [
-      createAuthMiddleware(),
-      createBodyValidation(UpdateEmailSchema),
-    ],
+    middleware: [createRequireAuth(), createBodyValidation(UpdateEmailSchema)],
   });
 });
