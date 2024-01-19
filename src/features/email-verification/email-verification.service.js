@@ -5,6 +5,9 @@ const { Op } = require('sequelize');
 const {
   NotFoundException,
 } = require('../../core/server/exceptions/not-found.exception');
+const { sendMail } = require('../../core/mail/send-mail');
+const path = require('path');
+const { generateUrl } = require('../../core/server/helpers/url.helper');
 
 exports.EmailVerificationService = new (class {
   async createForUser(user, email) {
@@ -55,6 +58,14 @@ exports.EmailVerificationService = new (class {
     await emailVerification.update({
       token: randomToken(),
       expiresIn: dayjs().add(1, 'hour'),
+    });
+    await sendMail({
+      to: email,
+      subject: 'Verify Your Email',
+      views: path.resolve(__dirname, './mails/views/verification-link.pug'),
+      data: {
+        url: generateUrl(`/email/verify?token=${emailVerification.token}`),
+      },
     });
   }
 })();
