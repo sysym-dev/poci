@@ -22,6 +22,7 @@ exports.EmailVerificationService = new (class {
       token: randomToken(),
       expiresIn: dayjs().add(1, 'hour'),
     });
+    await this.sendVerificationLinkMail(emailVerification);
   }
   async verifyToken(token) {
     const emailVerification = await EmailVerification.findOne({
@@ -59,8 +60,12 @@ exports.EmailVerificationService = new (class {
       token: randomToken(),
       expiresIn: dayjs().add(1, 'hour'),
     });
+
+    await this.sendVerificationLinkMail(emailVerification);
+  }
+  async sendVerificationLinkMail(emailVerification) {
     await sendMail({
-      to: email,
+      to: emailVerification.email,
       subject: 'Verify Your Email',
       views: path.resolve(__dirname, './mails/views/verification-link.pug'),
       data: {
