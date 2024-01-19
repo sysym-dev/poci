@@ -2,6 +2,7 @@ const { HttpException } = require('../exceptions/http.exception');
 
 exports.createErrorHandler = function () {
   return (err, req, res, next) => {
+    console.log(err);
     if (err instanceof HttpException) {
       return res.status(err.status).json({
         status: err.status,
