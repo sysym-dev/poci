@@ -1,13 +1,13 @@
 const {
   createBodyValidation,
 } = require('../../core/server/middlewares/body-validation.middleware');
-const { createRoutes } = require('../../core/server/create-routes');
+const { createRouter } = require('../../core/server/router');
 const { AuthController } = require('./auth.controller');
 const { RegisterSchema } = require('./schemas/register.schema');
 const { LoginSchema } = require('./schemas/login.schema');
 const { RefreshTokenSchema } = require('./schemas/refresh-token.schema');
 
-exports.routes = createRoutes(AuthController, (router) => {
+exports.routes = createRouter(AuthController, (router) => {
   router.post('/register', {
     handler: 'register',
     middleware: [createBodyValidation(RegisterSchema)],

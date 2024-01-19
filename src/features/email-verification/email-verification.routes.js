@@ -1,7 +1,7 @@
 const {
   createRequestValidation,
 } = require('../../core/server/middlewares/request-validation.middleware');
-const { createRoutes } = require('../../core/server/create-routes');
+const { createRouter } = require('../../core/server/router');
 const {
   EmailVerificationController,
 } = require('./email-verification.controller');
@@ -11,7 +11,7 @@ const {
   createBodyValidation,
 } = require('../../core/server/middlewares/body-validation.middleware');
 
-exports.routes = createRoutes(EmailVerificationController, (router) => {
+exports.routes = createRouter(EmailVerificationController, (router) => {
   router.get('/email/verify', {
     handler: 'verify',
     middleware: [

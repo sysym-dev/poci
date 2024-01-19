@@ -4,7 +4,7 @@ const {
 const {
   createRequireAuth,
 } = require('../auth/middlewares/require-auth.middleware');
-const { createRoutes } = require('../../core/server/create-routes');
+const { createRouter } = require('../../core/server/router');
 const { MeController } = require('./me.controller');
 const { UpdateMeSchema } = require('./schemas/update-me.schema');
 const { UpdatePasswordSchema } = require('./schemas/update-password.schema');
@@ -13,7 +13,7 @@ const {
   createFileUploadHanlder,
 } = require('../../core/storage/file-upload.handler');
 
-exports.routes = createRoutes(MeController, (router) => {
+exports.routes = createRouter(MeController, (router) => {
   router.get('/me', {
     handler: 'me',
     middleware: [createRequireAuth()],

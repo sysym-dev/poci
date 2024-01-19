@@ -7,7 +7,7 @@ const {
 } = require('../../core/server/exceptions/not-found.exception');
 const { sendMail } = require('../../core/mail/send-mail');
 const path = require('path');
-const { generateUrl } = require('../../core/server/helpers/url.helper');
+const { generateServerUrl } = require('../../core/app/app.helper');
 
 exports.EmailVerificationService = new (class {
   async createForUser(user, email) {
@@ -64,7 +64,9 @@ exports.EmailVerificationService = new (class {
       subject: 'Verify Your Email',
       views: path.resolve(__dirname, './mails/views/verification-link.pug'),
       data: {
-        url: generateUrl(`/email/verify?token=${emailVerification.token}`),
+        url: generateServerUrl(
+          `/email/verify?token=${emailVerification.token}`,
+        ),
       },
     });
   }
