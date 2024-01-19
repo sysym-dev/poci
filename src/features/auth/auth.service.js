@@ -2,17 +2,19 @@ const { User } = require('../user/model/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
-const { AuthException } = require('./exceptions/auth.exception');
+const {
+  UnauthorizedException,
+} = require('../../core/server/exceptions/unauthorized.exception');
 const {
   RefreshTokenService,
-} = require('../../features/refresh-token/refresh-token.service');
+} = require('../refresh-token/refresh-token.service');
 const {
   EmailVerificationService,
-} = require('../../features/email-verification/email-verification.service');
+} = require('../email-verification/email-verification.service');
 const {
   NotFoundException,
 } = require('../../core/server/exceptions/not-found.exception');
-const { MeService } = require('../../features/me/me.service');
+const { MeService } = require('../me/me.service');
 
 class AuthService {
   async register(payload) {
@@ -45,7 +47,7 @@ class AuthService {
       };
     } catch (err) {
       if (err instanceof NotFoundException) {
-        throw new AuthException('Refresh token invalid');
+        throw new UnauthorizedException('Refresh token invalid');
       }
 
       throw err;
@@ -60,7 +62,7 @@ class AuthService {
     });
 
     if (!user) {
-      throw new AuthException('User with the email is not found');
+      throw new UnauthorizedException('User with the email is not found');
     }
 
     return user;
@@ -70,7 +72,7 @@ class AuthService {
     const user = await User.findByPk(id);
 
     if (!user) {
-      throw new AuthException('User with the id is not found');
+      throw new UnauthorizedException('User with the id is not found');
     }
 
     return user;
@@ -83,13 +85,13 @@ class AuthService {
 
       return user;
     } catch (err) {
-      throw new AuthException(err.message);
+      throw new UnauthorizedException(err.message);
     }
   }
 
   async verifyUserPassword(plain, user) {
     if (!(await bcrypt.compare(plain, user.password))) {
-      throw new AuthException('Password incorrect');
+      throw new UnauthorizedException('Password incorrect');
     }
   }
 

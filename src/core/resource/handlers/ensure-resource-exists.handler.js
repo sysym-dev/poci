@@ -1,6 +1,6 @@
 const {
-  ResourceNotFoundException,
-} = require('../exceptions/resource-not-found.exception');
+  NotFoundException,
+} = require('../../server/exceptions/not-found.exception');
 const { parseGetOneQuery } = require('../helpers/parse-get-one-query');
 const {
   createResourceAttributesQuery,
@@ -20,7 +20,7 @@ exports.createEnsureResourceExists = function (resource) {
       });
 
       if (data === null) {
-        throw new ResourceNotFoundException();
+        throw new NotFoundException();
       }
 
       req['resource'] = data;
