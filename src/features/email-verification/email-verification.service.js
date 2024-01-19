@@ -41,4 +41,20 @@ exports.EmailVerificationService = new (class {
     });
     await emailVerification.destroy();
   }
+  async resendEmail(email) {
+    const emailVerification = await EmailVerification.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!emailVerification) {
+      throw new NotFoundException('Email invalid');
+    }
+
+    await emailVerification.update({
+      token: randomToken(),
+      expiresIn: dayjs().add(1, 'hour'),
+    });
+  }
 })();
