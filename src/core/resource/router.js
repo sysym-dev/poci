@@ -22,7 +22,7 @@ const {
   createResourceIncludeQuery,
 } = require('./queries/resource-include.query.js');
 
-exports.createResourcesRoute = function (resourceClasses) {
+exports.createResourcesRouter = function (resourceClasses) {
   const router = Router();
 
   resourceClasses.forEach((resourceClass) => {

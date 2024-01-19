@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-exports.createRoutes = function (controllerClass, handler) {
+exports.createRouter = function (controllerClass, handler) {
   const router = Router();
   const controller = new controllerClass();
 
