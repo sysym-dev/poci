@@ -5,24 +5,26 @@ const { Op } = require('sequelize');
 const {
   NotFoundException,
 } = require('../../core/server/exceptions/not-found.exception');
-const { sendMail } = require('../../core/mail/send-mail');
 const path = require('path');
 const { generateServerUrl } = require('../../core/app/app.helper');
+const {
+  sendEmailVerificationLinkJob,
+} = require('./jobs/send-email-verification-link.job');
 
 exports.EmailVerificationService = new (class {
   async createForUser(user, email) {
-    const emailVerification = await user.getEmailVerification();
+    const existingEmailVerification = await user.getEmailVerification();
 
-    if (emailVerification) {
-      await emailVerification.destroy();
+    if (existingEmailVerification) {
+      await existingEmailVerification.destroy();
     }
 
-    await user.createEmailVerification({
+    const emailVerification = await user.createEmailVerification({
       email,
       token: randomToken(),
       expiresIn: dayjs().add(1, 'hour'),
     });
-    await this.sendVerificationLinkMail(emailVerification);
+    await this.sendEmailVerificationLink(emailVerification);
   }
   async verifyToken(token) {
     const emailVerification = await EmailVerification.findOne({
@@ -61,17 +63,22 @@ exports.EmailVerificationService = new (class {
       expiresIn: dayjs().add(1, 'hour'),
     });
 
-    await this.sendVerificationLinkMail(emailVerification);
+    await this.sendEmailVerificationLink(emailVerification);
   }
-  async sendVerificationLinkMail(emailVerification) {
-    await sendMail({
-      to: emailVerification.email,
-      subject: 'Verify Your Email',
-      views: path.resolve(__dirname, './mails/views/verification-link.pug'),
+  async sendEmailVerificationLink(emailVerification) {
+    await sendEmailVerificationLinkJob.dispatch({
       data: {
-        url: generateServerUrl(
-          `/email/verify?token=${emailVerification.token}`,
-        ),
+        to: emailVerification.email,
+        subject: 'Verify Your Email',
+        views: path.resolve(__dirname, './mails/views/verification-link.pug'),
+        data: {
+          url: generateServerUrl(
+            `/email/verify?token=${emailVerification.token}`,
+          ),
+        },
+        job: {
+          name: 'SendEmailVerificationLink',
+        },
       },
     });
   }
