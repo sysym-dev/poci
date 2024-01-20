@@ -1,7 +1,5 @@
 const { RefreshTokenDefinition } = require('./refresh-token.definition');
-const {
-  UserDefinition,
-} = require('../../../modules/user/model/user.definition');
+const { UserDefinition } = require('../..//user/model/user.definition');
 
 RefreshTokenDefinition.belongsTo(UserDefinition, {
   foreignKey: {

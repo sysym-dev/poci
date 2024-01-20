@@ -1,9 +1,13 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('../../../core/db/db');
 
-exports.RefreshTokenDefinition = db.define(
-  'RefreshToken',
+exports.EmailVerificationDefinition = db.define(
+  'EmailVerification',
   {
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     token: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -14,7 +18,7 @@ exports.RefreshTokenDefinition = db.define(
     },
   },
   {
-    tableName: 'refresh_tokens',
+    tableName: 'email_verifications',
     underscored: true,
   },
 );

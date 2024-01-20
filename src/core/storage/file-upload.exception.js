@@ -1,6 +1,6 @@
 const {
   UnprocessableEntityException,
-} = require('../../server/exceptions/unprocessable-entity.exception');
+} = require('../server/exceptions/unprocessable-entity.exception');
 
 exports.FileUploadException = class extends UnprocessableEntityException {
   constructor(path, message) {
