@@ -27,6 +27,7 @@ exports.createRouter = function (controllerClass, handler) {
             body: req.body,
             me: req.me,
             query: req.query,
+            res,
           });
 
           return res.json({ data });
