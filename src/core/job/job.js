@@ -25,7 +25,10 @@ exports.createJob = function (name, options) {
 
       queue.process(async (job) => {
         await options.handle(job.data);
-        await options.onFinish(job);
+      });
+
+      queue.on('job succeeded', (jobId, result) => {
+        console.log(`Job ${jobId} succeeded`);
       });
     },
   };
