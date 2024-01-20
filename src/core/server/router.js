@@ -30,6 +30,10 @@ exports.createRouter = function (controllerClass, handler) {
             res,
           });
 
+          if (options.redirect) {
+            return res.redirect(options.redirect);
+          }
+
           return res.json({ data });
         } catch (err) {
           return next(err);

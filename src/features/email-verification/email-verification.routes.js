@@ -10,10 +10,12 @@ const { ResendSchema } = require('./schemas/resend.schema');
 const {
   createBodyValidation,
 } = require('../../core/server/middlewares/body-validation.middleware');
+const { config } = require('../../core/app/app.config');
 
 exports.routes = createRouter(EmailVerificationController, (router) => {
   router.get('/email/verify', {
     handler: 'verify',
+    redirect: config.clientUrl,
     middleware: [
       createRequestValidation(VerifySchema, {
         path: 'query',
