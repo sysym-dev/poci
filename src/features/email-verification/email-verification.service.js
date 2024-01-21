@@ -70,14 +70,18 @@ exports.EmailVerificationService = new (class {
       data: {
         to: emailVerification.email,
         subject: 'Verify Your Email',
-        views: path.resolve(__dirname, './mails/views/verification-link.pug'),
+        views: path.resolve(
+          __dirname,
+          './mails/views/email-verification-link.pug',
+        ),
         data: {
-          url: generateServerUrl(
+          title: 'Verify Your Email',
+          message:
+            'To confirm your registration or validate the recent email update, kindly click the verification link provided in this email.',
+          actionText: 'Verify',
+          actionUrl: generateServerUrl(
             `/email/verify?token=${emailVerification.token}`,
           ),
-        },
-        job: {
-          name: 'SendEmailVerificationLink',
         },
       },
     });

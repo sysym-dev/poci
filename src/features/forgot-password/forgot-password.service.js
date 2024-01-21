@@ -38,10 +38,10 @@ exports.ForgotPasswordService = new (class {
     await sendResetPasswordLinkJob.dispatch({
       data: {
         to: email,
-        subject: 'Reset Password Link',
+        subject: 'Reset Password',
         views: path.resolve(__dirname, './mails/views/reset-password-link.pug'),
         data: {
-          title: 'Reset Password Link',
+          title: 'Reset Password',
           message: 'Click the button link below to reset your account password',
           actionText: 'Reset Password',
           actionUrl: generateClientUrl(
