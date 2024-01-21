@@ -12,6 +12,9 @@ const { routes: authRoutes } = require('./src/features/auth/auth.routes.js');
 const {
   routes: emailVerificationRoutes,
 } = require('./src/features/email-verification/email-verification.routes.js');
+const {
+  routes: forgotPasswordRoutes,
+} = require('./src/features/forgot-password/forgot-password.routes.js');
 const { routes: meRoutes } = require('./src/features/me/me.routes.js');
 
 async function start() {
@@ -20,7 +23,12 @@ async function start() {
 
     const server = createServer({
       resources: [TaskResource, TaskCategoryResource],
-      routes: [authRoutes, meRoutes, emailVerificationRoutes],
+      routes: [
+        authRoutes,
+        meRoutes,
+        emailVerificationRoutes,
+        forgotPasswordRoutes,
+      ],
     });
 
     server.listen();

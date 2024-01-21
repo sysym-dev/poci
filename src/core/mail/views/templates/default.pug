@@ -3,7 +3,7 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
+        title #{subject}
         link(rel="preconnect", href="https://fonts.googleapis.com")
         link(rel="preconnect", href="https://fonts.gstatic.com" crossorigin)
         link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap")
@@ -680,7 +680,7 @@ html(lang="en")
         div(class="flex h-screen w-full items-center justify-center bg-gray-200 px-8")
             div(class="mx-auto max-w-screen-sm")
                 div(class="rounded-md bg-white p-8")
-                    h1(class="mb-4 text-lg font-bold text-gray-900") Please confirm your email address
-                    p(class="mb-4 text-sm leading-normal text-gray-700") To confirm your registration or validate the recent email update, kindly click the verification link provided in this email.
-                    a(href=url class="inline-block rounded-md bg-sky-600 px-3 py-2 text-sm text-white") Confirm Now 
-                a(href=clientUrl class="mt-4 block text-center text-xs font-bold text-gray-500") #{clientName} 
+                    h1(class="mb-4 text-lg font-bold text-gray-900") #{title}
+                    p(class="mb-4 text-sm leading-normal text-gray-700") #{message}
+                    a(href=actionUrl class="inline-block rounded-md bg-sky-600 px-3 py-2 text-sm text-white") #{actionText}
+                a(href=clientUrl class="mt-4 block text-center text-xs font-bold text-gray-500") #{clientName}
