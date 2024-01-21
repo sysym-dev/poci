@@ -1,6 +1,6 @@
 const { ForgotPasswordDefinition } = require('./forgot-password.definition');
-const { UserDefintion } = require('../../user/model/user.definition');
+const { UserDefinition } = require('../../user/model/user.definition');
 
-ForgotPasswordDefinition.belongsTo(UserDefintion);
+ForgotPasswordDefinition.belongsTo(UserDefinition);
 
 exports.ForgotPassword = ForgotPasswordDefinition;

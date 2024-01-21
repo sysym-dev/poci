@@ -4,4 +4,7 @@ exports.ForgotPasswordController = class {
   async forgotPassword({ body }) {
     await ForgotPasswordService.createByEmail(body.email);
   }
+  async resetPassword({ body }) {
+    await ForgotPasswordService.resetPassword(body);
+  }
 };
