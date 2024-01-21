@@ -17,6 +17,7 @@ exports.sendMail = async function (options) {
     ? pug.renderFile(options.views, {
         clientUrl: appConfig.clientUrl,
         clientName: appConfig.clientName,
+        subject: options.subject,
         ...options.data,
       })
     : null;
