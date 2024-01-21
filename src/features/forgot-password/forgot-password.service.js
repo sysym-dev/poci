@@ -1,4 +1,5 @@
 const dayjs = require('dayjs');
+const path = require('path');
 const {
   NotFoundException,
 } = require('../../core/server/exceptions/not-found.exception');
@@ -6,6 +7,10 @@ const { randomToken } = require('../../core/utils/string');
 const { User } = require('../user/model/user.model');
 const { ForgotPassword } = require('./model/forgot-password.model');
 const { Op } = require('sequelize');
+const {
+  sendResetPasswordLinkJob,
+} = require('./jobs/send-reset-password-link.job');
+const { generateClientUrl } = require('../../core/app/app.helper');
 
 exports.ForgotPasswordService = new (class {
   async createByEmail(email) {
@@ -25,9 +30,25 @@ exports.ForgotPasswordService = new (class {
       await existingForgotPassword.destroy();
     }
 
-    return await user.createForgotPassword({
+    const forgotPassword = await user.createForgotPassword({
       token: randomToken(),
       expiresIn: dayjs().add(1, 'hour'),
+    });
+
+    await sendResetPasswordLinkJob.dispatch({
+      data: {
+        to: email,
+        subject: 'Reset Password Link',
+        views: path.resolve(__dirname, './mails/views/reset-password-link.pug'),
+        data: {
+          title: 'Reset Password Link',
+          message: 'Click the button link below to reset your account password',
+          actionText: 'Reset Password',
+          actionUrl: generateClientUrl(
+            `/reset-password?token=${forgotPassword.token}`,
+          ),
+        },
+      },
     });
   }
   async resetPassword(body) {
