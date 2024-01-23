@@ -30,6 +30,7 @@ exports.createResourcesRouter = function (resourceClasses) {
 
     router.get(
       `${resource.url}`,
+      resource.middlewares ? resource.middlewares() : [],
       createGetAllQueryValidation({
         filterables: resource.filterables(),
         sortables: resource.sortables(),
@@ -61,6 +62,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.get(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createGetOneQueryValidation({
         relations: resource.relations ? resource.relations() : [],
       }),
@@ -69,6 +71,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.post(
       `${resource.url}`,
+      resource.middlewares ? resource.middlewares() : [],
       createSchemaBodyValidation(resource.schema({ isUpdating: false })),
       createDataResponse(
         async ({ req }) => await resource.model.create(req.body),
@@ -76,6 +79,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.patch(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createEnsureResourceExists(resource),
       createSchemaBodyValidation(resource.schema({ isUpdating: true })),
       createDataResponse(async ({ req }) => {
@@ -86,6 +90,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.delete(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createEnsureResourceExists(resource),
       createDataResponse(async ({ req }) => {
         await req.resource.destroy();
