@@ -1,9 +1,7 @@
 const { config } = require('./storage.config');
+const path = require('path');
 
-const getFileUrl = (...paths) => `${config.baseUrl}/${paths.join('/')}`;
-const getUploadedFileUrl = (...paths) => getFileUrl(...['uploads', ...paths]);
-
-module.exports = {
-  getFileUrl,
-  getUploadedFileUrl,
-};
+exports.getFileUrl = (...paths) => `${config.baseUrl}/${paths.join('/')}`;
+exports.getUploadedFileUrl = (...paths) => getFileUrl(...['uploads', ...paths]);
+exports.getUploadPath = (...filename) =>
+  path.resolve(config.uploadPath, ...filename);
