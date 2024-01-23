@@ -7,24 +7,13 @@ exports.AuthController = class {
   async login({ body }) {
     return await AuthService.login(body);
   }
-  me({ me }) {
-    return AuthService.generateMe(me);
-  }
-  async updateMe({ body, me }) {
-    return await AuthService.updateMe(me, body);
-  }
-  async updatePassword({ body, me }) {
-    await AuthService.updatePassword(me, body.password);
-  }
-  async updatePhoto({ file, me }) {
-    return await AuthService.updateMe(me, {
-      photoFilename: file.uploadedName,
-    });
-  }
-  async updateEmail({ body, me }) {
-    await AuthService.updateEmail(me, body.email);
-  }
   async refreshToken({ body }) {
     return await AuthService.refreshToken(body.token);
+  }
+  async loginWithGoogle({ body }) {
+    return await AuthService.loginWithGoogle(body.token);
+  }
+  async loginWithGithub({ body }) {
+    return await AuthService.loginWithGithub(body.code);
   }
 };
