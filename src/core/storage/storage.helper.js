@@ -1,9 +1,24 @@
 const { config } = require('./storage.config');
+const path = require('path');
+const axios = require('axios');
+const fs = require('fs/promises');
 
-const getFileUrl = (...paths) => `${config.baseUrl}/${paths.join('/')}`;
-const getUploadedFileUrl = (...paths) => getFileUrl(...['uploads', ...paths]);
+function getFileUrl(...paths) {
+  return `${config.baseUrl}/${paths.join('/')}`;
+}
 
-module.exports = {
-  getFileUrl,
-  getUploadedFileUrl,
+exports.getUploadedFileUrl = function (...paths) {
+  return getFileUrl(...['uploads', ...paths]);
 };
+exports.getUploadPath = function (...filename) {
+  return path.resolve(config.uploadPath, ...filename);
+};
+exports.downloadFile = async function (url, filePath) {
+  const res = await axios.get(url, {
+    responseType: 'arraybuffer',
+  });
+
+  await fs.writeFile(filePath, res.data);
+};
+
+exports.getFileUrl = getFileUrl;
