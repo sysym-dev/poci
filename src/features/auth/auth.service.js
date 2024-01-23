@@ -20,6 +20,9 @@ const {
   downloadFile,
 } = require('../../core/storage/storage.helper');
 const { verifyToken: verifyGoogleToken } = require('../../core/oauth/google');
+const {
+  getUserFromCode: getGithubUserFromCode,
+} = require('../../core/oauth/github');
 
 class AuthService {
   async register(payload) {
@@ -149,6 +152,38 @@ class AuthService {
 
         await downloadFile(
           payload.picture,
+          getUploadPath('users', 'photo', fileName),
+        );
+
+        await user.update({
+          photoFilename: fileName,
+        });
+      }
+
+      return await this.generateAuthResult(user);
+    } catch (err) {
+      throw new UnauthorizedException(err.message);
+    }
+  }
+
+  async loginWithGithub(code) {
+    try {
+      const payload = await getGithubUserFromCode(code);
+
+      const [user, created] = await User.findOrCreate({
+        where: {
+          githubId: payload.id,
+        },
+        defaults: {
+          name: payload.name,
+        },
+      });
+
+      if (created) {
+        const fileName = `photo-${Date.now()}.png`;
+
+        await downloadFile(
+          payload.avatar_url,
           getUploadPath('users', 'photo', fileName),
         );
 

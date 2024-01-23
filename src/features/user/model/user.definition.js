@@ -12,7 +12,7 @@ const UserDefinition = db.define(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     password: {
@@ -44,6 +44,10 @@ const UserDefinition = db.define(
       },
     },
     googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    githubId: {
       type: DataTypes.STRING,
       allowNull: true,
     },

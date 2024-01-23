@@ -13,4 +13,7 @@ exports.AuthController = class {
   async loginWithGoogle({ body }) {
     return await AuthService.loginWithGoogle(body.token);
   }
+  async loginWithGithub({ body }) {
+    return await AuthService.loginWithGithub(body.code);
+  }
 };
