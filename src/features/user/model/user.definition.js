@@ -17,7 +17,7 @@ const UserDefinition = db.define(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     photoFilename: {
       type: DataTypes.STRING,
@@ -42,6 +42,10 @@ const UserDefinition = db.define(
       get() {
         return !!this.emailVerifiedAt;
       },
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
