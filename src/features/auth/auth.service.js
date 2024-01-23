@@ -1,7 +1,5 @@
-const { OAuth2Client } = require('google-auth-library');
 const { User } = require('../user/model/user.model');
 const jwt = require('jsonwebtoken');
-const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
 const { config } = require('./auth.config');
 const {
@@ -17,8 +15,11 @@ const {
   NotFoundException,
 } = require('../../core/server/exceptions/not-found.exception');
 const { MeService } = require('../me/me.service');
-const { default: axios } = require('axios');
-const { getUploadPath } = require('../../core/storage/storage.helper');
+const {
+  getUploadPath,
+  downloadFile,
+} = require('../../core/storage/storage.helper');
+const { verifyToken: verifyGoogleToken } = require('../../core/oauth/google');
 
 class AuthService {
   async register(payload) {
@@ -130,24 +131,17 @@ class AuthService {
 
   async loginWithGoogle(token) {
     try {
-      const client = new OAuth2Client();
-
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: config.googleClientId,
-      });
-      const payload = ticket.getPayload();
-
-      const res = await axios.get(payload.picture, {
-        responseType: 'arraybuffer',
-      });
+      const payload = await verifyGoogleToken(token);
       const fileName = `photo-${Date.now()}.png`;
 
-      await fs.writeFile(getUploadPath('users', 'photo', fileName), res.data);
+      await downloadFile(
+        payload.picture,
+        getUploadPath('users', 'photo', fileName),
+      );
 
       const [user] = await User.findOrCreate({
         where: {
-          googleId: ticket.getUserId(),
+          googleId: payload.sub,
         },
         defaults: {
           email: payload.email,
