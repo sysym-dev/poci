@@ -132,14 +132,8 @@ class AuthService {
   async loginWithGoogle(token) {
     try {
       const payload = await verifyGoogleToken(token);
-      const fileName = `photo-${Date.now()}.png`;
 
-      await downloadFile(
-        payload.picture,
-        getUploadPath('users', 'photo', fileName),
-      );
-
-      const [user] = await User.findOrCreate({
+      const [user, created] = await User.findOrCreate({
         where: {
           googleId: payload.sub,
         },
@@ -147,9 +141,21 @@ class AuthService {
           email: payload.email,
           name: payload.name,
           emailVerifiedAt: new Date(),
-          photoFilename: fileName,
         },
       });
+
+      if (created) {
+        const fileName = `photo-${Date.now()}.png`;
+
+        await downloadFile(
+          payload.picture,
+          getUploadPath('users', 'photo', fileName),
+        );
+
+        await user.update({
+          photoFilename: fileName,
+        });
+      }
 
       return await this.generateAuthResult(user);
     } catch (err) {
