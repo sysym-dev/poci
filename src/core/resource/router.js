@@ -41,8 +41,8 @@ exports.createResourcesRouter = function (resourceClasses) {
 
         const { count, rows } = await resource.model.findAndCountAll({
           where: {
-            ...resource.filter(query.filter),
             ...resource.defaultFilter({ me }),
+            ...resource.filter(query.filter),
           },
           limit: query.page.size,
           offset: query.page.offset,

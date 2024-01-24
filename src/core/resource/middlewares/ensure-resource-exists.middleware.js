@@ -14,7 +14,11 @@ exports.createEnsureResourceExists = function (resource) {
     try {
       const query = parseGetOneQuery(req.query);
 
-      const data = await resource.model.findByPk(req.params.id, {
+      const data = await resource.model.findOne({
+        where: {
+          ...resource.defaultFilter({ me: req.me }),
+          id: req.params.id,
+        },
         attributes: createResourceAttributesQuery(resource),
         include: createResourceIncludeQuery(resource, query),
       });
