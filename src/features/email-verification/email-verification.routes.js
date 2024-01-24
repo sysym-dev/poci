@@ -19,7 +19,6 @@ exports.routes = createRouter(EmailVerificationController, (router) => {
     middleware: [
       createRequestValidation(VerifySchema, {
         path: 'query',
-        wrapObject: true,
       }),
     ],
   });
