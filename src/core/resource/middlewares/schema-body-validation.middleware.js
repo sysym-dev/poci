@@ -14,7 +14,7 @@ exports.createSchemaBodyValidation = function (schema) {
     }),
   );
   return [
-    createRequestValidation(Joi.object(bodySchema), {
+    createRequestValidation(bodySchema, {
       path: 'body',
     }),
     (req, res, next) => {
