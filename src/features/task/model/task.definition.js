@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { db } = require('../../../core/db/db');
 
 const TaskDefinition = db.define(
-  'Task',
+  'task',
   {
     name: {
       type: DataTypes.STRING,
