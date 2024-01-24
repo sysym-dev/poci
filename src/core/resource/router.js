@@ -30,16 +30,20 @@ exports.createResourcesRouter = function (resourceClasses) {
 
     router.get(
       `${resource.url}`,
+      resource.middlewares ? resource.middlewares() : [],
       createGetAllQueryValidation({
         filterables: resource.filterables(),
         sortables: resource.sortables(),
         relations: resource.relations ? resource.relations() : [],
       }),
-      createDataResponse(async ({ req }) => {
+      createDataResponse(async ({ req, me }) => {
         const query = parseGetAllQuery(req.query);
 
         const { count, rows } = await resource.model.findAndCountAll({
-          where: resource.filter(query.filter),
+          where: {
+            ...resource.defaultFilter({ me }),
+            ...resource.filter(query.filter),
+          },
           limit: query.page.size,
           offset: query.page.offset,
           order: [query.sort],
@@ -61,6 +65,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.get(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createGetOneQueryValidation({
         relations: resource.relations ? resource.relations() : [],
       }),
@@ -69,13 +74,19 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.post(
       `${resource.url}`,
+      resource.middlewares ? resource.middlewares() : [],
       createSchemaBodyValidation(resource.schema({ isUpdating: false })),
       createDataResponse(
-        async ({ req }) => await resource.model.create(req.body),
+        async ({ req, me }) =>
+          await resource.model.create({
+            ...resource.defaultValues({ me }),
+            ...req.body,
+          }),
       ),
     );
     router.patch(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createEnsureResourceExists(resource),
       createSchemaBodyValidation(resource.schema({ isUpdating: true })),
       createDataResponse(async ({ req }) => {
@@ -86,6 +97,7 @@ exports.createResourcesRouter = function (resourceClasses) {
     );
     router.delete(
       `${resource.url}/:id`,
+      resource.middlewares ? resource.middlewares() : [],
       createEnsureResourceExists(resource),
       createDataResponse(async ({ req }) => {
         await req.resource.destroy();
