@@ -5,10 +5,29 @@ const { optionalProperty } = require('../../core/utils/object.js');
 const {
   createCountRelationAttribute,
 } = require('../../core/resource/queries/count-relation-attribute.query.js');
+const {
+  createRequireAuth,
+} = require('../auth/middlewares/require-auth.middleware.js');
 
 exports.TaskCategoryResource = class {
   url = '/task-categories';
   model = TaskCategory;
+
+  middlewares() {
+    return [createRequireAuth()];
+  }
+
+  defaultFilter({ me }) {
+    return {
+      user_id: me.id,
+    };
+  }
+
+  defaultValues({ me }) {
+    return {
+      UserId: me.id,
+    };
+  }
 
   attributes() {
     return [

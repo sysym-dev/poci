@@ -6,7 +6,7 @@ const {
 exports.createGetAllQueryValidation = function (options) {
   const { filterables = {}, sortables = [], relations = [] } = options;
 
-  const schema = Joi.object({
+  const schema = {
     page: Joi.object({
       size: Joi.number().positive().optional(),
       number: Joi.number().positive().optional(),
@@ -21,7 +21,7 @@ exports.createGetAllQueryValidation = function (options) {
     include: Joi.array()
       .items(Joi.string().valid(...relations))
       .optional(),
-  });
+  };
 
   return createRequestValidation(schema, {
     path: 'query',

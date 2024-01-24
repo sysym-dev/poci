@@ -10,6 +10,7 @@ exports.createExistsRule = function (options) {
     const exists = await model.count({
       where: {
         [field]: value,
+        ...options.where,
       },
     });
 

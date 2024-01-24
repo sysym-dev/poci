@@ -8,10 +8,29 @@ const {
 const {
   TaskCategory,
 } = require('../task-category/model/task-category.model.js');
+const {
+  createRequireAuth,
+} = require('../auth/middlewares/require-auth.middleware.js');
 
 exports.TaskResource = class {
   url = '/tasks';
   model = Task;
+
+  middlewares() {
+    return [createRequireAuth()];
+  }
+
+  defaultFilter({ me }) {
+    return {
+      user_id: me.id,
+    };
+  }
+
+  defaultValues({ me }) {
+    return {
+      UserId: me.id,
+    };
+  }
 
   attributes() {
     return [
@@ -36,13 +55,19 @@ exports.TaskResource = class {
       }),
       due_at: [Joi.date().optional().allow(null), 'dueAt'],
       task_category_id: [
-        options.isUpdating
-          ? Joi.number()
-              .optional()
-              .external(createExistsRule({ model: TaskCategory, field: 'id' }))
-          : Joi.number()
-              .required()
-              .external(createExistsRule({ model: TaskCategory, field: 'id' })),
+        ({ me }) => {
+          const existsRule = createExistsRule({
+            model: TaskCategory,
+            field: 'id',
+            where: {
+              user_id: me.id,
+            },
+          });
+
+          return options.isUpdating
+            ? Joi.number().optional().external(existsRule)
+            : Joi.number().required().external(existsRule);
+        },
         'taskCategoryId',
       ],
     };

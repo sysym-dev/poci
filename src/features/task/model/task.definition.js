@@ -22,10 +22,6 @@ const TaskDefinition = db.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    taskCategoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
   },
   {
     tableName: 'tasks',
