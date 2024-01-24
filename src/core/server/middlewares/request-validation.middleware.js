@@ -4,13 +4,20 @@ const {
 } = require('../../../core/server/exceptions/unprocessable-entity.exception');
 const Joi = require('joi');
 
-exports.createRequestValidation = function (schema, options) {
+exports.createRequestValidation = function (rawSchema, options) {
   return async (req, res, next) => {
     try {
-      const data = await (options.wrapObject
-        ? Joi.object(schema)
-        : schema
-      ).validateAsync(req[options.path]);
+      const schema = Object.fromEntries(
+        Object.entries(rawSchema).map(([key, value]) => {
+          if (typeof value !== 'function') {
+            return [key, value];
+          }
+
+          return [key, value({ me: req.me })];
+        }),
+      );
+
+      const data = await Joi.object(schema).validateAsync(req[options.path]);
 
       req[options.path] = data;
 
