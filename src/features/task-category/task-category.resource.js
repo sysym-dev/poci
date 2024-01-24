@@ -17,6 +17,18 @@ exports.TaskCategoryResource = class {
     return [createRequireAuth()];
   }
 
+  defaultFilter({ me }) {
+    return {
+      user_id: me.id,
+    };
+  }
+
+  defaultValues({ me }) {
+    return {
+      UserId: me.id,
+    };
+  }
+
   attributes() {
     return [
       'id',
