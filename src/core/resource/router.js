@@ -36,11 +36,14 @@ exports.createResourcesRouter = function (resourceClasses) {
         sortables: resource.sortables(),
         relations: resource.relations ? resource.relations() : [],
       }),
-      createDataResponse(async ({ req }) => {
+      createDataResponse(async ({ req, me }) => {
         const query = parseGetAllQuery(req.query);
 
         const { count, rows } = await resource.model.findAndCountAll({
-          where: resource.filter(query.filter),
+          where: {
+            ...resource.filter(query.filter),
+            ...resource.defaultFilter({ me }),
+          },
           limit: query.page.size,
           offset: query.page.offset,
           order: [query.sort],
@@ -74,7 +77,11 @@ exports.createResourcesRouter = function (resourceClasses) {
       resource.middlewares ? resource.middlewares() : [],
       createSchemaBodyValidation(resource.schema({ isUpdating: false })),
       createDataResponse(
-        async ({ req }) => await resource.model.create(req.body),
+        async ({ req, me }) =>
+          await resource.model.create({
+            ...resource.defaultValues({ me }),
+            ...req.body,
+          }),
       ),
     );
     router.patch(
