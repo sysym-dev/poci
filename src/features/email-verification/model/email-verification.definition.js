@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { db } = require('../../../core/db/db');
 
 exports.EmailVerificationDefinition = db.define(
-  'EmailVerification',
+  'emailVerification',
   {
     email: {
       type: DataTypes.STRING,

@@ -28,7 +28,7 @@ exports.TaskResource = class {
 
   defaultValues({ me }) {
     return {
-      UserId: me.id,
+      userId: me.id,
     };
   }
 
@@ -91,7 +91,7 @@ exports.TaskResource = class {
   }
 
   relations() {
-    return ['TaskCategory'];
+    return ['taskCategory'];
   }
 
   filter(query) {

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { db } = require('../../../core/db/db');
 
 exports.ForgotPasswordDefinition = db.define(
-  'ForgotPassword',
+  'forgotPassword',
   {
     token: {
       type: DataTypes.STRING,

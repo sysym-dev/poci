@@ -59,14 +59,14 @@ exports.ForgotPasswordService = new (class {
           [Op.gt]: new Date(),
         },
       },
-      include: ['User'],
+      include: ['user'],
     });
 
     if (!forgotPassword) {
       throw new NotFoundException('Token invalid');
     }
 
-    await forgotPassword.User.update({
+    await forgotPassword.user.update({
       password: body.password,
     });
     await forgotPassword.destroy();

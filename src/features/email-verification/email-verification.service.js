@@ -34,14 +34,14 @@ exports.EmailVerificationService = new (class {
           [Op.gt]: new Date(),
         },
       },
-      include: ['User'],
+      include: ['user'],
     });
 
     if (!emailVerification) {
       throw new NotFoundException('Token invalid');
     }
 
-    await emailVerification.User.update({
+    await emailVerification.user.update({
       email: emailVerification.email,
       emailVerifiedAt: new Date(),
     });
