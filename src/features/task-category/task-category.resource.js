@@ -25,7 +25,7 @@ exports.TaskCategoryResource = class {
 
   defaultValues({ me }) {
     return {
-      UserId: me.id,
+      userId: me.id,
     };
   }
 

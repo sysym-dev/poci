@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { db } = require('../../../core/db/db');
 
 exports.RefreshTokenDefinition = db.define(
-  'RefreshToken',
+  'refreshToken',
   {
     token: {
       type: DataTypes.STRING,

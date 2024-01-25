@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { getUploadedFileUrl } = require('../../../core/storage/storage.helper');
 
 const UserDefinition = db.define(
-  'User',
+  'user',
   {
     name: {
       type: DataTypes.STRING,

@@ -48,7 +48,7 @@ class AuthService {
   async refreshToken(token) {
     try {
       const refreshTokenRow = await RefreshTokenService.findByToken(token);
-      const user = await this.findUserById(refreshTokenRow.UserId);
+      const user = await this.findUserById(refreshTokenRow.userId);
 
       return {
         accessToken: await this.generateAccessToken(user),
