@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('users', {
+  await queryInterface.createTable('email_verifications', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -11,32 +11,25 @@ exports.up = async ({ context: queryInterface }) => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
+      allowNull: false,
     },
-    name: {
+    token: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    photo_filename: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    email_verified_at: {
+    expires_in: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
     },
-    google_id: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    github_id: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+      onUpdate: 'cascade',
+      onDelete: 'cascade',
     },
     created_at: {
       type: DataTypes.DATE,
@@ -53,5 +46,5 @@ exports.up = async ({ context: queryInterface }) => {
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('users');
+  await queryInterface.dropTable('email_verifications');
 };

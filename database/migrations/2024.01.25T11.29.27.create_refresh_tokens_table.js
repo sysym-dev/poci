@@ -6,7 +6,7 @@ exports.up = async ({ context: queryInterface }) => {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoInrement: true,
+      autoIncrement: true,
       allowNull: false,
     },
     token: {
