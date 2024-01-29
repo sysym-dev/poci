@@ -115,10 +115,10 @@ exports.TaskResource = class {
       ...optionalProperty(query.due_at_from || query.due_at_to, {
         dueAt: {
           ...optionalProperty(query.due_at_from, {
-            [Op.gt]: query.due_at_from,
+            [Op.gte]: query.due_at_from,
           }),
           ...optionalProperty(query.due_at_to, {
-            [Op.lt]: query.due_at_to,
+            [Op.lte]: query.due_at_to,
           }),
         },
       }),
