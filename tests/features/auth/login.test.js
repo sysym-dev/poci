@@ -9,6 +9,10 @@ const { User } = require('../../../src/features/user/model/user.model');
 beforeAll(async () => {
   await connect();
   await migration.up();
+
+  await User.destroy({
+    where: {},
+  });
 });
 
 test('the endpoint is accessable', async () => {
