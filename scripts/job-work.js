@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV === 'development') {
-  require('dotenv/config');
-}
+require('../src/core/env/load-env');
 
 const { createJobWorker } = require('../src/core/job/job.worker');
 const {

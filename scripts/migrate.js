@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV === 'development') {
-  require('dotenv/config');
-}
+require('../src/core/env/load-env');
 
 const { Umzug, SequelizeStorage } = require('umzug');
 const { db } = require('../src/core/db/db');
@@ -14,4 +12,8 @@ const umzug = new Umzug({
   logger: console,
 });
 
-umzug.runAsCLI();
+if (require.main === module) {
+  umzug.runAsCLI();
+}
+
+exports.migration = umzug;

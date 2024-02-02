@@ -31,6 +31,7 @@ exports.createServer = function (options) {
   }
 
   return {
+    app: server,
     listen,
   };
 };
