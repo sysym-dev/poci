@@ -98,6 +98,10 @@ class AuthService {
   }
 
   async verifyUserPassword(plain, user) {
+    if (!user.password) {
+      throw new UnauthorizedException('Password incorrect');
+    }
+
     if (!(await bcrypt.compare(plain, user.password))) {
       throw new UnauthorizedException('Password incorrect');
     }
