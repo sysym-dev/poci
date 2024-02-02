@@ -4,6 +4,7 @@ const request = require('supertest');
 const { server } = require('../../../index');
 const { connect } = require('../../../src/core/db/connect');
 const { migration } = require('../../../scripts/migrate');
+const { User } = require('../../../src/features/user/model/user.model');
 
 beforeAll(async () => {
   await connect();
@@ -15,10 +16,26 @@ test('the endpoint is accessable', async () => {
 });
 
 test('the invalid email should be error', async () => {
-  const res = await request(server.app)
+  await request(server.app)
     .post('/login')
     .send({
       email: 'invalid@email.com',
+      password: 'incorrect',
+    })
+    .expect(401);
+});
+
+test('the incorrect password should be error', async () => {
+  const user = await User.create({
+    email: 'user@email.com',
+    name: 'User',
+    password: 'password',
+  });
+
+  await request(server.app)
+    .post('/login')
+    .send({
+      email: user.email,
       password: 'incorrect',
     })
     .expect(401);
