@@ -2,19 +2,12 @@ require('../../../src/core/env/load-env');
 
 const request = require('supertest');
 const { server } = require('../../../index');
-const { connect } = require('../../../src/core/db/connect');
-const { migration } = require('../../../scripts/migrate');
 const { User } = require('../../../src/features/user/model/user.model');
 const { testValidMe } = require('../../supports/me.support');
 const { testValidAuthResult } = require('../../supports/auth.support');
 const {
   UnauthorizedException,
 } = require('../../../src/core/server/exceptions/unauthorized.exception');
-
-beforeAll(async () => {
-  await connect();
-  await migration.up();
-});
 
 beforeEach(async () => {
   await User.destroy({
