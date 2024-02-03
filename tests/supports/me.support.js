@@ -1,9 +1,11 @@
-exports.testValidMe = (me) => {
-  expect(me).toHaveProperty('id');
-  expect(me).toHaveProperty('email');
-  expect(me).toHaveProperty('photo_url');
-  expect(me).toHaveProperty('is_email_verified');
+exports.testValidMe = (me, user) => {
+  const expected = {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    photo_url: user.photoUrl,
+    is_email_verified: user.isEmailVerified,
+  };
 
-  expect(typeof me.id).toBe('number');
-  expect(typeof me.is_email_verified).toBe('boolean');
+  expect(me).toEqual(expected);
 };

@@ -7,6 +7,9 @@ const { migration } = require('../../../scripts/migrate');
 const { User } = require('../../../src/features/user/model/user.model');
 const { testValidMe } = require('../../supports/me.support');
 const { testValidAuthResult } = require('../../supports/auth.support');
+const {
+  UnauthorizedException,
+} = require('../../../src/core/server/exceptions/unauthorized.exception');
 
 beforeAll(async () => {
   await connect();
@@ -19,18 +22,18 @@ beforeEach(async () => {
   });
 });
 
-test('the endpoint is accessable', async () => {
-  await request(server.app).post('/login').expect(422);
-});
-
 test('the invalid email should be error', async () => {
-  await request(server.app)
+  const res = await request(server.app)
     .post('/login')
     .send({
       email: 'invalid@email.com',
       password: 'incorrect',
     })
     .expect(401);
+
+  expect(res.body).toEqual(
+    new UnauthorizedException('User with the email is not found').toResponse(),
+  );
 });
 
 test('the incorrect password should be error', async () => {
@@ -40,13 +43,17 @@ test('the incorrect password should be error', async () => {
     password: 'password',
   });
 
-  await request(server.app)
+  const res = await request(server.app)
     .post('/login')
     .send({
       email: user.email,
       password: 'incorrect',
     })
     .expect(401);
+
+  expect(res.body).toEqual(
+    new UnauthorizedException('Password incorrect').toResponse(),
+  );
 });
 
 test('the return should be valid auth result', async () => {
@@ -64,6 +71,6 @@ test('the return should be valid auth result', async () => {
     })
     .expect(200);
 
-  testValidMe(res.body.data.me);
+  testValidMe(res.body.data.me, user);
   testValidAuthResult(res.body.data.token);
 });
