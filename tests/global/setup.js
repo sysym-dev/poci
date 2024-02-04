@@ -1,3 +1,5 @@
+require('../../src/core/env/load-env');
+
 const { migration } = require('../../scripts/migrate');
 const { connect } = require('../../src/core/db/connect');
 

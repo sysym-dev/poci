@@ -1,6 +1,4 @@
-require('../../../src/core/env/load-env');
-
-const request = require('supertest');
+const supertest = require('supertest');
 const { server } = require('../../../index');
 const { User } = require('../../../src/features/user/model/user.model');
 const { testValidMe } = require('../../supports/me.support');
@@ -15,8 +13,8 @@ beforeEach(async () => {
   });
 });
 
-test('the invalid email should be error', async () => {
-  const res = await request(server.app)
+test('the not exists email should be error', async () => {
+  const res = await supertest(server.app)
     .post('/login')
     .send({
       email: 'invalid@email.com',
@@ -36,7 +34,7 @@ test('the incorrect password should be error', async () => {
     password: 'password',
   });
 
-  const res = await request(server.app)
+  const res = await supertest(server.app)
     .post('/login')
     .send({
       email: user.email,
@@ -56,7 +54,7 @@ test('the return should be valid auth result', async () => {
     password: 'password',
   });
 
-  const res = await request(server.app)
+  const res = await supertest(server.app)
     .post('/login')
     .send({
       email: user.email,
