@@ -10,6 +10,9 @@ const { generateServerUrl } = require('../../core/app/app.helper');
 const {
   sendEmailVerificationLinkJob,
 } = require('./jobs/send-email-verification-link.job');
+const {
+  BadRequestException,
+} = require('../../core/server/exceptions/bad-request.exception');
 
 exports.EmailVerificationService = new (class {
   async createForUser(user, email) {
@@ -38,7 +41,7 @@ exports.EmailVerificationService = new (class {
     });
 
     if (!emailVerification) {
-      throw new NotFoundException('Token invalid');
+      throw new BadRequestException('Token not found');
     }
 
     await emailVerification.user.update({
