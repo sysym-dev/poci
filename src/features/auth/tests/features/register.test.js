@@ -1,11 +1,11 @@
 const supertest = require('supertest');
-const { server } = require('../../..');
-const { User } = require('../../../src/features/user/model/user.model');
+const { server } = require('../../../../../index');
+const { User } = require('../../../user/model/user.model');
+const { testValidMe } = require('../../../me/tests/supports/me.support');
+const { testValidAuthResult } = require('../supports/auth.support');
 const {
   UnprocessableEntityException,
-} = require('../../../src/core/server/exceptions/unprocessable-entity.exception');
-const { testValidMe } = require('../../supports/me.support');
-const { testValidAuthResult } = require('../../supports/auth.support');
+} = require('../../../../core/server/exceptions/unprocessable-entity.exception');
 
 beforeEach(async () => {
   await User.destroy({

@@ -1,11 +1,11 @@
 const supertest = require('supertest');
-const { server } = require('../../../index');
-const { User } = require('../../../src/features/user/model/user.model');
-const { testValidMe } = require('../../supports/me.support');
-const { testValidAuthResult } = require('../../supports/auth.support');
+const { server } = require('../../../../../index');
+const { User } = require('../../../user/model/user.model');
+const { testValidMe } = require('../../../me/tests/supports/me.support');
+const { testValidAuthResult } = require('../supports/auth.support');
 const {
   UnauthorizedException,
-} = require('../../../src/core/server/exceptions/unauthorized.exception');
+} = require('../../../../core/server/exceptions/unauthorized.exception');
 
 beforeEach(async () => {
   await User.destroy({
