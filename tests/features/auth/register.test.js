@@ -4,6 +4,8 @@ const { User } = require('../../../src/features/user/model/user.model');
 const {
   UnprocessableEntityException,
 } = require('../../../src/core/server/exceptions/unprocessable-entity.exception');
+const { testValidMe } = require('../../supports/me.support');
+const { testValidAuthResult } = require('../../supports/auth.support');
 
 beforeEach(async () => {
   await User.destroy({
@@ -33,4 +35,24 @@ test('the already exists email should be error', async () => {
       email: 'email already exists',
     }).toResponse(),
   );
+});
+
+test('the result should be a valid auth result', async () => {
+  const res = await supertest(server.app)
+    .post('/register')
+    .send({
+      email: 'test@email.com',
+      name: 'Test',
+      password: 'password',
+      password_confirmation: 'password',
+    })
+    .expect(200);
+  const user = await User.findOne({
+    where: {
+      email: 'test@email.com',
+    },
+  });
+
+  testValidMe(res.body.data.me, user);
+  testValidAuthResult(res.body.data.token);
 });

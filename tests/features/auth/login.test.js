@@ -47,7 +47,7 @@ test('the incorrect password should be error', async () => {
   );
 });
 
-test('the return should be valid auth result', async () => {
+test('the return should be a valid auth result', async () => {
   const user = await User.create({
     email: 'user@email.com',
     name: 'User',
