@@ -18,7 +18,7 @@ beforeEach(async () => {
   });
 });
 
-test('the invalid token should error', async () => {
+test('the invalid token should be error', async () => {
   const res = await supertest(server.app)
     .get('/email/verify')
     .query({
@@ -31,7 +31,7 @@ test('the invalid token should error', async () => {
   );
 });
 
-test('the expired token should error', async () => {
+test('the expired token should be error', async () => {
   const user = await User.create({
     name: 'Test',
     email: 'test@email.com',
@@ -56,7 +56,7 @@ test('the expired token should error', async () => {
   );
 });
 
-test('the valid token should verify user email', async () => {
+test('the valid token should be verify user email', async () => {
   const user = await User.create({
     name: 'Test',
     email: 'test@email.com',

@@ -11,6 +11,9 @@ const {
   sendResetPasswordLinkJob,
 } = require('./jobs/send-reset-password-link.job');
 const { generateClientUrl } = require('../../core/app/app.helper');
+const {
+  BadRequestException,
+} = require('../../core/server/exceptions/bad-request.exception');
 
 exports.ForgotPasswordService = new (class {
   async createByEmail(email) {
@@ -21,7 +24,7 @@ exports.ForgotPasswordService = new (class {
     });
 
     if (!user) {
-      throw new NotFoundException('User with the email is not found');
+      throw new BadRequestException('Email not found');
     }
 
     const existingForgotPassword = await user.getForgotPassword();

@@ -19,7 +19,7 @@ beforeEach(async () => {
   });
 });
 
-test('the invalid refresh token should error', async () => {
+test('the invalid refresh token should be error', async () => {
   const res = await supertest(server.app)
     .post('/refresh-token')
     .send({
@@ -32,7 +32,7 @@ test('the invalid refresh token should error', async () => {
   );
 });
 
-test('the expired refresh token should error', async () => {
+test('the expired refresh token should be error', async () => {
   const user = await User.create({
     name: 'Test',
     email: 'test@email.com',
@@ -55,7 +55,7 @@ test('the expired refresh token should error', async () => {
   );
 });
 
-test('the valid refresh token should return access token', async () => {
+test('the valid refresh token should be return access token', async () => {
   const user = await User.create({
     name: 'Test',
     email: 'test@email.com',
