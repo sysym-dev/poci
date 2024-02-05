@@ -26,6 +26,12 @@ const {
 
 class AuthService {
   async register(payload) {
+    const isUserEmailExists = await this.isUserEmailExists(payload.email);
+
+    if (isUserEmailExists) {
+      throw new UnauthorizedException('Email already exists');
+    }
+
     const user = await User.create({
       name: payload.name,
       email: payload.email,
@@ -55,11 +61,19 @@ class AuthService {
       };
     } catch (err) {
       if (err instanceof NotFoundException) {
-        throw new UnauthorizedException('Refresh token invalid');
+        throw new UnauthorizedException('Token not found');
       }
 
       throw err;
     }
+  }
+
+  async isUserEmailExists(email) {
+    return (
+      (await User.count({
+        where: { email },
+      })) > 0
+    );
   }
 
   async findUserByEmail(email) {
@@ -70,7 +84,7 @@ class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('User with the email is not found');
+      throw new UnauthorizedException('Email not found');
     }
 
     return user;

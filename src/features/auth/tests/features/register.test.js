@@ -4,8 +4,8 @@ const { User } = require('../../../user/model/user.model');
 const { testValidMe } = require('../../../me/tests/supports/me.support');
 const { testValidAuthResult } = require('../supports/auth.support');
 const {
-  UnprocessableEntityException,
-} = require('../../../../core/server/exceptions/unprocessable-entity.exception');
+  UnauthorizedException,
+} = require('../../../../core/server/exceptions/unauthorized.exception');
 
 beforeEach(async () => {
   await User.destroy({
@@ -28,12 +28,10 @@ test('the already exists email should be error', async () => {
       password: user.password,
       password_confirmation: user.password,
     })
-    .expect(422);
+    .expect(401);
 
   expect(res.body).toEqual(
-    new UnprocessableEntityException('Invalid Request (email)', {
-      email: 'email already exists',
-    }).toResponse(),
+    new UnauthorizedException('Email already exists').toResponse(),
   );
 });
 

@@ -28,7 +28,7 @@ test('the invalid refresh token should error', async () => {
     .expect(401);
 
   expect(res.body).toEqual(
-    new UnauthorizedException('Refresh token invalid').toResponse(),
+    new UnauthorizedException('Token not found').toResponse(),
   );
 });
 
@@ -51,7 +51,7 @@ test('the expired refresh token should error', async () => {
     .expect(401);
 
   expect(res.body).toEqual(
-    new UnauthorizedException('Refresh token invalid').toResponse(),
+    new UnauthorizedException('Token not found').toResponse(),
   );
 });
 

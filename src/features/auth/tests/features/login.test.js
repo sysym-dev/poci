@@ -23,7 +23,7 @@ test('the not exists email should be error', async () => {
     .expect(401);
 
   expect(res.body).toEqual(
-    new UnauthorizedException('User with the email is not found').toResponse(),
+    new UnauthorizedException('Email not found').toResponse(),
   );
 });
 

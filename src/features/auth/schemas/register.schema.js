@@ -6,15 +6,7 @@ const { User } = require('../../user/model/user.model');
 
 exports.RegisterSchema = {
   name: Joi.string().required(),
-  email: Joi.string()
-    .email()
-    .required()
-    .external(
-      createUniqueRule({
-        model: User,
-        field: 'email',
-      }),
-    ),
+  email: Joi.string().email().required(),
   password: Joi.string().required(),
   password_confirmation: Joi.string().required().valid(Joi.ref('password')),
 };
