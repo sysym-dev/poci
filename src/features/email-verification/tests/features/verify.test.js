@@ -80,4 +80,5 @@ test('the valid token should verify user email', async () => {
   await user.reload();
 
   expect(user.isEmailVerified).toBe(true);
+  expect(await user.getEmailVerification()).toBeNull();
 });
