@@ -2,9 +2,6 @@ const dayjs = require('dayjs');
 const { randomToken } = require('../../core/utils/string');
 const { EmailVerification } = require('./model/email-verification.model');
 const { Op } = require('sequelize');
-const {
-  NotFoundException,
-} = require('../../core/server/exceptions/not-found.exception');
 const path = require('path');
 const { generateServerUrl } = require('../../core/app/app.helper');
 const {
@@ -58,7 +55,7 @@ exports.EmailVerificationService = new (class {
     });
 
     if (!emailVerification) {
-      throw new NotFoundException('Email invalid');
+      throw new BadRequestException('Email not found');
     }
 
     await emailVerification.update({
