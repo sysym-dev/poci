@@ -1,8 +1,5 @@
 const dayjs = require('dayjs');
 const path = require('path');
-const {
-  NotFoundException,
-} = require('../../core/server/exceptions/not-found.exception');
 const { randomToken } = require('../../core/utils/string');
 const { User } = require('../user/model/user.model');
 const { ForgotPassword } = require('./model/forgot-password.model');
@@ -66,7 +63,7 @@ exports.ForgotPasswordService = new (class {
     });
 
     if (!forgotPassword) {
-      throw new NotFoundException('Token invalid');
+      throw new BadRequestException('Token not found');
     }
 
     await forgotPassword.user.update({
