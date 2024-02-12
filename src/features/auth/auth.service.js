@@ -107,7 +107,16 @@ class AuthService {
 
       return user;
     } catch (err) {
-      throw new UnauthorizedException(err.message);
+      const messages = {
+        'jwt malformed': 'Access token invalid',
+        'jwt expired': 'Access token expired',
+      };
+
+      throw new UnauthorizedException(
+        err instanceof jwt.JsonWebTokenError
+          ? messages[err.message]
+          : err.message,
+      );
     }
   }
 
@@ -138,16 +147,16 @@ class AuthService {
     };
   }
 
-  async generateAccessToken(user) {
-    {
-      return await jwt.sign(
-        {
-          userId: user.id,
-        },
-        config.secret,
-        { expiresIn: config.expiresIn },
-      );
-    }
+  async generateAccessToken(user, options = {}) {
+    const expiresIn = options.expiresIn || config.expiresIn;
+
+    return await jwt.sign(
+      {
+        userId: user.id,
+      },
+      config.secret,
+      { expiresIn },
+    );
   }
 
   async loginWithGoogle(token) {
