@@ -6,6 +6,7 @@ const {
 } = require('../../../../core/server/exceptions/unauthorized.exception');
 const { AuthService } = require('../../../auth/auth.service');
 const { User } = require('../../../user/model/user.model');
+const { testValidMe } = require('../supports/me.support');
 
 beforeEach(async () => {
   await User.destroy({
@@ -46,4 +47,38 @@ test('the expired token should be error', async () => {
   );
 });
 
-// test.only('test invalid user should be error')
+test('test invalid user should be error', async () => {
+  const user = await User.create({
+    name: 'test',
+    email: 'test@email.com',
+    password: 'password',
+  });
+  const accessToken = await AuthService.generateAccessToken(user);
+
+  await user.destroy();
+
+  const res = await supertest(server.app)
+    .get('/me')
+    .set('Authorization', accessToken)
+    .expect(401);
+
+  expect(res.body).toEqual(
+    new UnauthorizedException('User with the id is not found').toResponse(),
+  );
+});
+
+test('test valid access token should return me', async () => {
+  const user = await User.create({
+    name: 'test',
+    email: 'test@email.com',
+    password: 'password',
+  });
+  const accessToken = await AuthService.generateAccessToken(user);
+
+  const res = await supertest(server.app)
+    .get('/me')
+    .set('Authorization', accessToken)
+    .expect(200);
+
+  testValidMe(res.body.data, user);
+});
