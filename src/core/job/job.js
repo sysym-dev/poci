@@ -13,12 +13,14 @@ exports.createJob = function (name, options) {
 
   return {
     dispatch: async (payload) => {
-      const queue = new Queue(name, {
-        isWorker: false,
-        ...config,
-      });
+      if (!jobConfig.disabled) {
+        const queue = new Queue(name, {
+          isWorker: false,
+          ...config,
+        });
 
-      await queue.createJob(payload.data).save();
+        await queue.createJob(payload.data).save();
+      }
     },
     process: () => {
       const queue = new Queue(name, config);

@@ -8,4 +8,5 @@ exports.db = new Sequelize({
   username: config.username,
   password: config.password,
   database: config.name,
+  logging: config.silent ? false : true,
 });

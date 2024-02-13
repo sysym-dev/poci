@@ -1,8 +1,5 @@
 const dayjs = require('dayjs');
 const path = require('path');
-const {
-  NotFoundException,
-} = require('../../core/server/exceptions/not-found.exception');
 const { randomToken } = require('../../core/utils/string');
 const { User } = require('../user/model/user.model');
 const { ForgotPassword } = require('./model/forgot-password.model');
@@ -11,6 +8,9 @@ const {
   sendResetPasswordLinkJob,
 } = require('./jobs/send-reset-password-link.job');
 const { generateClientUrl } = require('../../core/app/app.helper');
+const {
+  BadRequestException,
+} = require('../../core/server/exceptions/bad-request.exception');
 
 exports.ForgotPasswordService = new (class {
   async createByEmail(email) {
@@ -21,7 +21,7 @@ exports.ForgotPasswordService = new (class {
     });
 
     if (!user) {
-      throw new NotFoundException('User with the email is not found');
+      throw new BadRequestException('Email not found');
     }
 
     const existingForgotPassword = await user.getForgotPassword();
@@ -63,7 +63,7 @@ exports.ForgotPasswordService = new (class {
     });
 
     if (!forgotPassword) {
-      throw new NotFoundException('Token invalid');
+      throw new BadRequestException('Token not found');
     }
 
     await forgotPassword.user.update({

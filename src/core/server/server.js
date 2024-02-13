@@ -15,7 +15,11 @@ exports.createServer = function (options) {
   server.use(cors());
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
-  server.use(morgan('tiny'));
+
+  if (!config.silent) {
+    server.use(morgan('tiny'));
+  }
+
   server.use(createResourcesRouter(resources));
 
   for (const route of routes) {
@@ -31,6 +35,7 @@ exports.createServer = function (options) {
   }
 
   return {
+    app: server,
     listen,
   };
 };

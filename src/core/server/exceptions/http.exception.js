@@ -10,4 +10,13 @@ exports.HttpException = class extends Error {
     this.status = status;
     this.details = details;
   }
+
+  toResponse() {
+    return {
+      status: this.status,
+      name: this.name,
+      message: this.message,
+      details: this.details,
+    };
+  }
 };
