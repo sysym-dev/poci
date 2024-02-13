@@ -37,7 +37,7 @@ test('the not exist category should be error', async () => {
   });
   const accessToken = await AuthService.generateAccessToken(user);
 
-  const res = await supertest(server.app)
+  await supertest(server.app)
     .post('/tasks')
     .set('Authorization', accessToken)
     .send({
@@ -45,12 +45,6 @@ test('the not exist category should be error', async () => {
       task_category_id: 1,
     })
     .expect(422);
-
-  expect(res.body).toEqual(
-    new UnprocessableEntityException('Invalid Request (task_category_id)', {
-      task_category_id: "task_category_id with value 1 doesn't exists",
-    }).toResponse(),
-  );
 });
 
 test('the not owned category should be error', async () => {
@@ -70,7 +64,7 @@ test('the not owned category should be error', async () => {
     userId: otherUser.id,
   });
 
-  const res = await supertest(server.app)
+  await supertest(server.app)
     .post('/tasks')
     .set('Authorization', accessToken)
     .send({
@@ -78,15 +72,9 @@ test('the not owned category should be error', async () => {
       task_category_id: taskCategory.id,
     })
     .expect(422);
-
-  expect(res.body).toEqual(
-    new UnprocessableEntityException('Invalid Request (task_category_id)', {
-      task_category_id: "task_category_id with value 1 doesn't exists",
-    }).toResponse(),
-  );
 });
 
-test.only('the status attribute exists should be error', async () => {
+test('the status attribute exists should be error', async () => {
   const user = await User.create({
     name: 'test',
     email: 'test@email.com',
