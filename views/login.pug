@@ -4,7 +4,9 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Login
     body 
-        form(action="/", method="post")
+        each val in getFlashMessages('error')
+            p= val
+        form(action="/login", method="post")
             fieldset
                 legend Login to your account
                 label Email
