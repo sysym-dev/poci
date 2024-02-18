@@ -6,6 +6,9 @@ import { validateSchema } from './src/core/validation/validate-schema.js';
 import { loginSchema } from './src/features/auth/schemas/login.schema.js';
 import { login } from './src/features/auth/auth.service.js';
 import { AuthenticationError } from './src/features/auth/auth.error.js';
+import { requireAuth } from './src/middlewares/require-auth.middleware.js';
+import { requireGuest } from './src/middlewares/require-guest.middleware.js';
+import { handleRequest } from './src/middlewares/handle-request.middleware.js';
 
 const app = express();
 
@@ -16,7 +19,7 @@ app.use(
   session({
     secret: 'test',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   }),
 );
 app.use(
@@ -25,16 +28,31 @@ app.use(
   }),
 );
 
-app.get('/login', (req, res) => {
+app.get(
+  '/',
+  requireAuth,
+  handleRequest((req, res) => {
+    if (!req.session.isLoggedIn) {
+      return res.redirect('/login');
+    }
+
+    return res.send(req.session.userId);
+  }),
+);
+app.get('/login', requireGuest, (req, res) => {
   return res.render('login');
 });
 app.post('/login', [
+  requireGuest,
   validateSchema(loginSchema, { redirect: '/login' }),
-  async (req, res, next) => {
+  handleRequest(async (req, res) => {
     try {
       const user = await login(req.body);
 
-      return res.send(user);
+      req.session.isLoggedIn = true;
+      req.session.userId = user.id;
+
+      return res.redirect('/');
     } catch (err) {
       if (err instanceof AuthenticationError) {
         res.flash('error', err.message);
@@ -42,9 +60,9 @@ app.post('/login', [
         return res.redirect('/login');
       }
 
-      next(err);
+      throw err;
     }
-  },
+  }),
 ]);
 
 app.listen(process.env.PORT, () => {
