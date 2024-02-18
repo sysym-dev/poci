@@ -1,7 +1,11 @@
+import 'dotenv/config.js';
 import express from 'express';
 import session from 'express-session';
 import flash from 'express-flash-message';
-import { validationResult, matchedData, checkSchema } from 'express-validator';
+import { validateSchema } from './src/core/validation/validate-schema.js';
+import { loginSchema } from './src/features/auth/schemas/login.schema.js';
+import { login } from './src/features/auth/auth.service.js';
+import { AuthenticationError } from './src/features/auth/auth.error.js';
 
 const app = express();
 
@@ -25,37 +29,24 @@ app.get('/login', (req, res) => {
   return res.render('login');
 });
 app.post('/login', [
-  checkSchema({
-    email: {
-      isEmail: {
-        errorMessage: 'email invalid',
-      },
-      notEmpty: {
-        errorMessage: 'email required',
-      },
-    },
-    password: {
-      isString: {
-        errorMessage: 'password invalid',
-      },
-      notEmpty: {
-        errorMessage: 'password required',
-      },
-    },
-  }),
-  (req, res) => {
-    const error = validationResult(req);
+  validateSchema(loginSchema, { redirect: '/login' }),
+  async (req, res, next) => {
+    try {
+      const user = await login(req.body);
 
-    if (!error.isEmpty()) {
-      res.flash('error', error.array()[0].msg);
+      return res.send(user);
+    } catch (err) {
+      if (err instanceof AuthenticationError) {
+        res.flash('error', err.message);
 
-      return res.redirect('/login');
+        return res.redirect('/login');
+      }
+
+      next(err);
     }
-
-    return res.send(matchedData(req));
   },
 ]);
 
-app.listen(3000, () => {
-  console.log('app listen at 3000');
+app.listen(process.env.PORT, () => {
+  console.log(`app listen at ${process.env.PORT}`);
 });
