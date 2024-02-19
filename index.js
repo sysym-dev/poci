@@ -2,8 +2,10 @@ import 'dotenv/config.js';
 import express from 'express';
 import session from 'express-session';
 import flash from 'express-flash-message';
+
 import { router as indexRouter } from './src/features/index/index.router.js';
 import { router as authRouter } from './src/features/auth/auth.router.js';
+import { router as collectionRouter } from './src/features/collection/collection.router.js';
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use(
 
 app.use(indexRouter);
 app.use(authRouter);
+app.use(collectionRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`app listen at ${process.env.PORT}`);
