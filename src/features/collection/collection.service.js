@@ -1,7 +1,7 @@
 import { pool } from '../../core/database/pool.js';
 
 export async function readCollections({ userId }) {
-  const [rows] = await pool.query(
+  const [rows] = await pool.execute(
     'SELECT name FROM collections WHERE user_id = ?',
     [userId],
   );

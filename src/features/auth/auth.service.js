@@ -3,7 +3,7 @@ import { AuthenticationError } from './auth.error.js';
 import bcrypt from 'bcrypt';
 
 async function findUser(email) {
-  const [rows] = await pool.query(
+  const [rows] = await pool.execute(
     'SELECT id, email, password FROM users WHERE email = ? LIMIT 1',
     [email],
   );
