@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 async function findUser(email) {
   const [rows] = await pool.query(
-    'SELECT `email`, `password` FROM `users` WHERE `email` = ? LIMIT 1',
+    'SELECT id, email, password FROM users WHERE email = ? LIMIT 1',
     [email],
   );
 
