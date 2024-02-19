@@ -8,3 +8,10 @@ export async function readCollections({ userId }) {
 
   return rows;
 }
+
+export async function newCollection(payload) {
+  await pool.execute('INSERT INTO collections (name, user_id) VALUES (?, ?)', [
+    payload.name,
+    payload.userId,
+  ]);
+}
