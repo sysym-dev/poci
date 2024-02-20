@@ -707,6 +707,10 @@ body {
   display: flex;
 }
 
+.list-decimal {
+  list-style-type: decimal;
+}
+
 .gap-x-1 {
   -moz-column-gap: 0.25rem;
        column-gap: 0.25rem;
@@ -725,4 +729,16 @@ body {
 
 .p-4 {
   padding: 1rem;
+}
+
+.pl-5 {
+  padding-left: 1.25rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.pl-8 {
+  padding-left: 2rem;
 }
