@@ -4,6 +4,7 @@ import { validateSchema } from '../../core/validation/validate-schema.js';
 import { newSchema } from './schemas/new.schema.js';
 import { editSchema } from './schemas/edit.schema.js';
 import {
+  deleteCollection,
   findCollection,
   newCollection,
   updateCollection,
@@ -61,5 +62,15 @@ router
       return res.redirect('/');
     }),
   );
+
+router.get(
+  '/collections/:id/delete',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await deleteCollection({ id: req.params.id, userId: req.auth.userId });
+
+    return res.redirect('/');
+  }),
+);
 
 export { router };

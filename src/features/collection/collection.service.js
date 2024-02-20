@@ -40,3 +40,14 @@ export async function updateCollection({ id, userId }, payload) {
     throw new NotFoundError('Collection not found');
   }
 }
+
+export async function deleteCollection({ id, userId }) {
+  const [res] = await pool.execute(
+    'DELETE FROM collections WHERE id = ? AND user_id = ?',
+    [id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Collection not found');
+  }
+}
