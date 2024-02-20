@@ -9,10 +9,10 @@ router.route('/').get(
   requireAuth,
   handleRequest(async (req, res) => {
     const collections = await readCollections({
-      userId: 1,
+      userId: req.auth.userId,
     });
 
-    return res.render('index', { collections });
+    return res.render('index', { title: 'Home', collections });
   }),
 );
 

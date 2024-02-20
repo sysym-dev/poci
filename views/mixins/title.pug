@@ -1,0 +1,3 @@
+mixin title(label, options)
+    - const sizes = {lg: 'title-lg'}
+    h1(class=`title ${sizes[options.size]}`)&attributes(attributes)= label

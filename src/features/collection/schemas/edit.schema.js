@@ -1,4 +1,4 @@
-export const newSchema = {
+export const editSchema = {
   name: {
     isString: {
       errorMessage: 'name invalid',

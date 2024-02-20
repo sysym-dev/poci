@@ -1,0 +1,8 @@
+extends ../layouts/app.pug
+
+include ../mixins/title.pug
+include ../mixins/link.pug
+
+block app-content
+    +title('Not Found', { size: 'lg' })
+    +link('Back', { href: '/' })

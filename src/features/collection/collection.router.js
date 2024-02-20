@@ -1,8 +1,14 @@
 import { Router } from 'express';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import { validateSchema } from '../../core/validation/validate-schema.js';
-import { newSchma } from './schemas/new.schema.js';
-import { newCollection } from './collection.service.js';
+import { newSchema } from './schemas/new.schema.js';
+import { editSchema } from './schemas/edit.schema.js';
+import {
+  deleteCollection,
+  findCollection,
+  newCollection,
+  updateCollection,
+} from './collection.service.js';
 import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 
 const router = Router();
@@ -11,11 +17,13 @@ router
   .route('/collections/new')
   .get(
     requireAuth,
-    handleRequest((req, res) => res.render('collection/new')),
+    handleRequest((req, res) =>
+      res.render('collection/new', { title: 'New Collection' }),
+    ),
   )
   .post(
     requireAuth,
-    validateSchema(newSchma, { redirect: '/collections/new' }),
+    validateSchema(newSchema, { redirect: '/collections/new' }),
     handleRequest(async (req, res) => {
       await newCollection({
         name: req.body.name,
@@ -25,5 +33,44 @@ router
       return res.redirect('/');
     }),
   );
+
+router
+  .route('/collections/:id/edit')
+  .get(
+    requireAuth,
+    handleRequest(async (req, res) => {
+      const collection = await findCollection({
+        id: req.params.id,
+        userId: req.auth.userId,
+      });
+
+      return res.render('collection/edit', {
+        title: 'Edit Collection',
+        collection,
+      });
+    }),
+  )
+  .post(
+    requireAuth,
+    validateSchema(editSchema),
+    handleRequest(async (req, res) => {
+      await updateCollection(
+        { id: req.params.id, userId: req.auth.userId },
+        req.body,
+      );
+
+      return res.redirect('/');
+    }),
+  );
+
+router.get(
+  '/collections/:id/delete',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await deleteCollection({ id: req.params.id, userId: req.auth.userId });
+
+    return res.redirect('/');
+  }),
+);
 
 export { router };

@@ -1,17 +1,19 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Index
-    body 
-        main 
-            section 
-                h1 Collections
-                a(href="/collections/new") New Collection
-                if !collections.length
-                    p Collections empty
-                else
-                    ul 
-                        each item in collections
-                            li= item.name
+extends layouts/app.pug
+
+include mixins/title.pug
+include mixins/link.pug
+
+block app-content
+    section(class='space-y-2') 
+        div 
+            +title('Collections', { size: 'lg' })
+            +link('New Collection', { href: '/collections/new' })
+        if !collections.length
+            p Collections empty
+        else
+            ul 
+                each item in collections
+                    li(class='flex gap-x-2')
+                        p= item.name
+                        +link('Edit', { href: `/collections/${item.id}/edit` })
+                        +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })
