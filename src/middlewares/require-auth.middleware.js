@@ -3,5 +3,7 @@ export function requireAuth(req, res, next) {
     return res.redirect('/login');
   }
 
+  req.auth = { userId: req.session.userId };
+
   next();
 }

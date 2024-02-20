@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title New Collection
+    body
+        each val in getFlashMessages('error')
+            p= val
+        form(action="/collections/new" method="post") 
+            fieldset 
+                legend New Collection
+                label(for="name") Name
+                input(id="name" name="name" placeholder="Name" type="text" autofocus)
+                button(type="submit") Save
