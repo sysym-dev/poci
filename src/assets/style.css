@@ -17,7 +17,7 @@
   }
 
   .link {
-    @apply text-sky-600;
+    @apply text-sky-600 hover:underline;
   }
 
   .input {
@@ -30,11 +30,11 @@
   .button {
     @apply inline-block px-2.5 py-1 rounded focus:outline-1 focus:outline-offset-2;
   }
-  .button-primary {
+  .button-sky {
     @apply bg-sky-600 text-white hover:bg-sky-700 focus:outline-sky-700;
   }
   .button-gray {
-    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-gray-700;
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-gray-300;
   }
 
   .alert {

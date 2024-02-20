@@ -597,6 +597,10 @@ body {
   color: rgb(2 132 199 / var(--tw-text-opacity));
 }
 
+.link:hover {
+  text-decoration-line: underline;
+}
+
 .input {
   display: block;
   width: 100%;
@@ -633,19 +637,19 @@ body {
   outline-offset: 2px;
 }
 
-.button-primary {
+.button-sky {
   --tw-bg-opacity: 1;
   background-color: rgb(2 132 199 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.button-primary:hover {
+.button-sky:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(3 105 161 / var(--tw-bg-opacity));
 }
 
-.button-primary:focus {
+.button-sky:focus {
   outline-color: #0369a1;
 }
 
@@ -662,7 +666,7 @@ body {
 }
 
 .button-gray:focus {
-  outline-color: #374151;
+  outline-color: #d1d5db;
 }
 
 .alert {

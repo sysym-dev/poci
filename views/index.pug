@@ -1,10 +1,13 @@
 extends layouts/app.pug
 
+include mixins/title.pug
+include mixins/link.pug
+
 block app-content
     section(class="space-y-2") 
         div 
-            h1(class="title title-lg") Collections
-            a(href="/collections/new" class="link") New Collection
+            +title('Collections', { size: 'lg' })
+            +link('New Collection', { href: '/collections/new' })
         if !collections.length
             p Collections empty
         else
@@ -12,4 +15,4 @@ block app-content
                 each item in collections
                     li(class="flex gap-x-2")
                         p= item.name
-                        a(href=`/collections/${item.id}/edit` class="link") Edit
+                        +link('Edit', { href: `/collections/${item.id}/edit` })

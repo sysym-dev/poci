@@ -1,13 +1,15 @@
 extends ../layouts/app.pug
 
+include ../mixins/error-alert.pug
+include ../mixins/title.pug
+include ../mixins/input.pug
+include ../mixins/button.pug
+
 block app-content
-    each val in getFlashMessages('error')
-        div(class="alert alert-red")= val
+    +error-alert
     form(action="/collections/new" method="post") 
-        h1(class="title title-lg mb-2") New Collection
-        div(class="mb-2")
-            label(for="name" class="label") Name
-            input(id="name" name="name" placeholder="Name" type="text" class="input" autofocus required)
+        +title('New Collection', { size: 'lg' })(class="mb-2")
+        +input('Name', { input: { name: 'name', type: 'text', required: true, autofocus: true } })
         div(class="flex gap-x-1")
-            button(type="submit" class="button button-primary") Save
-            a(href="/" class="button button-gray") Back
+            +button('Save', { color: 'sky' })
+            +button('Back', { color: 'gray', link: { href: '/' } })

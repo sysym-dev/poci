@@ -1,15 +1,14 @@
 extends layouts/app.pug
 
+include mixins/title.pug
+include mixins/input.pug
+include mixins/button.pug
+include mixins/error-alert.pug
+
 block app-content
-    each val in getFlashMessages('error')
-        div(class="alert alert-red")= val
-    form(action="/login", method="post")
-        fieldset
-            h1(class="title title-lg mb-2") Login to your account
-            div(class="mb-2")
-                label(class="label") Email
-                input(type="email", name="email", placeholder="Email" class="input" required autofocus) 
-            div(class="mb-2")
-                label(class="label") Password
-                input(type="password", name="password", placeholder="Password" class="input" required)
-            button(type="submit" class="button button-primary") Login
+    +error-alert
+    form(action='/login', method='post')
+        +title('Login to your account', { size: 'lg' })(class='mb-2')
+        +input('Email', { input: { name: 'email', type: 'email', required: true, autofocus: true } })
+        +input('Password', { input: { name: 'password', type: 'password', required: true } })
+        +button('Login', { color: 'sky' })

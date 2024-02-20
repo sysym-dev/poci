@@ -1,5 +1,8 @@
 extends ../layouts/app.pug
 
+include ../mixins/title.pug
+include ../mixins/link.pug
+
 block app-content
-    h1(class="title title-lg") Internal Server Error
-    a(class="link" href="/") Back
+    +title('Internal Server Error', { size: 'lg' })
+    +link('Back', { href: '/' })

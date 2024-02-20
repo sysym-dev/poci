@@ -1,5 +1,8 @@
 extends ../layouts/app.pug
 
+include ../mixins/title.pug
+include ../mixins/link.pug
+
 block app-content
-    h1(class="title title-lg") Not Found
-    a(class="link" href="/") Back
+    +title('Not Found', { size: 'lg' })
+    +link('Back', { href: '/' })

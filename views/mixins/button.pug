@@ -1,0 +1,7 @@
+mixin button(label, options)
+    - const colors = {sky: 'button-sky', gray: 'button-gray'}
+    
+    if options.link 
+        a(href=options.link.href class=`button ${colors[options.color]}`)= label
+    else
+        button(type='submit' class=`button button-${options.color}`)= label
