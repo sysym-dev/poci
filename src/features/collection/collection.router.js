@@ -16,7 +16,9 @@ router
   .route('/collections/new')
   .get(
     requireAuth,
-    handleRequest((req, res) => res.render('collection/new')),
+    handleRequest((req, res) =>
+      res.render('collection/new', { title: 'New Collection' }),
+    ),
   )
   .post(
     requireAuth,
@@ -41,7 +43,10 @@ router
         userId: req.auth.userId,
       });
 
-      return res.render('collection/edit', { collection });
+      return res.render('collection/edit', {
+        title: 'Edit Collection',
+        collection,
+      });
     }),
   )
   .post(

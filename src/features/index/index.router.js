@@ -12,7 +12,7 @@ router.route('/').get(
       userId: req.auth.userId,
     });
 
-    return res.render('index', { collections });
+    return res.render('index', { title: 'Home', collections });
   }),
 );
 
