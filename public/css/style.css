@@ -599,6 +599,7 @@ body {
 
 .input {
   display: block;
+  width: 100%;
   border-radius: 0.25rem;
   border-width: 1px;
   padding-left: 0.625rem;
