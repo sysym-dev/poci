@@ -1,17 +1,15 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Index
-    body 
-        main 
-            section 
-                h1 Collections
-                a(href="/collections/new") New Collection
-                if !collections.length
-                    p Collections empty
-                else
-                    ul 
-                        each item in collections
-                            li= item.name
+extends layouts/app.pug
+
+block app-content
+    section(class="space-y-2") 
+        div 
+            h1(class="title title-lg") Collections
+            a(href="/collections/new" class="link") New Collection
+        if !collections.length
+            p Collections empty
+        else
+            ul 
+                each item in collections
+                    li(class="flex gap-x-2")
+                        p= item.name
+                        a(href="" class="link") Edit

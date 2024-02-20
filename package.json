@@ -23,7 +23,7 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,md}": "prettier --write"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

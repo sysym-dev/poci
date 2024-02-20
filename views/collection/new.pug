@@ -1,15 +1,13 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title New Collection
-    body
-        each val in getFlashMessages('error')
-            p= val
-        form(action="/collections/new" method="post") 
-            fieldset 
-                legend New Collection
-                label(for="name") Name
-                input(id="name" name="name" placeholder="Name" type="text" autofocus)
-                button(type="submit") Save
+extends ../layouts/app.pug
+
+block app-content
+    each val in getFlashMessages('error')
+        div(class="alert alert-red")= val
+    form(action="/collections/new" method="post") 
+        h1(class="title title-lg mb-2") New Collection
+        div(class="mb-2")
+            label(for="name" class="label") Name
+            input(id="name" name="name" placeholder="Name" type="text" class="input" autofocus)
+        div(class="flex gap-x-1")
+            button(type="submit" class="button button-primary") Save
+            a(href="/" class="button button-gray") Back

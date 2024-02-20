@@ -10,11 +10,11 @@ const router = Router();
 router
   .route('/collections/new')
   .get(
-    requireAuth,
+    // requireAuth,
     handleRequest((req, res) => res.render('collection/new')),
   )
   .post(
-    requireAuth,
+    // requireAuth,
     validateSchema(newSchma, { redirect: '/collections/new' }),
     handleRequest(async (req, res) => {
       await newCollection({
