@@ -7,9 +7,9 @@ include ../mixins/button.pug
 
 block app-content
     +error-alert
-    form(action=`/collections/${collection.id}/edit` method="post") 
-        +title('Edit Collection', { size: 'lg' })(class="mb-2")
+    form(action=`/collections/${collection.id}/edit` method='post') 
+        +title('Edit Collection', { size: 'lg' })(class='mb-2')
         +input('Name', { input: { name: 'name', type: 'text', value: collection.name, required: true, autofocus: true } })
-        div(class="flex gap-x-1")
+        div(class='flex gap-x-1')
             +button('Save', { color: 'sky' })
             +button('Back', { color: 'gray', link: { href: '/' } })
