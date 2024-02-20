@@ -9,7 +9,7 @@ export function validateSchema(schema, options) {
       if (!error.isEmpty()) {
         res.flash('error', error.array()[0].msg);
 
-        return res.redirect(options.redirect);
+        return res.redirect(options?.redirect ?? req.path);
       }
 
       req.body = matchedData(req);
