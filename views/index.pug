@@ -12,4 +12,4 @@ block app-content
                 each item in collections
                     li(class="flex gap-x-2")
                         p= item.name
-                        a(href="" class="link") Edit
+                        a(href=`/collections/${item.id}/edit` class="link") Edit

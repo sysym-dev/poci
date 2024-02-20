@@ -3,11 +3,11 @@ extends ../layouts/app.pug
 block app-content
     each val in getFlashMessages('error')
         div(class="alert alert-red")= val
-    form(action="/collections/new" method="post") 
-        h1(class="title title-lg mb-2") New Collection
+    form(action=`/collections/${collection.id}/edit` method="post") 
+        h1(class="title title-lg mb-2") Edit Collection
         div(class="mb-2")
             label(for="name" class="label") Name
-            input(id="name" name="name" placeholder="Name" type="text" class="input" autofocus required)
+            input(id="name" name="name" placeholder="Name" type="text" class="input" value=collection.name required autofocus)
         div(class="flex gap-x-1")
             button(type="submit" class="button button-primary") Save
             a(href="/" class="button button-gray") Back

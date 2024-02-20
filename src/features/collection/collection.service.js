@@ -1,8 +1,9 @@
 import { pool } from '../../core/database/pool.js';
+import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 export async function readCollections({ userId }) {
   const [rows] = await pool.execute(
-    'SELECT name FROM collections WHERE user_id = ?',
+    'SELECT id, name FROM collections WHERE user_id = ?',
     [userId],
   );
 
@@ -14,4 +15,28 @@ export async function newCollection(payload) {
     payload.name,
     payload.userId,
   ]);
+}
+
+export async function findCollection({ id, userId }) {
+  const [rows] = await pool.execute(
+    'SELECT id, name FROM collections WHERE id = ? AND user_id = ?',
+    [id, userId],
+  );
+
+  if (!rows.length) {
+    throw new NotFoundError('Collection not found');
+  }
+
+  return rows[0];
+}
+
+export async function updateCollection({ id, userId }, payload) {
+  const [res] = await pool.execute(
+    'UPDATE collections SET name = ? WHERE id = ? AND user_id = ?',
+    [payload.name, id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Collection not found');
+  }
 }
