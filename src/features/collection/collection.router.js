@@ -7,11 +7,13 @@ import {
   addCollectionItem,
   deleteCollection,
   findCollection,
+  isCollectionExists,
   newCollection,
   updateCollection,
 } from './collection.service.js';
 import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 import { newItemSchema } from './schemas/new-item.schema.js';
+import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 const router = Router();
 
@@ -95,6 +97,15 @@ router
     requireAuth,
     validateSchema(newItemSchema),
     handleRequest(async (req, res) => {
+      if (
+        !(await isCollectionExists({
+          id: req.params.id,
+          userId: req.auth.userId,
+        }))
+      ) {
+        throw new NotFoundError('Collection not found');
+      }
+
       await addCollectionItem({
         name: req.body.name,
         collectionId: req.params.id,

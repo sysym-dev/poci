@@ -52,6 +52,16 @@ export async function deleteCollection({ id, userId }) {
   }
 }
 
+export async function isCollectionExists({ id, userId }) {
+  const [res] = await pool.execute(
+    'SELECT COUNT(*) AS count FROM collections WHERE id = ? AND user_id = ?',
+    [id, userId],
+  );
+  const count = res[0].count;
+
+  return count > 0;
+}
+
 export async function addCollectionItem(payload) {
   await pool.execute(
     'INSERT INTO collection_items (name, collection_id, user_id) VALUES (?, ?, ?)',
