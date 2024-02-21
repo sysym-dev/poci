@@ -1,13 +1,101 @@
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
+function columnMapper(table, columns, attribute) {
+  return Object.fromEntries(
+    columns.map((column) => {
+      return [column, attribute[`${table}_${column}`]];
+    }),
+  );
+}
+function rowsMapper(rows, options) {
+  return rows.reduce((carry, item) => {
+    const itemId = item[`${options.table}_id`];
+    const itemIndexInCarry = carry.findIndex((carryItem) => {
+      return carryItem.id === itemId;
+    });
+
+    if (itemIndexInCarry === -1) {
+      const itemRelations = Object.fromEntries(
+        Object.entries(options.relations).map(([name, relation]) => {
+          const relationId = item[`${relation.table}_id`];
+
+          return [
+            name,
+            relationId
+              ? [
+                  {
+                    id: relationId,
+                    ...columnMapper(relation.table, relation.columns, item),
+                  },
+                ]
+              : [],
+          ];
+        }),
+      );
+
+      return [
+        ...carry,
+        {
+          id: itemId,
+          ...columnMapper(options.table, options.columns, item),
+          ...itemRelations,
+        },
+      ];
+    }
+
+    const itemRelations = Object.fromEntries(
+      Object.entries(options.relations).map(([name, relation]) => {
+        const relationId = item[`${relation.table}_id`];
+
+        return [
+          name,
+          [
+            ...carry[itemIndexInCarry][name],
+            {
+              id: relationId,
+              ...columnMapper(relation.table, relation.columns, item),
+            },
+          ],
+        ];
+      }),
+    );
+
+    carry[itemIndexInCarry] = {
+      ...carry[itemIndexInCarry],
+      ...itemRelations,
+    };
+
+    return carry;
+  }, []);
+}
+
 export async function readCollections({ userId }) {
   const [rows] = await pool.execute(
-    'SELECT id, name FROM collections WHERE user_id = ?',
+    `
+      SELECT
+        collections.id collections_id,
+        collections.name collections_name,
+        collection_items.id collection_items_id,
+        collection_items.name collection_items_name
+      FROM collections
+      LEFT JOIN collection_items
+      ON collection_items.collection_id = collections.id
+      WHERE collections.user_id = ?
+    `,
     [userId],
   );
 
-  return rows;
+  return rowsMapper(rows, {
+    table: 'collections',
+    columns: ['name'],
+    relations: {
+      items: {
+        table: 'collection_items',
+        columns: ['name'],
+      },
+    },
+  });
 }
 
 export async function newCollection(payload) {
