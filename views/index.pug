@@ -12,14 +12,13 @@ block app-content
             p Collections empty
         else
             ol(class='list-decimal pl-4') 
-                each item in collections
+                each collection in collections
                     li
                         div(class='flex gap-x-2')
-                            p= item.name
-                            +link('Edit', { href: `/collections/${item.id}/edit` })
-                            +link('Add Item', { href: `/collections/${item.id}/items/new` })
-                            +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })
+                            p= collection.name
+                            +link('Edit', { href: `/collections/${collection.id}/edit` })
+                            +link('Add Item', { href: `/collections/${collection.id}/items/new` })
+                            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
                         ol(class='pl-4 list-decimal') 
-                            li Jaket tracker
-                            li Koko batik
-                            li Celana yang tidak isbal
+                            each item in collection.items
+                                li= item.name
