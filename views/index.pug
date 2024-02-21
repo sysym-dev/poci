@@ -17,6 +17,7 @@ block app-content
                         div(class='flex gap-x-2')
                             p= item.name
                             +link('Edit', { href: `/collections/${item.id}/edit` })
+                            +link('Add Item', { href: `/collections/${item.id}/items/new` })
                             +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })
                         ol(class='pl-4 list-decimal') 
                             li Jaket tracker

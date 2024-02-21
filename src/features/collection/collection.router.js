@@ -4,12 +4,14 @@ import { validateSchema } from '../../core/validation/validate-schema.js';
 import { newSchema } from './schemas/new.schema.js';
 import { editSchema } from './schemas/edit.schema.js';
 import {
+  addCollectionItem,
   deleteCollection,
   findCollection,
   newCollection,
   updateCollection,
 } from './collection.service.js';
 import { requireAuth } from '../../middlewares/require-auth.middleware.js';
+import { newItemSchema } from './schemas/new-item.schema.js';
 
 const router = Router();
 
@@ -72,5 +74,35 @@ router.get(
     return res.redirect('/');
   }),
 );
+
+router
+  .route('/collections/:id/items/new')
+  .get(
+    requireAuth,
+    handleRequest(async (req, res) => {
+      const collection = await findCollection({
+        id: req.params.id,
+        userId: req.auth.userId,
+      });
+
+      return res.render('collection-item/new', {
+        title: 'New Collection Item',
+        collection,
+      });
+    }),
+  )
+  .post(
+    requireAuth,
+    validateSchema(newItemSchema),
+    handleRequest(async (req, res) => {
+      await addCollectionItem({
+        name: req.body.name,
+        collectionId: req.params.id,
+        userId: req.auth.userId,
+      });
+
+      return res.redirect('/');
+    }),
+  );
 
 export { router };

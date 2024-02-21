@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { pool } from './src/core/database/pool.js';
 
-await pool.execute('DROP TABLE collections;');
-await pool.execute('DROP TABLE users;');
+await pool.execute('DROP TABLE IF EXISTS collections;');
+await pool.execute('DROP TABLE IF EXISTS users;');
 
 await pool.execute(`
     CREATE TABLE users (

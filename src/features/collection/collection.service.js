@@ -51,3 +51,10 @@ export async function deleteCollection({ id, userId }) {
     throw new NotFoundError('Collection not found');
   }
 }
+
+export async function addCollectionItem(payload) {
+  await pool.execute(
+    'INSERT INTO collection_items (name, collection_id, user_id) VALUES (?, ?, ?)',
+    [payload.name, payload.collectionId, payload.userId],
+  );
+}
