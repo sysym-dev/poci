@@ -6,13 +6,11 @@ import { readCollections } from '../collection/collection.service.js';
 const router = Router();
 
 router.route('/').get(
-  // requireAuth,
+  requireAuth,
   handleRequest(async (req, res) => {
     const collections = await readCollections({
-      userId: 1,
+      userId: req.auth.userId,
     });
-
-    console.log(JSON.stringify(collections, null, 4));
 
     return res.render('index', { title: 'Home', collections });
   }),
