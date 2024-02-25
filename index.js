@@ -5,6 +5,7 @@ import flash from 'express-flash-message';
 import { router as indexRouter } from './src/features/index/index.router.js';
 import { router as authRouter } from './src/features/auth/auth.router.js';
 import { router as collectionRouter } from './src/features/collection/collection.router.js';
+import { router as collectionItemRouter } from './src/features/collection-item/collection-item.router.js';
 import { ServerError } from './src/core/server/errors/server.error.js';
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(
 app.use(indexRouter);
 app.use(authRouter);
 app.use(collectionRouter);
+app.use(collectionItemRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof ServerError) {
