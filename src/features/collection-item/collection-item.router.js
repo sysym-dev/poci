@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import {
+  deleteCollectionItem,
   findCollectionItem,
   updateCollectionItem,
 } from './collection-item.service.js';
@@ -46,5 +47,23 @@ router
       return res.redirect(`/collections/${collectionItem.collection_id}`);
     }),
   );
+
+router.get(
+  '/collection-items/:id/delete',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    const collectionItem = await findCollectionItem({
+      id: req.params.id,
+      userId: req.auth.userId,
+    });
+
+    await deleteCollectionItem({
+      id: req.params.id,
+      userId: req.auth.userId,
+    });
+
+    return res.redirect(`/collections/${collectionItem.collection_id}`);
+  }),
+);
 
 export { router };
