@@ -6,7 +6,9 @@ include ../mixins/link.pug
 
 block app-content
     +link('Back', { href: '/' })
-    +title(collection.name, { size: 'lg' })(class='my-2')
+    div(class='my-2')
+        +title(collection.name, { size: 'lg' })
+        +link('Add Item', { href: `/collections/${collection.id}/items/new` })
     if !collection.items.length
         p Collections empty
     else

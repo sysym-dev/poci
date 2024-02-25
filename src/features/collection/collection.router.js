@@ -129,7 +129,7 @@ router
         userId: req.auth.userId,
       });
 
-      return res.redirect('/');
+      return res.redirect(`/collections/${req.params.id}`);
     }),
   );
 
