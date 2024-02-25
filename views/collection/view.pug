@@ -11,7 +11,7 @@ block app-content
         div(class='flex gap-x-2')
             +link('Add Item', { href: `/collections/${collection.id}/items/new` })
             +link('Edit', { href: `/collections/${collection.id}/edit?from=/collections/${collection.id}` })
-            +link('Delete', { href: `/collections/${collection.id}/items/new`, color: 'red' })
+            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
     if !collection.items.length
         p Collections empty
     else
