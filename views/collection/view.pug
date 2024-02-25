@@ -17,5 +17,5 @@ block app-content
                 li
                     div(class='flex gap-x-2')
                         p= item.name
-                        +link('Edit', { href: `/collections/${item.id}/edit` })
-                        +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })
+                        +link('Edit', { href: `/collection-items/${item.id}/edit` })
+                        +link('Delete', { href: `/collection-items/${item.id}/delete`, color: 'red' })
