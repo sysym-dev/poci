@@ -68,6 +68,7 @@ router
       return res.render('collection/edit', {
         title: 'Edit Collection',
         collection,
+        from: req.query.from ?? '/',
       });
     }),
   )
@@ -80,7 +81,7 @@ router
         req.body,
       );
 
-      return res.redirect('/');
+      return res.redirect(req.query.from ?? '/');
     }),
   );
 
