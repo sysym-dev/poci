@@ -1,0 +1,19 @@
+extends ../layouts/app.pug
+
+include ../mixins/error-alert.pug
+include ../mixins/title.pug
+include ../mixins/link.pug
+
+block app-content
+    +link('Back', { href: '/' })
+    +title(collection.name, { size: 'lg' })(class='my-2')
+    if !collection.items.length
+        p Collections empty
+    else
+        ol(class='list-decimal pl-4') 
+            each item in collection.items
+                li
+                    div(class='flex gap-x-2')
+                        p= item.name
+                        +link('Edit', { href: `/collections/${item.id}/edit` })
+                        +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })

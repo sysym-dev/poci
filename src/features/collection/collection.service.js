@@ -3,42 +3,19 @@ import { rowsMapper } from '../../core/database/utils/mapper.util.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 export async function readCollections({ userId }) {
-  const [collections] = await pool.execute(
+  const [rows] = await pool.execute(
     `
       SELECT
-        collections.id AS collections_id,
-        collections.name AS collections_name,
-        collection_items.id AS collection_items_id,
-        collection_items.name AS collection_items_name
+        id,
+        name
       FROM collections
-      LEFT JOIN (
-        SELECT
-          id,
-          name,
-          collection_id,
-          ROW_NUMBER() OVER(PARTITION BY collection_id ORDER BY id) AS row_num
-        FROM collection_items
-      ) AS collection_items
-      ON
-        collection_items.collection_id = collections.id
-        AND collection_items.row_num <= 5
       WHERE user_id = ?
-      ORDER BY collections_id, collection_items_id
-      LIMIT 25
+      LIMIT 5
     `,
     [userId],
   );
 
-  return rowsMapper(collections, {
-    table: 'collections',
-    columns: ['name'],
-    relations: {
-      items: {
-        table: 'collection_items',
-        columns: ['name'],
-      },
-    },
-  });
+  return rows;
 }
 
 export async function newCollection(payload) {
@@ -50,7 +27,14 @@ export async function newCollection(payload) {
 
 export async function findCollection({ id, userId }) {
   const [rows] = await pool.execute(
-    'SELECT id, name FROM collections WHERE id = ? AND user_id = ?',
+    `
+      SELECT
+        id, name
+      FROM collections
+      WHERE
+        id = ?
+        AND user_id = ?
+    `,
     [id, userId],
   );
 
@@ -59,6 +43,40 @@ export async function findCollection({ id, userId }) {
   }
 
   return rows[0];
+}
+
+export async function findCollectionAndItems({ id, userId }) {
+  const [rows] = await pool.execute(
+    `
+      SELECT
+        collections.id AS collections_id,
+        collections.name AS collections_name,
+        collection_items.id AS collection_items_id,
+        collection_items.name AS collection_items_name
+      FROM collections
+      LEFT JOIN collection_items
+      ON collection_items.collection_id = collections.id
+      WHERE
+        collections.id = ?
+        AND collections.user_id = ?
+    `,
+    [id, userId],
+  );
+
+  if (!rows.length) {
+    throw new NotFoundError('Collection not found');
+  }
+
+  return rowsMapper(rows, {
+    table: 'collections',
+    columns: ['name'],
+    relations: {
+      items: {
+        table: 'collection_items',
+        columns: ['name'],
+      },
+    },
+  })[0];
 }
 
 export async function updateCollection({ id, userId }, payload) {

@@ -7,6 +7,7 @@ import {
   addCollectionItem,
   deleteCollection,
   findCollection,
+  findCollectionAndItems,
   isCollectionExists,
   newCollection,
   updateCollection,
@@ -37,6 +38,22 @@ router
       return res.redirect('/');
     }),
   );
+
+router.get(
+  '/collections/:id',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    const collection = await findCollectionAndItems({
+      id: req.params.id,
+      userId: req.auth.userId,
+    });
+
+    return res.render('collection/view', {
+      title: collection.name,
+      collection,
+    });
+  }),
+);
 
 router
   .route('/collections/:id/edit')
