@@ -6,9 +6,13 @@ document.querySelectorAll('.item-done-checkbox').forEach((checkbox) => {
 
 async function updateIsDone(id, value) {
   await fetch(`/api/collection-items/${id}/update-is-done`, {
-    method: 'post',
-    body: {
-      is_done: value,
+    method: 'PATCH',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      is_done: value,
+    }),
   });
 }
