@@ -2,7 +2,7 @@ import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 export async function findCollectionItem({ id, userId }) {
-  const [rows] = await pool.query(
+  const [rows] = await pool.execute(
     `SELECT id, name, collection_id FROM collection_items WHERE id = ? AND user_id = ?`,
     [id, userId],
   );
@@ -15,7 +15,7 @@ export async function findCollectionItem({ id, userId }) {
 }
 
 export async function updateCollectionItem({ id, userId }, payload) {
-  const [res] = await pool.query(
+  const [res] = await pool.execute(
     `
         UPDATE collection_items
         SET name = ?
@@ -32,7 +32,7 @@ export async function updateCollectionItem({ id, userId }, payload) {
 }
 
 export async function updateCollectionItemIsDone({ id, userId }, isDone) {
-  const [res] = await pool.query(
+  const [res] = await pool.execute(
     `UPDATE collection_items SET is_done = ? WHERE id = ? AND user_id = ?`,
     [isDone, id, userId],
   );
@@ -43,7 +43,7 @@ export async function updateCollectionItemIsDone({ id, userId }, isDone) {
 }
 
 export async function deleteCollectionItem({ id, userId }) {
-  const [res] = await pool.query(
+  const [res] = await pool.execute(
     `DELETE FROM collection_items WHERE id = ? AND user_id = ?`,
     [id, userId],
   );

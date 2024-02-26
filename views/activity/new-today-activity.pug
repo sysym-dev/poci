@@ -1,0 +1,15 @@
+extends ../layouts/app.pug
+
+include ../mixins/error-alert.pug
+include ../mixins/title.pug
+include ../mixins/input.pug
+include ../mixins/button.pug
+
+block app-content
+    +error-alert
+    form(action='/today-activities/new' method='post') 
+        +title('New Today Activity', { size: 'lg' })(class='mb-2')
+        +input('Name', { input: { name: 'name', type: 'text', autofocus: true } })
+        div(class='flex gap-x-1')
+            +button('Save', { color: 'sky' })
+            +button('Back', { color: 'gray', link: { href: '/' } })
