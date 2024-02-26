@@ -11,9 +11,10 @@ block app-content
         if !collections.length
             p Collections empty
         else
-            ul 
-                each item in collections
-                    li(class='flex gap-x-2')
-                        p= item.name
-                        +link('Edit', { href: `/collections/${item.id}/edit` })
-                        +link('Delete', { href: `/collections/${item.id}/delete`, color: 'red' })
+            ol(class='list-decimal pl-4') 
+                each collection in collections
+                    li
+                        div(class='flex gap-x-2')
+                            +link(collection.name, { href: `collections/${collection.id}`, color: 'black' })
+                            +link('Edit', { href: `/collections/${collection.id}/edit` })
+                            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })

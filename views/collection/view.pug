@@ -1,0 +1,28 @@
+extends ../layouts/app.pug
+
+include ../mixins/error-alert.pug
+include ../mixins/title.pug
+include ../mixins/link.pug
+
+block app-content
+    +link('Back', { href: '/' })
+    div(class='my-2')
+        +title(collection.name, { size: 'lg' })
+        div(class='flex gap-x-2')
+            +link('Add Item', { href: `/collections/${collection.id}/items/new` })
+            +link('Edit', { href: `/collections/${collection.id}/edit?from=/collections/${collection.id}` })
+            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
+    if !collection.items.length
+        p Collections empty
+    else
+        ol(class='') 
+            each item in collection.items
+                li
+                    div(class='flex items-center gap-x-2')
+                        input(class='item-done-checkbox' type='checkbox', checked=!!item.is_done value=item.id)
+                        p= item.name
+                        +link('Edit', { href: `/collection-items/${item.id}/edit` })
+                        +link('Delete', { href: `/collection-items/${item.id}/delete`, color: 'red' })
+
+block script
+    script(src='/public/js/collection/view.js')

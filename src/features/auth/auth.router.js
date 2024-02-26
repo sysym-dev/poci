@@ -15,7 +15,7 @@ router
   })
   .post([
     requireGuest,
-    validateSchema(loginSchema, { redirect: '/login' }),
+    validateSchema(loginSchema),
     handleRequest(async (req, res) => {
       try {
         const user = await login(req.body);

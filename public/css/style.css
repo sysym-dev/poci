@@ -606,6 +606,11 @@ body {
   color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
+.link-black {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+}
+
 .input {
   display: block;
   width: 100%;
@@ -695,6 +700,11 @@ body {
   margin-right: auto;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -705,6 +715,10 @@ body {
 
 .flex {
   display: flex;
+}
+
+.list-decimal {
+  list-style-type: decimal;
 }
 
 .gap-x-1 {
@@ -725,4 +739,8 @@ body {
 
 .p-4 {
   padding: 1rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
 }

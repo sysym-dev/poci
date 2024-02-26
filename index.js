@@ -5,6 +5,7 @@ import flash from 'express-flash-message';
 import { router as indexRouter } from './src/features/index/index.router.js';
 import { router as authRouter } from './src/features/auth/auth.router.js';
 import { router as collectionRouter } from './src/features/collection/collection.router.js';
+import { router as collectionItemRouter } from './src/features/collection-item/collection-item.router.js';
 import { ServerError } from './src/core/server/errors/server.error.js';
 
 const app = express();
@@ -13,6 +14,7 @@ app.set('view engine', 'pug');
 app.use('/public', express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   session({
     secret: 'test',
@@ -29,15 +31,16 @@ app.use(
 app.use(indexRouter);
 app.use(authRouter);
 app.use(collectionRouter);
+app.use(collectionItemRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof ServerError) {
-    return res.render(`error/${err.code}`);
+    return err.render(req, res);
   }
 
   console.log(err);
 
-  return res.render('error/500');
+  return new ServerError().render(req, res);
 });
 
 app.listen(process.env.PORT, () => {
