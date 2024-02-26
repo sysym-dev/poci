@@ -4,17 +4,35 @@ include mixins/title.pug
 include mixins/link.pug
 
 block app-content
-    section(class='space-y-2') 
-        div 
-            +title('Collections', { size: 'lg' })
-            +link('New Collection', { href: '/collections/new' })
-        if !collections.length
-            p Collections empty
-        else
-            ol(class='list-decimal pl-4') 
-                each collection in collections
-                    li
-                        div(class='flex gap-x-2')
-                            +link(collection.name, { href: `collections/${collection.id}`, color: 'black' })
-                            +link('Edit', { href: `/collections/${collection.id}/edit` })
-                            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
+    div(class='grid grid-cols-2')
+        section(class='space-y-2') 
+            div 
+                +title('Collections', { size: 'lg' })
+                +link('New Collection', { href: '/collections/new' })
+            if !collections.length
+                p Collections empty
+            else
+                ol(class='list-decimal pl-4') 
+                    each collection in collections
+                        li
+                            div(class='flex gap-x-2')
+                                +link(collection.name, { href: `collections/${collection.id}`, color: 'black' })
+                                +link('Edit', { href: `/collections/${collection.id}/edit` })
+                                +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
+        section(class='space-y-2') 
+            div 
+                +title('Today Activities', { size: 'lg' })
+                +link('Add Today Activity', { href: '/today-activities/new' })
+            ol
+                li(class='flex items-center gap-x-2')
+                    input(type='checkbox')
+                    p Menulis Rukun Wudhu
+                li(class='flex items-center gap-x-2')
+                    input(type='checkbox')
+                    p Menulis Artikel
+                li(class='flex items-center gap-x-2')
+                    input(type='checkbox')
+                    p Ngoding Proyek
+                li(class='flex items-center gap-x-2')
+                    input(type='checkbox')
+                    p Belajar C

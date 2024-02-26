@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { pool } from '../core/database/pool.js';
 
+await pool.execute('DROP TABLE IF EXISTS activities');
 await pool.execute('DROP TABLE IF EXISTS collection_items;');
 await pool.execute('DROP TABLE IF EXISTS collections;');
 await pool.execute('DROP TABLE IF EXISTS users;');
@@ -38,6 +39,19 @@ await pool.execute(`
             REFERENCES collections (id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+    )
+`);
+await pool.execute(`
+    CREATE TABLE activities (
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        name VARCHAR(255) NOT NULL,
+        due_date DATETIME NOT NULL,
+        user_id INT UNSIGNED NOT NULL,
+        PRIMARY KEY (id),
         FOREIGN KEY (user_id)
             REFERENCES users (id)
             ON UPDATE CASCADE
