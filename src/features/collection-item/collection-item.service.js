@@ -31,6 +31,17 @@ export async function updateCollectionItem({ id, userId }, payload) {
   }
 }
 
+export async function updateCollectionItemIsDone({ id, userId }, isDone) {
+  const [res] = await pool.query(
+    `UPDATE collection_items SET is_done = ? WHERE id = ? AND user_id = ?`,
+    [isDone, id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Collection item not found');
+  }
+}
+
 export async function deleteCollectionItem({ id, userId }) {
   const [res] = await pool.query(
     `DELETE FROM collection_items WHERE id = ? AND user_id = ?`,

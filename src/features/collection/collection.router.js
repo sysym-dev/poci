@@ -28,7 +28,7 @@ router
   )
   .post(
     requireAuth,
-    validateSchema(newSchema, { redirect: '/collections/new' }),
+    validateSchema(newSchema),
     handleRequest(async (req, res) => {
       await newCollection({
         name: req.body.name,

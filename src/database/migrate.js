@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { pool } from '../core/database/pool';
+import { pool } from '../core/database/pool.js';
 
 await pool.execute('DROP TABLE IF EXISTS collections;');
 await pool.execute('DROP TABLE IF EXISTS users;');
