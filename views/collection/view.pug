@@ -19,7 +19,7 @@ block app-content
             each item in collection.items
                 li
                     div(class='flex items-center gap-x-2')
-                        input(class='item-done-checkbox' type='checkbox', name='' checked=item.is_done value=item.id)
+                        input(class='item-done-checkbox' type='checkbox', checked=!!item.is_done value=item.id)
                         p= item.name
                         +link('Edit', { href: `/collection-items/${item.id}/edit` })
                         +link('Delete', { href: `/collection-items/${item.id}/delete`, color: 'red' })

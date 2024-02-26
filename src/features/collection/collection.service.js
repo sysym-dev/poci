@@ -52,7 +52,8 @@ export async function findCollectionAndItems({ id, userId }) {
         collections.id AS collections_id,
         collections.name AS collections_name,
         collection_items.id AS collection_items_id,
-        collection_items.name AS collection_items_name
+        collection_items.name AS collection_items_name,
+        collection_items.is_done AS collection_items_is_done
       FROM collections
       LEFT JOIN collection_items
       ON collection_items.collection_id = collections.id
@@ -73,7 +74,7 @@ export async function findCollectionAndItems({ id, userId }) {
     relations: {
       items: {
         table: 'collection_items',
-        columns: ['name'],
+        columns: ['name', 'is_done'],
       },
     },
   })[0];
