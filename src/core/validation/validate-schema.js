@@ -1,15 +1,14 @@
 import { validationResult, matchedData, checkSchema } from 'express-validator';
+import { UnprocessableEntityError } from '../server/errors/unprocessable-entity.error.js';
 
-export function validateSchema(schema, options) {
+export function validateSchema(schema) {
   return [
     checkSchema(schema, ['body']),
     (req, res, next) => {
       const error = validationResult(req);
 
       if (!error.isEmpty()) {
-        res.flash('error', error.array()[0].msg);
-
-        return res.redirect(options?.redirect ?? req.path);
+        throw new UnprocessableEntityError(null, error.array());
       }
 
       req.body = matchedData(req);
