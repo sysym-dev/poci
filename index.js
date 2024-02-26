@@ -14,6 +14,7 @@ app.set('view engine', 'pug');
 app.use('/public', express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   session({
     secret: 'test',
@@ -34,6 +35,10 @@ app.use(collectionItemRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof ServerError) {
+    if (err.render) {
+      return err.render(req, res);
+    }
+
     return res.render(`error/${err.code}`);
   }
 
