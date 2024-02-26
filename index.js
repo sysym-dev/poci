@@ -35,16 +35,12 @@ app.use(collectionItemRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof ServerError) {
-    if (err.render) {
-      return err.render(req, res);
-    }
-
-    return res.render(`error/${err.code}`);
+    return err.render(req, res);
   }
 
   console.log(err);
 
-  return res.render('error/500');
+  return new ServerError().render(req, res);
 });
 
 app.listen(process.env.PORT, () => {
