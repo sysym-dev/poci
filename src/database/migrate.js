@@ -49,7 +49,7 @@ await pool.execute(`
     CREATE TABLE activities (
         id INT UNSIGNED NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
-        due_date DATETIME NOT NULL,
+        due_at DATETIME NOT NULL,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
         user_id INT UNSIGNED NOT NULL,
         PRIMARY KEY (id),
