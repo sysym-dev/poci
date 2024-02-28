@@ -7,9 +7,11 @@ import {
   deleteActivity,
   findTodayActivity,
   newTodayActivity,
+  updateActivityIsDone,
   updateTodayActivity,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
+import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
 
 const router = Router();
 
@@ -72,5 +74,19 @@ router
       return res.redirect('/');
     }),
   );
+
+router.patch(
+  '/api/activities/:id/update-is-done',
+  requireAuth,
+  validateSchema(updateIsDoneSchema),
+  handleRequest(async (req, res) => {
+    await updateActivityIsDone(
+      { id: req.params.id, userId: req.auth.userId },
+      req.body.is_done,
+    );
+
+    return res.json('Ok');
+  }),
+);
 
 export { router };

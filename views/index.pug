@@ -29,7 +29,10 @@ block app-content
                 ol
                     each activity in activities
                         li(class='flex items-center gap-x-2')
-                            input(type='checkbox')
+                            input(type='checkbox' class='today-activity-done-checkbox' value=activity.id)
                             p= activity.name
                             +link('Edit', { href: `/today-activities/${activity.id}/edit` })
                             +link('Delete', { href: `/activities/${activity.id}/delete`, color: 'red' })
+
+block script
+    script(src='/public/js/index.js')

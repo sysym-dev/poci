@@ -53,3 +53,14 @@ export async function updateTodayActivity({ id, userId }, { name }) {
     throw new NotFoundError('Activity Not Found');
   }
 }
+
+export async function updateActivityIsDone({ id, userId }, isDone) {
+  const [res] = await pool.execute(
+    'UPDATE activities SET is_done = ? WHERE id = ? AND user_id = ?',
+    [isDone, id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Activity Not Found');
+  }
+}
