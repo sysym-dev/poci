@@ -1,4 +1,5 @@
 import { pool } from '../../core/database/pool.js';
+import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 export async function newTodayActivity({ name, userId }) {
   const dueDate = new Date();
@@ -16,4 +17,15 @@ export async function readActivities({ userId }) {
   );
 
   return rows;
+}
+
+export async function deleteActivity({ id, userId }) {
+  const [res] = await pool.execute(
+    `DELETE FROM activities WHERE id = ? AND user_id = ?`,
+    [id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Activity Not Found');
+  }
 }

@@ -31,3 +31,4 @@ block app-content
                         li(class='flex items-center gap-x-2')
                             input(type='checkbox')
                             p= activity.name
+                            +link('Delete', { href: `/activities/${activity.id}/delete`, color: 'red' })

@@ -3,7 +3,7 @@ import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import { validateSchema } from '../../core/validation/validate-schema.js';
 import { newTodayActivitySchema } from './schemas/new-today-activity.schema.js';
-import { newTodayActivity } from './activity.service.js';
+import { deleteActivity, newTodayActivity } from './activity.service.js';
 
 const router = Router();
 
@@ -25,5 +25,15 @@ router
       return res.redirect('/');
     }),
   );
+
+router.get(
+  '/activities/:id/delete',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await deleteActivity({ id: req.params.id, userId: req.auth.userId });
+
+    return res.redirect('/');
+  }),
+);
 
 export { router };
