@@ -29,3 +29,27 @@ export async function deleteActivity({ id, userId }) {
     throw new NotFoundError('Activity Not Found');
   }
 }
+
+export async function findTodayActivity({ id, userId }) {
+  const [res] = await pool.execute(
+    'SELECT id, name FROM activities WHERE id = ? AND user_id = ? LIMIT 1',
+    [id, userId],
+  );
+
+  if (!res.length) {
+    throw new NotFoundError('Activity Not Found');
+  }
+
+  return res[0];
+}
+
+export async function updateTodayActivity({ id, userId }, { name }) {
+  const [res] = await pool.execute(
+    'UPDATE activities SET name = ? WHERE id = ? AND user_id = ?',
+    [name, id, userId],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Activity Not Found');
+  }
+}
