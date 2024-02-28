@@ -3,6 +3,8 @@ document
   .forEach((checkbox) => {
     checkbox.addEventListener('change', (e) => {
       updateIsDone(e.target.value, e.target.checked);
+
+      e.target.nextSibling.classList.toggle('line-through');
     });
   });
 

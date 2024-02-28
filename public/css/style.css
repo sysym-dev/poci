@@ -756,3 +756,7 @@ body {
 .pl-4 {
   padding-left: 1rem;
 }
+
+.line-through {
+  text-decoration-line: line-through;
+}
