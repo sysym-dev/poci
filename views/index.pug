@@ -23,16 +23,11 @@ block app-content
             div 
                 +title('Today Activities', { size: 'lg' })
                 +link('Add Today Activity', { href: '/today-activities/new' })
-            ol
-                li(class='flex items-center gap-x-2')
-                    input(type='checkbox')
-                    p Menulis Rukun Wudhu
-                li(class='flex items-center gap-x-2')
-                    input(type='checkbox')
-                    p Menulis Artikel
-                li(class='flex items-center gap-x-2')
-                    input(type='checkbox')
-                    p Ngoding Proyek
-                li(class='flex items-center gap-x-2')
-                    input(type='checkbox')
-                    p Belajar C
+            if !activities.length
+                p Activities empty
+            else
+                ol
+                    each activity in activities
+                        li(class='flex items-center gap-x-2')
+                            input(type='checkbox')
+                            p= activity.name

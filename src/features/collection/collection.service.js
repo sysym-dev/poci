@@ -10,7 +10,6 @@ export async function readCollections({ userId }) {
         name
       FROM collections
       WHERE user_id = ?
-      LIMIT 5
     `,
     [userId],
   );

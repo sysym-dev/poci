@@ -11,7 +11,7 @@ export async function newTodayActivity({ name, userId }) {
 
 export async function readActivities({ userId }) {
   const [rows] = await pool.execute(
-    'SELECT id, name, is_done FROM activities WHERE user_id = ?',
+    'SELECT id, name FROM activities WHERE user_id = ?',
     [userId],
   );
 
