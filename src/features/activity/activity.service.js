@@ -1,19 +1,27 @@
+import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
 export async function newTodayActivity({ name, userId }) {
-  const dueDate = new Date();
+  const dueAt = dayjs().endOf('d').toDate();
 
   return await pool.execute(
-    'INSERT INTO activities (name, due_date, user_id) VALUES (?, ?, ?)',
-    [name, dueDate, userId],
+    'INSERT INTO activities (name, due_at, user_id) VALUES (?, ?, ?)',
+    [name, dueAt, userId],
   );
 }
 
-export async function readActivities({ userId }) {
+export async function readTodayActivities({ userId }) {
   const [rows] = await pool.execute(
-    'SELECT id, name, is_done FROM activities WHERE user_id = ?',
-    [userId],
+    `SELECT
+      id, name, is_done
+    FROM activities
+    WHERE
+      user_id = ?
+      AND due_at >= ?
+      AND due_at <= ?  
+    `,
+    [userId, dayjs().startOf('d').toDate(), dayjs().endOf('d').toDate()],
   );
 
   return rows;

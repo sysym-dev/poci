@@ -23,11 +23,11 @@ block app-content
             div 
                 +title('Today Activities', { size: 'lg' })
                 +link('Add Today Activity', { href: '/today-activities/new' })
-            if !activities.length
+            if !todayActivities.length
                 p Activities empty
             else
                 ol
-                    each activity in activities
+                    each activity in todayActivities
                         li(class='flex items-center gap-x-2')
                             input(type='checkbox' class=`today-activity-done-checkbox` value=activity.id checked=!!activity.is_done)
                             p(class=`${activity.is_done ? 'line-through' : ''}`)= activity.name
