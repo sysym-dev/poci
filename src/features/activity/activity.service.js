@@ -8,3 +8,12 @@ export async function newTodayActivity({ name, userId }) {
     [name, dueDate, userId],
   );
 }
+
+export async function readActivities({ userId }) {
+  const [rows] = await pool.execute(
+    'SELECT id, name, is_done FROM activities WHERE user_id = ?',
+    [userId],
+  );
+
+  return rows;
+}
