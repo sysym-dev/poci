@@ -1,9 +1,14 @@
+import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
-export async function findCollectionItem({ id, userId }) {
+export async function findCollectionItem({ id, userId, ...options }) {
+  const columns = (
+    options.columns ?? ['id', 'name', 'collection_id', 'user_id']
+  ).join(', ');
+
   const [rows] = await pool.execute(
-    `SELECT id, name, collection_id FROM collection_items WHERE id = ? AND user_id = ?`,
+    `SELECT ${columns} FROM collection_items WHERE id = ? AND user_id = ?`,
     [id, userId],
   );
 
@@ -51,4 +56,21 @@ export async function deleteCollectionItem({ id, userId }) {
   if (!res.affectedRows) {
     throw new NotFoundError('Collection item not found');
   }
+}
+
+export async function addCollectionItemToTodayActvity(collectionItem) {
+  return await pool.execute(
+    `
+    INSERT INTO activities
+      (name, user_id, due_at, collection_item_id)
+    VALUES
+      (?, ?, ?, ?)
+  `,
+    [
+      collectionItem.name,
+      collectionItem.user_id,
+      dayjs().endOf('d').toDate(),
+      collectionItem.id,
+    ],
+  );
 }
