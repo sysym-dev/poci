@@ -52,9 +52,14 @@ await pool.execute(`
         due_at DATETIME NOT NULL,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
         user_id INT UNSIGNED NOT NULL,
+        collection_item_id INT UNSIGNED NULL,
         PRIMARY KEY (id),
         FOREIGN KEY (user_id)
             REFERENCES users (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+        FOREIGN KEY (collection_item_id)
+            REFERENCES collection_items (id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
     )
