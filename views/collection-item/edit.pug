@@ -9,7 +9,7 @@ block app-content
     +error-alert
     form(action=`/collection-items/${collectionItem.id}/edit` method='post') 
         +title('Edit Collection Item', { size: 'lg' })(class='mb-2')
-        +input('Name', { input: { name: 'name', type: 'text', value: collectionItem.name, autofocus: true } })
+        +input('Name', { input: { name: 'name', type: 'text', value: collectionItem.name, required: true, autofocus: true } })
         div(class='flex gap-x-1')
             +button('Save', { color: 'sky' })
             +button('Back', { color: 'gray', link: { href: `/collections/${collectionItem.collection_id}` } })

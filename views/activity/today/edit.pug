@@ -9,7 +9,7 @@ block app-content
     +error-alert
     form(action=`/today-activities/${activity.id}/edit` method='post') 
         +title('Edit Activity', { size: 'lg' })(class='mb-2')
-        +input('Name', { input: { name: 'name', type: 'text', value: activity.name, autofocus: true } })
+        +input('Name', { input: { name: 'name', type: 'text', value: activity.name, required: true, autofocus: true } })
         div(class='flex gap-x-1')
             +button('Save', { color: 'sky' })
             +button('Back', { color: 'gray', link: { href: '/' } })
