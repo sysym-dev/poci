@@ -45,6 +45,11 @@ export async function updateCollectionItemIsDone({ id, userId }, isDone) {
   if (!res.affectedRows) {
     throw new NotFoundError('Collection item not found');
   }
+
+  await pool.execute(
+    'UPDATE activities SET is_done = ? WHERE collection_item_id = ?',
+    [isDone, id],
+  );
 }
 
 export async function deleteCollectionItem({ id, userId }) {
