@@ -5,10 +5,10 @@ import { validateSchema } from '../../core/validation/validate-schema.js';
 import { newTodayActivitySchema } from './schemas/new-today-activity.schema.js';
 import {
   deleteActivity,
-  findTodayActivity,
+  findActivity,
   newTodayActivity,
   updateActivityIsDone,
-  updateTodayActivity,
+  updateActivity,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -51,7 +51,7 @@ router
   .get(
     requireAuth,
     handleRequest(async (req, res) => {
-      const activity = await findTodayActivity({
+      const activity = await findActivity({
         id: req.params.id,
         userId: req.auth.userId,
       });
@@ -66,7 +66,7 @@ router
     requireAuth,
     validateSchema(editTodayActivitySchema),
     handleRequest(async (req, res) => {
-      await updateTodayActivity(
+      await updateActivity(
         { id: req.params.id, userId: req.auth.userId },
         { name: req.body.name },
       );

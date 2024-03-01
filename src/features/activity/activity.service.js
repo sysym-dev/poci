@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
+import { updateCollectionItemIsDone } from '../collection-item/collection-item.service.js';
 
 export async function newTodayActivity({ name, userId }) {
   const dueAt = dayjs().endOf('d').toDate();
@@ -38,9 +39,11 @@ export async function deleteActivity({ id, userId }) {
   }
 }
 
-export async function findTodayActivity({ id, userId }) {
+export async function findActivity({ id, userId, ...options }) {
+  const columns = (options.columns ?? ['id', 'name']).join(', ');
+
   const [res] = await pool.execute(
-    'SELECT id, name FROM activities WHERE id = ? AND user_id = ? LIMIT 1',
+    `SELECT ${columns} FROM activities WHERE id = ? AND user_id = ? LIMIT 1`,
     [id, userId],
   );
 
@@ -51,7 +54,7 @@ export async function findTodayActivity({ id, userId }) {
   return res[0];
 }
 
-export async function updateTodayActivity({ id, userId }, { name }) {
+export async function updateActivity({ id, userId }, { name }) {
   const [res] = await pool.execute(
     'UPDATE activities SET name = ? WHERE id = ? AND user_id = ?',
     [name, id, userId],
@@ -63,12 +66,21 @@ export async function updateTodayActivity({ id, userId }, { name }) {
 }
 
 export async function updateActivityIsDone({ id, userId }, isDone) {
-  const [res] = await pool.execute(
-    'UPDATE activities SET is_done = ? WHERE id = ? AND user_id = ?',
-    [isDone, id, userId],
-  );
+  const activity = await findActivity({
+    id,
+    userId,
+    columns: ['id', 'collection_item_id'],
+  });
 
-  if (!res.affectedRows) {
-    throw new NotFoundError('Activity Not Found');
+  await pool.execute('UPDATE activities SET is_done = ? WHERE id = ?', [
+    isDone,
+    activity.id,
+  ]);
+
+  if (activity.collection_item_id) {
+    await updateCollectionItemIsDone(
+      { id: activity.collection_item_id, userId },
+      isDone,
+    );
   }
 }
