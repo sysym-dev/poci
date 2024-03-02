@@ -132,3 +132,52 @@ export async function readUnfinishedActivityYesterday({ userId }) {
 
   return res;
 }
+
+export async function markAsDoneUnfinishedYesterdayActivities({ userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  const [unfinishedActivitieIdsYesterday] = await pool.execute(
+    `
+    SELECT id, collection_item_id
+    FROM activities
+    WHERE
+      user_id = ?
+      AND is_done = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  if (!unfinishedActivitieIdsYesterday.length) {
+    return false;
+  }
+
+  const activitiesHasCollectionItem = unfinishedActivitieIdsYesterday.filter(
+    (activity) => !!activity.collection_item_id,
+  );
+
+  if (activitiesHasCollectionItem.length) {
+    await pool.execute(
+      `
+      UPDATE collection_items
+      SET is_done = 1
+      WHERE id IN (${activitiesHasCollectionItem.map(() => '?').join(', ')})
+    `,
+      activitiesHasCollectionItem.map((item) => item.collection_item_id),
+    );
+  }
+
+  await pool.execute(
+    `
+    UPDATE activities
+    SET is_done = 1
+    WHERE id IN (${unfinishedActivitieIdsYesterday.map(() => '?').join(', ')})
+  `,
+    unfinishedActivitieIdsYesterday.map((item) => item.id),
+  );
+}

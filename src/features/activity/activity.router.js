@@ -10,6 +10,7 @@ import {
   updateActivityIsDone,
   updateActivity,
   readUnfinishedActivityYesterday,
+  markAsDoneUnfinishedYesterdayActivities,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -100,6 +101,16 @@ router.get(
         userId: req.auth.userId,
       }),
     });
+  }),
+);
+
+router.get(
+  '/yesterday-unfinished-activities/mark-as-done',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await markAsDoneUnfinishedYesterdayActivities({ userId: req.auth.userId });
+
+    return res.redirect('/');
   }),
 );
 

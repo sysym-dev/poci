@@ -8,7 +8,8 @@ block app-content
     div(class='my-2')
         +title('Unfinished Yesterday Activites', { size: 'lg' })
         div(class='flex gap-x-2')
-            +link('Extend All To Today', { href: `/yesterday-unfinished-activities/update-is-done` })
+            +link('Mark All As Done', { href: `/yesterday-unfinished-activities/mark-as-done` })
+            +link('Extend All To Today', { href: `/yesterday-unfinished-activities/finish` })
             +link('Dismiss', { href: `/`, color: 'red' })
     ol 
         each activity in unfinishedActivities
