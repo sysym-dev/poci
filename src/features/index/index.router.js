@@ -3,7 +3,7 @@ import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import { readCollections } from '../collection/collection.service.js';
 import {
-  getCountUncompletedActivityYesterday,
+  getCountUnfinishedActivityYesterday,
   readTodayActivities,
 } from '../activity/activity.service.js';
 
@@ -18,8 +18,8 @@ router.route('/').get(
     const todayActivities = await readTodayActivities({
       userId: req.auth.userId,
     });
-    const countUncompletedActivityYesterday =
-      await getCountUncompletedActivityYesterday({
+    const countUnfinishedActivityYesterday =
+      await getCountUnfinishedActivityYesterday({
         userId: req.auth.userId,
       });
 
@@ -27,7 +27,7 @@ router.route('/').get(
       title: 'Home',
       collections,
       todayActivities,
-      countUncompletedActivityYesterday,
+      countUnfinishedActivityYesterday,
     });
   }),
 );

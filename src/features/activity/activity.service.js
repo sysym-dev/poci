@@ -86,7 +86,7 @@ export async function updateActivityIsDone({ id, userId }, isDone) {
   }
 }
 
-export async function getCountUncompletedActivityYesterday({ userId }) {
+export async function getCountUnfinishedActivityYesterday({ userId }) {
   const yesterday = dayjs().subtract(1, 'day');
 
   const [res] = await pool.execute(
@@ -108,4 +108,27 @@ export async function getCountUncompletedActivityYesterday({ userId }) {
   );
 
   return res[0].count;
+}
+
+export async function readUnfinishedActivityYesterday({ userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  const [res] = await pool.execute(
+    `
+    SELECT id, name
+    FROM activities
+    WHERE
+     user_id = ?
+     AND is_done = 0
+     AND due_at >= ?
+     AND due_at <= ?
+  `,
+    [
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  return res;
 }

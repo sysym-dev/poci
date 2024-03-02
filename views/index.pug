@@ -4,12 +4,12 @@ include mixins/title.pug
 include mixins/link.pug
 
 block app-content
-    if countUncompletedActivityYesterday
+    if countUnfinishedActivityYesterday
         div(class='mb-2')
-            p You have #{countUncompletedActivityYesterday} uncompleted task yesterday
+            p You have #{countUnfinishedActivityYesterday} unfinished activities yesterday
             div(class='flex gap-x-2')  
-                +link('View All', { color: 'sky', href: '/' })
-                +link('Extend To Today', { color: 'sky', href: '/' })
+                +link('View All', { href: '/yesterday-unfinished-activities' })
+                +link('Extend To Today', { href: '/' })
                 +link('Dismiss', { color: 'red', href: '/' })
     div(class='grid grid-cols-2')
         section(class='space-y-2') 

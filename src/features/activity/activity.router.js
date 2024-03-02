@@ -9,6 +9,7 @@ import {
   newTodayActivity,
   updateActivityIsDone,
   updateActivity,
+  readUnfinishedActivityYesterday,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -86,6 +87,19 @@ router.patch(
     );
 
     return res.json('Ok');
+  }),
+);
+
+router.get(
+  '/yesterday-unfinished-activities',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    return res.render('activity/yesterday/unfinished', {
+      title: 'Unfinished Activities Yesterday',
+      unfinishedActivities: await readUnfinishedActivityYesterday({
+        userId: req.auth.userId,
+      }),
+    });
   }),
 );
 

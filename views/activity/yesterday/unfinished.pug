@@ -1,0 +1,18 @@
+extends ../../layouts/app.pug
+
+include ../../mixins/title.pug
+include ../../mixins/link.pug
+
+block app-content
+    +link('Back', { href: '/' })
+    div(class='my-2')
+        +title('Unfinished Yesterday Activites', { size: 'lg' })
+        div(class='flex gap-x-2')
+            +link('Extend All To Today', { href: `/yesterday-unfinished-activities/update-is-done` })
+            +link('Dismiss', { href: `/`, color: 'red' })
+    ol 
+        each activity in unfinishedActivities
+            li(class='flex items-center gap-x-2')
+                p= activity.name
+                +link('Extend To Today', { href: '/' })
+                +link('Mark As Done', { href: '/' })

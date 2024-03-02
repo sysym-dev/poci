@@ -11,5 +11,5 @@ block app-content
         +title('Edit Collection Item', { size: 'lg' })(class='mb-2')
         +input('Name', { input: { name: 'name', type: 'text', value: collectionItem.name, required: true, autofocus: true } })
         div(class='flex gap-x-1')
-            +button('Save', { color: 'sky' })
+            +button('Save')
             +button('Back', { color: 'gray', link: { href: `/collections/${collectionItem.collection_id}` } })
