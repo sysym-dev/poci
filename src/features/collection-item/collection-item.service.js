@@ -63,8 +63,32 @@ export async function deleteCollectionItem({ id, userId }) {
   }
 }
 
-export async function addCollectionItemToTodayActvity(collectionItem) {
-  return await pool.execute(
+export async function addCollectionItemToTodayActvity({ id, userId }) {
+  const [res] = await pool.execute(
+    `
+    SELECT id, name, user_id, collection_id
+    FROM collection_items
+    WHERE
+      id = ?
+      AND user_id = ?
+      AND NOT EXISTS (
+        SELECT * FROM activities
+        WHERE activities.collection_item_id = collection_items.id
+      )
+    LIMIT 1
+  `,
+    [id, userId],
+  );
+
+  if (!res.length) {
+    throw new NotFoundError(
+      'Collection item not found or already added to activity',
+    );
+  }
+
+  const [collectionItem] = res;
+
+  await pool.execute(
     `
     INSERT INTO activities
       (name, user_id, due_at, collection_item_id)
@@ -78,4 +102,6 @@ export async function addCollectionItemToTodayActvity(collectionItem) {
       collectionItem.id,
     ],
   );
+
+  return collectionItem;
 }

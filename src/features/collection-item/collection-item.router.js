@@ -90,12 +90,10 @@ router.get(
   '/collection-items/:id/add-to-today-activity',
   requireAuth,
   handleRequest(async (req, res) => {
-    const collectionItem = await findCollectionItem({
+    const collectionItem = await addCollectionItemToTodayActvity({
       id: req.params.id,
       userId: req.auth.userId,
     });
-
-    await addCollectionItemToTodayActvity(collectionItem);
 
     return res.redirect(`/collections/${collectionItem.collection_id}`);
   }),
