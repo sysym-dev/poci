@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import { readCollections } from '../collection/collection.service.js';
-import { readTodayActivities } from '../activity/activity.service.js';
+import {
+  getCountUncompletedActivityYesterday,
+  readTodayActivities,
+} from '../activity/activity.service.js';
 
 const router = Router();
 
@@ -15,8 +18,17 @@ router.route('/').get(
     const todayActivities = await readTodayActivities({
       userId: req.auth.userId,
     });
+    const countUncompletedActivityYesterday =
+      await getCountUncompletedActivityYesterday({
+        userId: req.auth.userId,
+      });
 
-    return res.render('index', { title: 'Home', collections, todayActivities });
+    return res.render('index', {
+      title: 'Home',
+      collections,
+      todayActivities,
+      countUncompletedActivityYesterday,
+    });
   }),
 );
 

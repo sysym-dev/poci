@@ -13,6 +13,7 @@ export async function newTodayActivity({ name, userId }) {
 }
 
 export async function readTodayActivities({ userId }) {
+  const today = dayjs();
   const [rows] = await pool.execute(
     `SELECT
       id, name, is_done
@@ -22,7 +23,7 @@ export async function readTodayActivities({ userId }) {
       AND due_at >= ?
       AND due_at <= ?  
     `,
-    [userId, dayjs().startOf('d').toDate(), dayjs().endOf('d').toDate()],
+    [userId, today.startOf('d').toDate(), today.endOf('d').toDate()],
   );
 
   return rows;
@@ -83,4 +84,28 @@ export async function updateActivityIsDone({ id, userId }, isDone) {
       isDone,
     );
   }
+}
+
+export async function getCountUncompletedActivityYesterday({ userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  const [res] = await pool.execute(
+    `
+    SELECT
+      COUNT(*) AS count
+    FROM activities
+    WHERE
+     user_id = ?
+     AND is_done = 0
+     AND due_at >= ?
+     AND due_at <= ?
+  `,
+    [
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  return res[0].count;
 }
