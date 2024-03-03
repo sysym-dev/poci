@@ -51,6 +51,7 @@ await pool.execute(`
         name VARCHAR(255) NOT NULL,
         due_at DATETIME NOT NULL,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
+        is_dismissed BOOLEAN NOT NULL DEFAULT FALSE,
         user_id INT UNSIGNED NOT NULL,
         collection_item_id INT UNSIGNED NULL,
         PRIMARY KEY (id),
