@@ -65,10 +65,23 @@ export async function deleteCollectionItem({ id, userId }) {
 
 export async function addCollectionItemToTodayActvity({ id, userId }) {
   const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
 
   const [res] = await pool.execute(
     `
-    SELECT id, name, user_id, collection_id
+    SELECT
+      id,
+      name,
+      user_id,
+      collection_id,
+      (
+        SELECT COUNT(*)
+        FROM activities
+        WHERE
+          activities.collection_item_id = collection_items.id
+          AND due_at >= ?
+          AND due_at <= ?
+      ) count_yesterday_activities
     FROM collection_items
     WHERE
       id = ?
@@ -82,7 +95,14 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       )
     LIMIT 1
   `,
-    [id, userId, today.startOf('day').toDate(), today.endOf('day').toDate()],
+    [
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+      id,
+      userId,
+      today.startOf('day').toDate(),
+      today.endOf('day').toDate(),
+    ],
   );
 
   if (!res.length) {
@@ -107,6 +127,24 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       collectionItem.id,
     ],
   );
+
+  if (collectionItem.count_yesterday_activities) {
+    await pool.execute(
+      `
+      UPDATE activities
+      SET is_dismissed = 1
+      WHERE
+        collection_item_id = ?
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [
+        collectionItem.id,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
+    );
+  }
 
   return collectionItem;
 }

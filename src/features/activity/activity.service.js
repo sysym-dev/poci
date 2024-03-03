@@ -122,6 +122,7 @@ export async function getCountUnfinishedActivityYesterday({ userId }) {
     WHERE
      user_id = ?
      AND is_done = 0
+     AND is_dismissed = 0
      AND due_at >= ?
      AND due_at <= ?
      AND NOT EXISTS (
@@ -155,6 +156,7 @@ export async function readUnfinishedActivityYesterday({ userId }) {
     WHERE
      user_id = ?
      AND is_done = 0
+     AND is_dismissed = 0
      AND due_at >= ?
      AND due_at <= ?
      AND NOT EXISTS (
@@ -188,6 +190,7 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
     WHERE
       user_id = ?
       AND is_done = 0
+      AND is_dismissed = 0
       AND due_at >= ?
       AND due_at <= ?
       AND NOT EXISTS (
@@ -247,6 +250,7 @@ export async function extendUnfinishedYesterdayActivitiesToToday({ userId }) {
     WHERE
       user_id = ?
       AND is_done = 0
+      AND is_dismissed = 0
       AND due_at >= ?
       AND due_at <= ?
       AND NOT EXISTS (
