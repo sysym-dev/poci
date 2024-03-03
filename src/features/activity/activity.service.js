@@ -4,7 +4,7 @@ import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 import { updateCollectionItemIsDone } from '../collection-item/collection-item.service.js';
 
 export async function newTodayActivity({ name, userId }) {
-  const dueAt = dayjs().endOf('d').toDate();
+  const dueAt = dayjs().endOf('day').toDate();
 
   return await pool.execute(
     'INSERT INTO activities (name, due_at, user_id) VALUES (?, ?, ?)',
@@ -23,7 +23,7 @@ export async function readTodayActivities({ userId }) {
       AND due_at >= ?
       AND due_at <= ?  
     `,
-    [userId, today.startOf('d').toDate(), today.endOf('d').toDate()],
+    [userId, today.startOf('day').toDate(), today.endOf('day').toDate()],
   );
 
   return rows;

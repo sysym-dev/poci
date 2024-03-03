@@ -64,6 +64,8 @@ export async function deleteCollectionItem({ id, userId }) {
 }
 
 export async function addCollectionItemToTodayActvity({ id, userId }) {
+  const today = dayjs();
+
   const [res] = await pool.execute(
     `
     SELECT id, name, user_id, collection_id
@@ -73,11 +75,14 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       AND user_id = ?
       AND NOT EXISTS (
         SELECT * FROM activities
-        WHERE activities.collection_item_id = collection_items.id
+        WHERE
+          activities.collection_item_id = collection_items.id
+          AND due_at >= ?
+          AND due_at <= ?
       )
     LIMIT 1
   `,
-    [id, userId],
+    [id, userId, today.startOf('day').toDate(), today.endOf('day').toDate()],
   );
 
   if (!res.length) {
@@ -98,7 +103,7 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
     [
       collectionItem.name,
       collectionItem.user_id,
-      dayjs().endOf('d').toDate(),
+      today.endOf('day').toDate(),
       collectionItem.id,
     ],
   );

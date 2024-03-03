@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { rowsMapper } from '../../core/database/utils/mapper.util.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
@@ -45,6 +46,8 @@ export async function findCollection({ id, userId }) {
 }
 
 export async function findCollectionAndItems({ id, userId }) {
+  const today = dayjs();
+
   const [rows] = await pool.execute(
     `
       SELECT
@@ -58,7 +61,9 @@ export async function findCollectionAndItems({ id, userId }) {
           FROM activities
           WHERE
             activities.collection_item_id = collection_items.id
-        ) as collection_items_count_activities
+            AND activities.due_at >= ?
+            AND activities.due_at <= ?
+        ) as collection_items_count_today_activities
       FROM collections
       LEFT JOIN collection_items
       ON collection_items.collection_id = collections.id
@@ -66,7 +71,7 @@ export async function findCollectionAndItems({ id, userId }) {
         collections.id = ?
         AND collections.user_id = ?
     `,
-    [id, userId],
+    [today.startOf('day').toDate(), today.endOf('day').toDate(), id, userId],
   );
 
   if (!rows.length) {
@@ -79,7 +84,7 @@ export async function findCollectionAndItems({ id, userId }) {
     relations: {
       items: {
         table: 'collection_items',
-        columns: ['name', 'is_done', 'count_activities'],
+        columns: ['name', 'is_done', 'count_today_activities'],
       },
     },
   })[0];
