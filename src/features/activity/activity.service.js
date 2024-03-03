@@ -55,6 +55,30 @@ export async function findActivity({ id, userId, ...options }) {
   return res[0];
 }
 
+export async function findTodayActivity({ id, userId, ...options }) {
+  const today = dayjs();
+  const columns = (options.columns ?? ['id', 'name']).join(', ');
+
+  const [res] = await pool.execute(
+    `
+      SELECT ${columns} FROM activities
+      WHERE
+        id = ?
+        AND user_id = ?
+        AND due_at >= ?
+        AND due_at <= ?
+      LIMIT 1
+    `,
+    [id, userId, today.startOf('day').toDate(), today.endOf('day').toDate()],
+  );
+
+  if (!res.length) {
+    throw new NotFoundError('Activity Not Found');
+  }
+
+  return res[0];
+}
+
 export async function updateActivity({ id, userId }, { name }) {
   const [res] = await pool.execute(
     'UPDATE activities SET name = ? WHERE id = ? AND user_id = ?',
@@ -67,7 +91,7 @@ export async function updateActivity({ id, userId }, { name }) {
 }
 
 export async function updateActivityIsDone({ id, userId }, isDone) {
-  const activity = await findActivity({
+  const activity = await findTodayActivity({
     id,
     userId,
     columns: ['id', 'collection_item_id'],
@@ -87,7 +111,8 @@ export async function updateActivityIsDone({ id, userId }, isDone) {
 }
 
 export async function getCountUnfinishedActivityYesterday({ userId }) {
-  const yesterday = dayjs().subtract(1, 'day');
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
 
   const [res] = await pool.execute(
     `
@@ -99,11 +124,20 @@ export async function getCountUnfinishedActivityYesterday({ userId }) {
      AND is_done = 0
      AND due_at >= ?
      AND due_at <= ?
+     AND NOT EXISTS (
+      SELECT * FROM activities AS today_activities
+      WHERE
+        today_activities.collection_item_id = activities.collection_item_id
+        AND due_at >= ?
+        AND due_at <= ?
+     )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
+      today.startOf('day').toDate(),
+      today.endOf('day').toDate(),
     ],
   );
 
@@ -111,7 +145,8 @@ export async function getCountUnfinishedActivityYesterday({ userId }) {
 }
 
 export async function readUnfinishedActivityYesterday({ userId }) {
-  const yesterday = dayjs().subtract(1, 'day');
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
 
   const [res] = await pool.execute(
     `
@@ -122,11 +157,20 @@ export async function readUnfinishedActivityYesterday({ userId }) {
      AND is_done = 0
      AND due_at >= ?
      AND due_at <= ?
+     AND NOT EXISTS (
+      SELECT * FROM activities AS today_activities
+      WHERE
+        today_activities.collection_item_id = activities.collection_item_id
+        AND due_at >= ?
+        AND due_at <= ?
+     )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
+      today.startOf('day').toDate(),
+      today.endOf('day').toDate(),
     ],
   );
 
@@ -134,7 +178,8 @@ export async function readUnfinishedActivityYesterday({ userId }) {
 }
 
 export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
-  const yesterday = dayjs().subtract(1, 'day');
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
 
   const [unfinishedActivitieIdsYesterday] = await pool.execute(
     `
@@ -145,11 +190,20 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
       AND is_done = 0
       AND due_at >= ?
       AND due_at <= ?
+      AND NOT EXISTS (
+       SELECT * FROM activities AS today_activities
+       WHERE
+         today_activities.collection_item_id = activities.collection_item_id
+         AND due_at >= ?
+         AND due_at <= ?
+      )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
+      today.startOf('day').toDate(),
+      today.endOf('day').toDate(),
     ],
   );
 
@@ -195,12 +249,21 @@ export async function extendUnfinishedYesterdayActivitiesToToday({ userId }) {
       AND is_done = 0
       AND due_at >= ?
       AND due_at <= ?
+      AND NOT EXISTS (
+       SELECT * FROM activities AS today_activities
+       WHERE
+         today_activities.collection_item_id = activities.collection_item_id
+         AND due_at >= ?
+         AND due_at <= ?
+      )
   `,
     [
       today.endOf('day').toDate(),
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
+      today.startOf('day').toDate(),
+      today.endOf('day').toDate(),
     ],
   );
 }
