@@ -133,7 +133,7 @@ export async function readUnfinishedActivityYesterday({ userId }) {
   return res;
 }
 
-export async function markAsDoneUnfinishedYesterdayActivities({ userId }) {
+export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
   const yesterday = dayjs().subtract(1, 'day');
 
   const [unfinishedActivitieIdsYesterday] = await pool.execute(
@@ -179,5 +179,28 @@ export async function markAsDoneUnfinishedYesterdayActivities({ userId }) {
     WHERE id IN (${unfinishedActivitieIdsYesterday.map(() => '?').join(', ')})
   `,
     unfinishedActivitieIdsYesterday.map((item) => item.id),
+  );
+}
+
+export async function extendUnfinishedYesterdayActivitiesToToday({ userId }) {
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
+
+  await pool.execute(
+    `
+    UPDATE activities
+    SET due_at = ?
+    WHERE
+      user_id = ?
+      AND is_done = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      today.endOf('day').toDate(),
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
   );
 }

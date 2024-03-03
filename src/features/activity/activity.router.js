@@ -10,7 +10,8 @@ import {
   updateActivityIsDone,
   updateActivity,
   readUnfinishedActivityYesterday,
-  markAsDoneUnfinishedYesterdayActivities,
+  markUnfinishedYesterdayActivitiesAsDone,
+  extendUnfinishedYesterdayActivitiesToToday,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -108,7 +109,19 @@ router.get(
   '/yesterday-unfinished-activities/mark-as-done',
   requireAuth,
   handleRequest(async (req, res) => {
-    await markAsDoneUnfinishedYesterdayActivities({ userId: req.auth.userId });
+    await markUnfinishedYesterdayActivitiesAsDone({ userId: req.auth.userId });
+
+    return res.redirect('/');
+  }),
+);
+
+router.get(
+  '/yesterday-unfinished-activities/extend-to-today',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await extendUnfinishedYesterdayActivitiesToToday({
+      userId: req.auth.userId,
+    });
 
     return res.redirect('/');
   }),
