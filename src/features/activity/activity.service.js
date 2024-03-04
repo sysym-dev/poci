@@ -220,8 +220,8 @@ export async function markUnfinishedYesterdayActivityAsDone({ id, userId }) {
     WHERE
       id = ?
       AND user_id = ?
-      AND is_dismissed = 0
       AND is_done = 0
+      AND is_dismissed = 0
       AND due_at >= ?
       AND due_at <= ?
   `,
