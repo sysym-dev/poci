@@ -90,7 +90,7 @@ export async function updateActivity({ id, userId }, { name }) {
   }
 }
 
-export async function updateActivityIsDone({ id, userId }, isDone) {
+export async function updateTodayActivityIsDone({ id, userId }, isDone) {
   const activity = await findTodayActivity({
     id,
     userId,
@@ -106,6 +106,47 @@ export async function updateActivityIsDone({ id, userId }, isDone) {
     await updateCollectionItemIsDone(
       { id: activity.collection_item_id, userId },
       isDone,
+    );
+  }
+}
+
+export async function markUnfinishedYesterdayActivityAsDone({ id, userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  const [activities] = await pool.execute(
+    `
+    SELECT
+      id, collection_item_id
+    FROM activities
+    WHERE
+      id = ?
+      AND user_id = ?
+      AND is_done = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      id,
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  if (!activities.length) {
+    throw new NotFoundError('Activity Not Found');
+  }
+
+  const [activity] = activities;
+
+  await pool.execute('UPDATE activities SET is_done = 1 WHERE id = ?', [
+    activity.id,
+  ]);
+
+  if (activity.collection_item_id) {
+    await updateCollectionItemIsDone(
+      { id: activity.collection_item_id, userId },
+      true,
     );
   }
 }
