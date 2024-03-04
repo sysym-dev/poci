@@ -21,6 +21,8 @@ block app-content
                     div(class='flex items-center gap-x-2')
                         input(class='item-done-checkbox' type='checkbox', checked=!!item.is_done value=item.id)
                         p= item.name
+                        if !item.count_today_activities
+                            +link('Add To Today Activity', { href: `/collection-items/${item.id}/add-to-today-activity` })
                         +link('Edit', { href: `/collection-items/${item.id}/edit` })
                         +link('Delete', { href: `/collection-items/${item.id}/delete`, color: 'red' })
 

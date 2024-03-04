@@ -4,17 +4,42 @@ include mixins/title.pug
 include mixins/link.pug
 
 block app-content
-    section(class='space-y-2') 
-        div 
-            +title('Collections', { size: 'lg' })
-            +link('New Collection', { href: '/collections/new' })
-        if !collections.length
-            p Collections empty
-        else
-            ol(class='list-decimal pl-4') 
-                each collection in collections
-                    li
-                        div(class='flex gap-x-2')
-                            +link(collection.name, { href: `collections/${collection.id}`, color: 'black' })
-                            +link('Edit', { href: `/collections/${collection.id}/edit` })
-                            +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
+    if countUnfinishedActivityYesterday
+        div(class='mb-2')
+            p You have #{countUnfinishedActivityYesterday} unfinished activities yesterday
+            div(class='flex gap-x-2')  
+                +link('View All', { href: '/yesterday-unfinished-activities' })
+                +link('Extend To Today', { href: '/' })
+                +link('Dismiss', { color: 'red', href: '/' })
+    div(class='grid grid-cols-2')
+        section(class='space-y-2') 
+            div 
+                +title('Collections', { size: 'lg' })
+                +link('New Collection', { href: '/collections/new' })
+            if !collections.length
+                p Collections empty
+            else
+                ol(class='list-decimal pl-4') 
+                    each collection in collections
+                        li
+                            div(class='flex gap-x-2')
+                                +link(collection.name, { href: `collections/${collection.id}`, color: 'black' })
+                                +link('Edit', { href: `/collections/${collection.id}/edit` })
+                                +link('Delete', { href: `/collections/${collection.id}/delete`, color: 'red' })
+        section(class='space-y-2') 
+            div 
+                +title('Today Activities', { size: 'lg' })
+                +link('Add Today Activity', { href: '/today-activities/new' })
+            if !todayActivities.length
+                p Activities empty
+            else
+                ol
+                    each activity in todayActivities
+                        li(class='flex items-center gap-x-2')
+                            input(type='checkbox' class=`today-activity-done-checkbox` value=activity.id checked=!!activity.is_done)
+                            p(class=`${activity.is_done ? 'line-through' : ''}`)= activity.name
+                            +link('Edit', { href: `/today-activities/${activity.id}/edit` })
+                            +link('Delete', { href: `/activities/${activity.id}/delete`, color: 'red' })
+
+block script
+    script(src='/public/js/index.js')
