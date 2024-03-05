@@ -90,7 +90,7 @@ export async function updateActivity({ id, userId }, { name }) {
   }
 }
 
-export async function updateActivityIsDone({ id, userId }, isDone) {
+export async function updateTodayActivityIsDone({ id, userId }, isDone) {
   const activity = await findTodayActivity({
     id,
     userId,
@@ -111,8 +111,7 @@ export async function updateActivityIsDone({ id, userId }, isDone) {
 }
 
 export async function getCountUnfinishedActivityYesterday({ userId }) {
-  const today = dayjs();
-  const yesterday = today.subtract(1, 'day');
+  const yesterday = dayjs().subtract(1, 'day');
 
   const [res] = await pool.execute(
     `
@@ -125,20 +124,11 @@ export async function getCountUnfinishedActivityYesterday({ userId }) {
      AND is_dismissed = 0
      AND due_at >= ?
      AND due_at <= ?
-     AND NOT EXISTS (
-      SELECT * FROM activities AS today_activities
-      WHERE
-        today_activities.collection_item_id = activities.collection_item_id
-        AND due_at >= ?
-        AND due_at <= ?
-     )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
-      today.startOf('day').toDate(),
-      today.endOf('day').toDate(),
     ],
   );
 
@@ -146,8 +136,7 @@ export async function getCountUnfinishedActivityYesterday({ userId }) {
 }
 
 export async function readUnfinishedActivityYesterday({ userId }) {
-  const today = dayjs();
-  const yesterday = today.subtract(1, 'day');
+  const yesterday = dayjs().subtract(1, 'day');
 
   const [res] = await pool.execute(
     `
@@ -159,20 +148,11 @@ export async function readUnfinishedActivityYesterday({ userId }) {
      AND is_dismissed = 0
      AND due_at >= ?
      AND due_at <= ?
-     AND NOT EXISTS (
-      SELECT * FROM activities AS today_activities
-      WHERE
-        today_activities.collection_item_id = activities.collection_item_id
-        AND due_at >= ?
-        AND due_at <= ?
-     )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
-      today.startOf('day').toDate(),
-      today.endOf('day').toDate(),
     ],
   );
 
@@ -180,8 +160,7 @@ export async function readUnfinishedActivityYesterday({ userId }) {
 }
 
 export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
-  const today = dayjs();
-  const yesterday = today.subtract(1, 'day');
+  const yesterday = dayjs().subtract(1, 'day');
 
   const [unfinishedActivitieIdsYesterday] = await pool.execute(
     `
@@ -193,20 +172,11 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
       AND is_dismissed = 0
       AND due_at >= ?
       AND due_at <= ?
-      AND NOT EXISTS (
-       SELECT * FROM activities AS today_activities
-       WHERE
-         today_activities.collection_item_id = activities.collection_item_id
-         AND due_at >= ?
-         AND due_at <= ?
-      )
   `,
     [
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
-      today.startOf('day').toDate(),
-      today.endOf('day').toDate(),
     ],
   );
 
@@ -239,9 +209,51 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
   );
 }
 
+export async function markUnfinishedYesterdayActivityAsDone({ id, userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  const [activities] = await pool.execute(
+    `
+    SELECT
+      id, collection_item_id
+    FROM activities
+    WHERE
+      id = ?
+      AND user_id = ?
+      AND is_done = 0
+      AND is_dismissed = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      id,
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  if (!activities.length) {
+    throw new NotFoundError('Activity Not Found');
+  }
+
+  const [activity] = activities;
+
+  await pool.execute('UPDATE activities SET is_done = 1 WHERE id = ?', [
+    activity.id,
+  ]);
+
+  if (activity.collection_item_id) {
+    await updateCollectionItemIsDone(
+      { id: activity.collection_item_id, userId },
+      true,
+    );
+  }
+}
+
 export async function extendUnfinishedYesterdayActivitiesToToday({ userId }) {
   const today = dayjs();
-  const yesterday = today.subtract(1, 'day');
+  const yesterday = dayjs().subtract(1, 'day');
 
   await pool.execute(
     `
@@ -253,21 +265,45 @@ export async function extendUnfinishedYesterdayActivitiesToToday({ userId }) {
       AND is_dismissed = 0
       AND due_at >= ?
       AND due_at <= ?
-      AND NOT EXISTS (
-       SELECT * FROM activities AS today_activities
-       WHERE
-         today_activities.collection_item_id = activities.collection_item_id
-         AND due_at >= ?
-         AND due_at <= ?
-      )
   `,
     [
       today.endOf('day').toDate(),
       userId,
       yesterday.startOf('day').toDate(),
       yesterday.endOf('day').toDate(),
-      today.startOf('day').toDate(),
-      today.endOf('day').toDate(),
     ],
   );
+}
+
+export async function extendUnfinishedYesterdayActivitiyToToday({
+  id,
+  userId,
+}) {
+  const today = dayjs();
+  const yesterday = today.subtract(1, 'day');
+
+  const [res] = await pool.execute(
+    `
+    UPDATE activities
+    SET due_at = ?
+    WHERE
+      id = ?
+      AND user_id = ?
+      AND is_done = 0
+      AND is_dismissed = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      today.endOf('day').toDate(),
+      id,
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+
+  if (!res.affectedRows) {
+    throw new NotFoundError('Activity Not Found');
+  }
 }
