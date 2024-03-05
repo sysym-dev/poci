@@ -9,8 +9,6 @@ block app-content
             p You have #{countUnfinishedActivityYesterday} unfinished activities yesterday
             div(class='flex gap-x-2')  
                 +link('View All', { href: '/yesterday-unfinished-activities' })
-                +link('Extend To Today', { href: '/' })
-                +link('Dismiss', { color: 'red', href: '/' })
     div(class='grid grid-cols-2')
         section(class='space-y-2') 
             div 
