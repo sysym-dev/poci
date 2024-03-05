@@ -17,3 +17,4 @@ block app-content
                 p= activity.name
                 +link('Extend To Today', { href: `/yesterday-unfinished-activities/${activity.id}/extend-to-today` })
                 +link('Mark As Done', { href: `/yesterday-unfinished-activities/${activity.id}/mark-as-done` })
+                +link('Dismiss', { href: `/yesterday-unfinished-activities/${activity.id}/dismiss`, color: 'red' })
