@@ -14,6 +14,9 @@ import {
   extendUnfinishedYesterdayActivitiesToToday,
   markUnfinishedYesterdayActivityAsDone,
   extendUnfinishedYesterdayActivitiyToToday,
+  dismissUnfinishedYesterdayActivity,
+  dismissUnfinishedYesterdayActivities,
+  getCountUnfinishedActivityYesterday,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -98,6 +101,13 @@ router.get(
   '/yesterday-unfinished-activities',
   requireAuth,
   handleRequest(async (req, res) => {
+    const countUnfinishedActivityYesterday =
+      await getCountUnfinishedActivityYesterday({ userId: req.auth.userId });
+
+    if (!countUnfinishedActivityYesterday) {
+      return res.redirect('/');
+    }
+
     return res.render('activity/yesterday/unfinished', {
       title: 'Unfinished Activities Yesterday',
       unfinishedActivities: await readUnfinishedActivityYesterday({
@@ -130,6 +140,18 @@ router.get(
 );
 
 router.get(
+  '/yesterday-unfinished-activities/dismiss',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await dismissUnfinishedYesterdayActivities({
+      userId: req.auth.userId,
+    });
+
+    return res.redirect('/');
+  }),
+);
+
+router.get(
   '/yesterday-unfinished-activities/:id/mark-as-done',
   requireAuth,
   handleRequest(async (req, res) => {
@@ -138,7 +160,7 @@ router.get(
       userId: req.auth.userId,
     });
 
-    return res.redirect('/');
+    return res.redirect('/yesterday-unfinished-activities');
   }),
 );
 
@@ -151,7 +173,20 @@ router.get(
       userId: req.auth.userId,
     });
 
-    return res.redirect('/');
+    return res.redirect('/yesterday-unfinished-activities');
+  }),
+);
+
+router.get(
+  '/yesterday-unfinished-activities/:id/dismiss',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await dismissUnfinishedYesterdayActivity({
+      id: req.params.id,
+      userId: req.auth.userId,
+    });
+
+    return res.redirect('/yesterday-unfinished-activities');
   }),
 );
 

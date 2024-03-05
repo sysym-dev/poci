@@ -29,4 +29,4 @@
 - Bisa ditoggle done (otomatis mengubah is_done collection item)
 - Hanya today activity yang bisa di toggle is_done
 - Jika ada activity kemarin yang (tidak selesai, tidak diperpanjang, tidak didismiss) maka muncul alert
-- Activity kemarin yang tidak selesai bisa (ditandai sebagai selesai dan diperpanjang ke hari ini) selama masih dalam rentang kemarin, belum diperpanjang, belum didismiss, dan belum ditandai sebagai selesai.
+- Activity kemarin yang tidak selesai bisa (ditandai sebagai selesai, diperpanjang ke hari ini, dan didismiss) selama masih dalam rentang kemarin, belum diperpanjang, belum didismiss, dan belum ditandai sebagai selesai.
