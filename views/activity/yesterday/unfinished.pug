@@ -10,7 +10,7 @@ block app-content
         div(class='flex gap-x-2')
             +link('Mark All As Done', { href: `/yesterday-unfinished-activities/mark-as-done` })
             +link('Extend All To Today', { href: `/yesterday-unfinished-activities/extend-to-today` })
-            +link('Dismiss', { href: `/`, color: 'red' })
+            +link('Dismiss', { href: `/yesterday-unfinished-activities/dismiss`, color: 'red' })
     ol 
         each activity in unfinishedActivities
             li(class='flex items-center gap-x-2')

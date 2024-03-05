@@ -335,3 +335,25 @@ export async function dismissUnfinishedYesterdayActivity({ id, userId }) {
     throw new NotFoundError('Activity Not Found');
   }
 }
+
+export async function dismissUnfinishedYesterdayActivities({ userId }) {
+  const yesterday = dayjs().subtract(1, 'day');
+
+  await pool.execute(
+    `
+    UPDATE activities
+    SET is_dismissed = 1
+    WHERE
+      user_id = ?
+      AND is_done = 0
+      AND is_dismissed = 0
+      AND due_at >= ?
+      AND due_at <= ?
+  `,
+    [
+      userId,
+      yesterday.startOf('day').toDate(),
+      yesterday.endOf('day').toDate(),
+    ],
+  );
+}
