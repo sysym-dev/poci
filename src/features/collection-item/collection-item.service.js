@@ -74,6 +74,7 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       name,
       user_id,
       collection_id,
+      is_done,
       (
         SELECT COUNT(*)
         FROM activities
@@ -116,15 +117,16 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
   await pool.execute(
     `
     INSERT INTO activities
-      (name, user_id, due_at, collection_item_id)
+      (name, user_id, due_at, collection_item_id, is_done)
     VALUES
-      (?, ?, ?, ?)
+      (?, ?, ?, ?, ?)
   `,
     [
       collectionItem.name,
       collectionItem.user_id,
       today.endOf('day').toDate(),
       collectionItem.id,
+      collectionItem.is_done,
     ],
   );
 
