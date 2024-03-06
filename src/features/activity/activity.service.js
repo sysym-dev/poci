@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
-import { updateCollectionItemIsDone } from '../collection-item/collection-item.service.js';
 
 export async function newTodayActivity({ name, userId }) {
   const dueAt = dayjs().endOf('day').toDate();
@@ -91,22 +90,48 @@ export async function updateActivity({ id, userId }, { name }) {
 }
 
 export async function updateTodayActivityIsDone({ id, userId }, isDone) {
-  const activity = await findTodayActivity({
-    id,
-    userId,
-    columns: ['id', 'collection_item_id'],
-  });
+  const connection = await pool.getConnection();
 
-  await pool.execute('UPDATE activities SET is_done = ? WHERE id = ?', [
-    isDone,
-    activity.id,
-  ]);
+  try {
+    await connection.beginTransaction();
 
-  if (activity.collection_item_id) {
-    await updateCollectionItemIsDone(
-      { id: activity.collection_item_id, userId },
-      isDone,
+    const today = dayjs();
+    const [activities] = await connection.execute(
+      `
+      SELECT id, collection_item_id
+      FROM activities
+      WHERE
+        id = ?
+        AND user_id = ?
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [id, userId, today.startOf('day').toDate(), today.endOf('day').toDate()],
     );
+
+    if (!activities.length) {
+      throw new NotFoundError('Activity Not Found');
+    }
+
+    const [activity] = activities;
+
+    await connection.execute('UPDATE activities SET is_done = ? WHERE id = ?', [
+      isDone,
+      activity.id,
+    ]);
+
+    if (activity.collection_item_id) {
+      await connection.execute(
+        'UPDATE collection_items SET is_done = ? WHERE id = ?',
+        [isDone, activity.collection_item_id],
+      );
+    }
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
   }
 }
 
@@ -160,94 +185,118 @@ export async function readUnfinishedActivityYesterday({ userId }) {
 }
 
 export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
-  const yesterday = dayjs().subtract(1, 'day');
+  const connection = await pool.getConnection();
 
-  const [unfinishedActivitieIdsYesterday] = await pool.execute(
-    `
-    SELECT id, collection_item_id
-    FROM activities
-    WHERE
-      user_id = ?
-      AND is_done = 0
-      AND is_dismissed = 0
-      AND due_at >= ?
-      AND due_at <= ?
-  `,
-    [
-      userId,
-      yesterday.startOf('day').toDate(),
-      yesterday.endOf('day').toDate(),
-    ],
-  );
+  try {
+    await connection.beginTransaction();
 
-  if (!unfinishedActivitieIdsYesterday.length) {
-    return false;
-  }
+    const yesterday = dayjs().subtract(1, 'day');
 
-  const activitiesHasCollectionItem = unfinishedActivitieIdsYesterday.filter(
-    (activity) => !!activity.collection_item_id,
-  );
-
-  if (activitiesHasCollectionItem.length) {
-    await pool.execute(
+    const [unfinishedActivitieIdsYesterday] = await connection.execute(
       `
-      UPDATE collection_items
-      SET is_done = 1
-      WHERE id IN (${activitiesHasCollectionItem.map(() => '?').join(', ')})
+      SELECT id, collection_item_id
+      FROM activities
+      WHERE
+        user_id = ?
+        AND is_done = 0
+        AND is_dismissed = 0
+        AND due_at >= ?
+        AND due_at <= ?
     `,
-      activitiesHasCollectionItem.map((item) => item.collection_item_id),
+      [
+        userId,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
     );
-  }
 
-  await pool.execute(
-    `
-    UPDATE activities
-    SET is_done = 1
-    WHERE id IN (${unfinishedActivitieIdsYesterday.map(() => '?').join(', ')})
-  `,
-    unfinishedActivitieIdsYesterday.map((item) => item.id),
-  );
+    if (!unfinishedActivitieIdsYesterday.length) {
+      return false;
+    }
+
+    const activitiesHasCollectionItem = unfinishedActivitieIdsYesterday.filter(
+      (activity) => !!activity.collection_item_id,
+    );
+
+    if (activitiesHasCollectionItem.length) {
+      await connection.execute(
+        `
+        UPDATE collection_items
+        SET is_done = 1
+        WHERE id IN (${activitiesHasCollectionItem.map(() => '?').join(', ')})
+      `,
+        activitiesHasCollectionItem.map((item) => item.collection_item_id),
+      );
+    }
+
+    await connection.execute(
+      `
+      UPDATE activities
+      SET is_done = 1
+      WHERE id IN (${unfinishedActivitieIdsYesterday.map(() => '?').join(', ')})
+    `,
+      unfinishedActivitieIdsYesterday.map((item) => item.id),
+    );
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
+  }
 }
 
 export async function markUnfinishedYesterdayActivityAsDone({ id, userId }) {
-  const yesterday = dayjs().subtract(1, 'day');
+  const connection = await pool.getConnection();
 
-  const [activities] = await pool.execute(
-    `
-    SELECT
-      id, collection_item_id
-    FROM activities
-    WHERE
-      id = ?
-      AND user_id = ?
-      AND is_done = 0
-      AND is_dismissed = 0
-      AND due_at >= ?
-      AND due_at <= ?
-  `,
-    [
-      id,
-      userId,
-      yesterday.startOf('day').toDate(),
-      yesterday.endOf('day').toDate(),
-    ],
-  );
+  try {
+    await connection.beginTransaction();
 
-  if (!activities.length) {
-    throw new NotFoundError('Activity Not Found');
-  }
+    const yesterday = dayjs().subtract(1, 'day');
 
-  const [activity] = activities;
-
-  await pool.execute('UPDATE activities SET is_done = 1 WHERE id = ?', [
-    activity.id,
-  ]);
-
-  if (activity.collection_item_id) {
-    await updateCollectionItemIsDone(
-      { id: activity.collection_item_id, userId },
-      true,
+    const [activities] = await connection.execute(
+      `
+      SELECT
+        id, collection_item_id
+      FROM activities
+      WHERE
+        id = ?
+        AND user_id = ?
+        AND is_done = 0
+        AND is_dismissed = 0
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [
+        id,
+        userId,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
     );
+
+    if (!activities.length) {
+      throw new NotFoundError('Activity Not Found');
+    }
+
+    const [activity] = activities;
+
+    await connection.execute('UPDATE activities SET is_done = 1 WHERE id = ?', [
+      activity.id,
+    ]);
+
+    if (activity.collection_item_id) {
+      await connection.execute(
+        'UPDATE collection_items SET is_done = ? WHERE id = ?',
+        [true, activity.collection_item_id],
+      );
+    }
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
   }
 }
 
