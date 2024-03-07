@@ -1,4 +1,7 @@
 mixin input(label, options)
     div(class='mb-2')
         label(class='label')= label
-        input(placeholder=label class='input')&attributes(options.input)
+        if options.type === 'textarea'
+            textarea(placeholder=label class='input')&attributes(options.input)= options.input.value
+        else
+            input(placeholder=label class='input')&attributes(options.input)

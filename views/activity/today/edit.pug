@@ -10,6 +10,7 @@ block app-content
     form(action=`/today-activities/${activity.id}/edit` method='post') 
         +title('Edit Activity', { size: 'lg' })(class='mb-2')
         +input('Name', { input: { name: 'name', type: 'text', value: activity.name, required: true, autofocus: true } })
+        +input('Description', { type: 'textarea', input: { name: 'description', value: activity.description, required: false } })
         div(class='flex gap-x-1')
             +button('Save')
             +button('Back', { color: 'gray', link: { href: '/' } })

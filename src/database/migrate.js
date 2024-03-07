@@ -31,6 +31,7 @@ await pool.execute(`
     CREATE TABLE collection_items (
         id INT UNSIGNED NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
+        description TEXT NULL,
         collection_id INT UNSIGNED NOT NULL,
         user_id INT UNSIGNED NOT NULL,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
@@ -49,6 +50,7 @@ await pool.execute(`
     CREATE TABLE activities (
         id INT UNSIGNED NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
+        description TEXT NULL,
         due_at DATETIME NOT NULL,
         is_done BOOLEAN NOT NULL DEFAULT FALSE,
         is_dismissed BOOLEAN NOT NULL DEFAULT FALSE,

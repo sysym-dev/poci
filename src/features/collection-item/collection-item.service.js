@@ -23,12 +23,14 @@ export async function updateCollectionItem({ id, userId }, payload) {
   const [res] = await pool.execute(
     `
         UPDATE collection_items
-        SET name = ?
+        SET
+          name = ?,
+          description = ?
         WHERE
             id = ?
             AND user_id = ?
     `,
-    [payload.name, id, userId],
+    [payload.name, payload.description, id, userId],
   );
 
   if (!res.affectedRows) {
@@ -89,6 +91,7 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       SELECT
         id,
         name,
+        description,
         user_id,
         collection_id,
         is_done,
@@ -134,12 +137,13 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
     await connection.execute(
       `
       INSERT INTO activities
-        (name, user_id, due_at, collection_item_id, is_done)
+        (name, description, user_id, due_at, collection_item_id, is_done)
       VALUES
-        (?, ?, ?, ?, ?)
+        (?, ?, ?, ?, ?, ?)
     `,
       [
         collectionItem.name,
+        collectionItem.description,
         collectionItem.user_id,
         today.endOf('day').toDate(),
         collectionItem.id,

@@ -37,6 +37,7 @@ router
     handleRequest(async (req, res) => {
       await newTodayActivity({
         name: req.body.name,
+        description: req.body.description,
         userId: req.auth.userId,
       });
 
@@ -62,6 +63,7 @@ router
       const activity = await findActivity({
         id: req.params.id,
         userId: req.auth.userId,
+        columns: ['id', 'name', 'description'],
       });
 
       return res.render('activity/today/edit.pug', {
@@ -76,7 +78,7 @@ router
     handleRequest(async (req, res) => {
       await updateActivity(
         { id: req.params.id, userId: req.auth.userId },
-        { name: req.body.name },
+        { name: req.body.name, description: req.body.description },
       );
 
       return res.redirect('/');
