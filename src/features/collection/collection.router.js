@@ -126,6 +126,7 @@ router
 
       await addCollectionItem({
         name: req.body.name,
+        description: req.body.description,
         collectionId: req.params.id,
         userId: req.auth.userId,
       });

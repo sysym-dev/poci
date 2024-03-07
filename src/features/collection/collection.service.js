@@ -124,7 +124,7 @@ export async function isCollectionExists({ id, userId }) {
 
 export async function addCollectionItem(payload) {
   await pool.execute(
-    'INSERT INTO collection_items (name, collection_id, user_id) VALUES (?, ?, ?)',
-    [payload.name, payload.collectionId, payload.userId],
+    'INSERT INTO collection_items (name, description, collection_id, user_id) VALUES (?, ?, ?, ?)',
+    [payload.name, payload.description, payload.collectionId, payload.userId],
   );
 }
