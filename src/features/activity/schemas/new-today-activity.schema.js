@@ -7,4 +7,10 @@ export const newTodayActivitySchema = {
       errorMessage: 'name required',
     },
   },
+  description: {
+    isString: {
+      errorMessage: 'description invalid',
+    },
+    optional: true,
+  },
 };

@@ -37,6 +37,7 @@ router
     handleRequest(async (req, res) => {
       await newTodayActivity({
         name: req.body.name,
+        description: req.body.description,
         userId: req.auth.userId,
       });
 

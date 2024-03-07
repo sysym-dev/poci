@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
 
-export async function newTodayActivity({ name, userId }) {
+export async function newTodayActivity({ name, description, userId }) {
   const dueAt = dayjs().endOf('day').toDate();
 
   return await pool.execute(
-    'INSERT INTO activities (name, due_at, user_id) VALUES (?, ?, ?)',
-    [name, dueAt, userId],
+    'INSERT INTO activities (name, description, due_at, user_id) VALUES (?, ?, ?, ?)',
+    [name, description, dueAt, userId],
   );
 }
 
