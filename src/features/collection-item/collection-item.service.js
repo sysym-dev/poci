@@ -23,12 +23,14 @@ export async function updateCollectionItem({ id, userId }, payload) {
   const [res] = await pool.execute(
     `
         UPDATE collection_items
-        SET name = ?
+        SET
+          name = ?,
+          description = ?
         WHERE
             id = ?
             AND user_id = ?
     `,
-    [payload.name, id, userId],
+    [payload.name, payload.description, id, userId],
   );
 
   if (!res.affectedRows) {

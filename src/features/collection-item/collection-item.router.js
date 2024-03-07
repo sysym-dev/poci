@@ -22,6 +22,7 @@ router
       const collectionItem = await findCollectionItem({
         id: req.params.id,
         userId: req.auth.userId,
+        columns: ['id', 'name', 'description', 'collection_id'],
       });
 
       return res.render('collection-item/edit', {
