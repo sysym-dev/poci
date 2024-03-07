@@ -91,6 +91,7 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
       SELECT
         id,
         name,
+        description,
         user_id,
         collection_id,
         is_done,
@@ -136,12 +137,13 @@ export async function addCollectionItemToTodayActvity({ id, userId }) {
     await connection.execute(
       `
       INSERT INTO activities
-        (name, user_id, due_at, collection_item_id, is_done)
+        (name, description, user_id, due_at, collection_item_id, is_done)
       VALUES
-        (?, ?, ?, ?, ?)
+        (?, ?, ?, ?, ?, ?)
     `,
       [
         collectionItem.name,
+        collectionItem.description,
         collectionItem.user_id,
         today.endOf('day').toDate(),
         collectionItem.id,
