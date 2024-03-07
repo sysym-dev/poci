@@ -78,10 +78,10 @@ export async function findTodayActivity({ id, userId, ...options }) {
   return res[0];
 }
 
-export async function updateActivity({ id, userId }, { name }) {
+export async function updateActivity({ id, userId }, { name, description }) {
   const [res] = await pool.execute(
-    'UPDATE activities SET name = ? WHERE id = ? AND user_id = ?',
-    [name, id, userId],
+    'UPDATE activities SET name = ?, description = ? WHERE id = ? AND user_id = ?',
+    [name, description, id, userId],
   );
 
   if (!res.affectedRows) {

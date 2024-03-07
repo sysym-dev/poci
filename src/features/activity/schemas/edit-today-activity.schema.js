@@ -7,4 +7,10 @@ export const editTodayActivitySchema = {
       errorMessage: 'name required',
     },
   },
+  description: {
+    isString: {
+      errorMessage: 'description invalid',
+    },
+    optional: true,
+  },
 };
