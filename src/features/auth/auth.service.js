@@ -28,3 +28,26 @@ export async function login(credential) {
 
   return user;
 }
+
+export async function register(credential) {
+  try {
+    const [res] = await pool.execute(
+      `
+      INSERT INTO users
+        (email, password)
+      VALUES (?, ?)
+    `,
+      [credential.email, await bcrypt.hash(credential.password, 10)],
+    );
+
+    return {
+      id: res.insertId,
+    };
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      throw new AuthenticationError('email already used');
+    }
+
+    throw err;
+  }
+}
