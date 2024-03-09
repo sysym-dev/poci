@@ -49,4 +49,8 @@
   .alert-red {
     @apply bg-red-600 text-white;
   }
+
+  .navbar-item {
+    @apply p-2 block hover:bg-gray-50 text-gray-900 hover:no-underline;
+  }
 }
