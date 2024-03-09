@@ -6,6 +6,7 @@ import { AuthenticationError } from './auth.error.js';
 import { requireGuest } from '../../middlewares/require-guest.middleware.js';
 import { handleRequest } from '../../middlewares/handle-request.middleware.js';
 import { registerSchema } from './schemas/register.schema.js';
+import { requireAuth } from '../../middlewares/require-auth.middleware.js';
 
 const router = Router();
 
@@ -73,5 +74,15 @@ router
       }
     }),
   ]);
+
+router.route('/logout').get(
+  requireAuth,
+  handleRequest(async (req, res) => {
+    req.session.isLoggedIn = false;
+    req.session.userId = null;
+
+    return res.redirect('/');
+  }),
+);
 
 export { router };
