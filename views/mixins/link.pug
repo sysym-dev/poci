@@ -1,4 +1,4 @@
 mixin link(label, options)
     - const colors = {sky: 'link-sky', red: 'link-red', black: 'link-black'}
     
-    a(href=options.href class=`link ${colors[options.color || 'sky']}`)= label
+    a(href=options.href class=`link ${colors[options.color || 'sky']}`)&attributes(options.link)= label
