@@ -51,6 +51,6 @@
   }
 
   .navbar-item {
-    @apply p-2 block hover:bg-gray-50 text-gray-900 hover:no-underline;
+    @apply py-1 px-1.5 block hover:bg-gray-50 text-gray-900 hover:no-underline;
   }
 }
