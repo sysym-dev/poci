@@ -15,6 +15,7 @@ block app-content
         each activity in unfinishedActivities
             li(class='flex items-center gap-x-2')
                 p= activity.name
+                +link('Recreate For Today', { href: `/yesterday-unfinished-activities/${activity.id}/recreate-for-today` })
                 +link('Extend To Today', { href: `/yesterday-unfinished-activities/${activity.id}/extend-to-today` })
                 +link('Mark As Done', { href: `/yesterday-unfinished-activities/${activity.id}/mark-as-done` })
                 +link('Dismiss', { href: `/yesterday-unfinished-activities/${activity.id}/dismiss`, color: 'red' })

@@ -406,3 +406,75 @@ export async function dismissUnfinishedYesterdayActivities({ userId }) {
     ],
   );
 }
+
+export async function recreateUnfinishedYesterdayActivityForToday({
+  userId,
+  id,
+}) {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const today = dayjs();
+    const yesterday = today.subtract(1, 'day');
+
+    const [activities] = await connection.execute(
+      `
+      SELECT
+        id, name, description, collection_item_id, user_id
+      FROM activities
+      WHERE
+        id = ?
+        AND user_id = ?
+        AND is_done = 0
+        AND is_dismissed = 0
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [
+        id,
+        userId,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
+    );
+
+    if (!activities.length) {
+      throw new NotFoundError('Activity Not Found');
+    }
+
+    const [activity] = activities;
+
+    await connection.execute(
+      `
+      UPDATE activities
+      SET is_dismissed = 1
+      WHERE id = ?
+    `,
+      [id],
+    );
+
+    await connection.execute(
+      `
+      INSERT INTO activities
+        (name, description, due_at, user_id, collection_item_id)
+      VALUES 
+        (?, ?, ?, ?, ?)
+    `,
+      [
+        activity.name,
+        activity.description,
+        today.endOf('day').toDate(),
+        activity.user_id,
+        activity.collection_item_id,
+      ],
+    );
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
+  }
+}
