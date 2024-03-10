@@ -9,12 +9,14 @@ block app-content
         +title('Unfinished Yesterday Activites', { size: 'lg' })
         div(class='flex gap-x-2')
             +link('Mark All As Done', { href: `/yesterday-unfinished-activities/mark-as-done` })
+            +link('Recreate All For Today', { href: `/yesterday-unfinished-activities/recreate-for-today` })
             +link('Extend All To Today', { href: `/yesterday-unfinished-activities/extend-to-today` })
             +link('Dismiss All', { href: `/yesterday-unfinished-activities/dismiss`, color: 'red' })
     ol 
         each activity in unfinishedActivities
             li(class='flex items-center gap-x-2')
                 p= activity.name
-                +link('Extend To Today', { href: `/yesterday-unfinished-activities/${activity.id}/extend-to-today` })
                 +link('Mark As Done', { href: `/yesterday-unfinished-activities/${activity.id}/mark-as-done` })
+                +link('Recreate For Today', { href: `/yesterday-unfinished-activities/${activity.id}/recreate-for-today` })
+                +link('Extend To Today', { href: `/yesterday-unfinished-activities/${activity.id}/extend-to-today` })
                 +link('Dismiss', { href: `/yesterday-unfinished-activities/${activity.id}/dismiss`, color: 'red' })

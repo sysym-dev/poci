@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { pool } from '../../core/database/pool.js';
 import { NotFoundError } from '../../core/server/errors/not-found.error.js';
+import { arrayToPlaceholder } from '../../database/utils.js';
 
 export async function newTodayActivity({ name, description, userId }) {
   const dueAt = dayjs().endOf('day').toDate();
@@ -223,7 +224,7 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
         `
         UPDATE collection_items
         SET is_done = 1
-        WHERE id IN (${activitiesHasCollectionItem.map(() => '?').join(', ')})
+        WHERE id IN (${arrayToPlaceholder(activitiesHasCollectionItem)})
       `,
         activitiesHasCollectionItem.map((item) => item.collection_item_id),
       );
@@ -233,7 +234,7 @@ export async function markUnfinishedYesterdayActivitiesAsDone({ userId }) {
       `
       UPDATE activities
       SET is_done = 1
-      WHERE id IN (${unfinishedActivitieIdsYesterday.map(() => '?').join(', ')})
+      WHERE id IN (${arrayToPlaceholder(unfinishedActivitieIdsYesterday)})
     `,
       unfinishedActivitieIdsYesterday.map((item) => item.id),
     );
@@ -405,4 +406,144 @@ export async function dismissUnfinishedYesterdayActivities({ userId }) {
       yesterday.endOf('day').toDate(),
     ],
   );
+}
+
+export async function recreateUnfinishedYesterdayActivityForToday({
+  userId,
+  id,
+}) {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const today = dayjs();
+    const yesterday = today.subtract(1, 'day');
+
+    const [activities] = await connection.execute(
+      `
+      SELECT
+        id, name, description, collection_item_id, user_id
+      FROM activities
+      WHERE
+        id = ?
+        AND user_id = ?
+        AND is_done = 0
+        AND is_dismissed = 0
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [
+        id,
+        userId,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
+    );
+
+    if (!activities.length) {
+      throw new NotFoundError('Activity Not Found');
+    }
+
+    const [activity] = activities;
+
+    await connection.execute(
+      `
+      UPDATE activities
+      SET is_dismissed = 1
+      WHERE id = ?
+    `,
+      [id],
+    );
+
+    await connection.execute(
+      `
+      INSERT INTO activities
+        (name, description, due_at, user_id, collection_item_id)
+      VALUES 
+        (?, ?, ?, ?, ?)
+    `,
+      [
+        activity.name,
+        activity.description,
+        today.endOf('day').toDate(),
+        activity.user_id,
+        activity.collection_item_id,
+      ],
+    );
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
+  }
+}
+
+export async function recreateUnfinishedYesterdayActivitiesForToday({
+  userId,
+}) {
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    const today = dayjs();
+    const yesterday = today.subtract(1, 'day');
+
+    const [activities] = await connection.execute(
+      `
+      SELECT
+        id, name, description, collection_item_id, user_id
+      FROM activities
+      WHERE
+        user_id = ?
+        AND is_done = 0
+        AND is_dismissed = 0
+        AND due_at >= ?
+        AND due_at <= ?
+    `,
+      [
+        userId,
+        yesterday.startOf('day').toDate(),
+        yesterday.endOf('day').toDate(),
+      ],
+    );
+
+    if (!activities.length) {
+      return;
+    }
+
+    await connection.execute(
+      `
+      UPDATE activities
+      SET is_dismissed = 1
+      WHERE id IN (${arrayToPlaceholder(activities)})
+    `,
+      activities.map((activity) => activity.id),
+    );
+
+    await connection.query(
+      `
+      INSERT INTO activities
+        (name, description, due_at, user_id, collection_item_id)
+      VALUES ?
+    `,
+      [
+        activities.map((activity) => [
+          activity.name,
+          activity.description,
+          today.endOf('day').toDate(),
+          activity.user_id,
+          activity.collection_item_id,
+        ]),
+      ],
+    );
+
+    await connection.commit();
+  } catch (err) {
+    await connection.rollback();
+
+    throw err;
+  }
 }

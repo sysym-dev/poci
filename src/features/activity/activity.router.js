@@ -17,6 +17,8 @@ import {
   dismissUnfinishedYesterdayActivity,
   dismissUnfinishedYesterdayActivities,
   getCountUnfinishedActivityYesterday,
+  recreateUnfinishedYesterdayActivityForToday,
+  recreateUnfinishedYesterdayActivitiesForToday,
 } from './activity.service.js';
 import { editTodayActivitySchema } from './schemas/edit-today-activity.schema.js';
 import { updateIsDoneSchema } from './schemas/update-is-done.schema.js';
@@ -154,6 +156,18 @@ router.get(
 );
 
 router.get(
+  '/yesterday-unfinished-activities/recreate-for-today',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await recreateUnfinishedYesterdayActivitiesForToday({
+      userId: req.auth.userId,
+    });
+
+    return res.redirect('/');
+  }),
+);
+
+router.get(
   '/yesterday-unfinished-activities/:id/mark-as-done',
   requireAuth,
   handleRequest(async (req, res) => {
@@ -184,6 +198,19 @@ router.get(
   requireAuth,
   handleRequest(async (req, res) => {
     await dismissUnfinishedYesterdayActivity({
+      id: req.params.id,
+      userId: req.auth.userId,
+    });
+
+    return res.redirect('/yesterday-unfinished-activities');
+  }),
+);
+
+router.get(
+  '/yesterday-unfinished-activities/:id/recreate-for-today',
+  requireAuth,
+  handleRequest(async (req, res) => {
+    await recreateUnfinishedYesterdayActivityForToday({
       id: req.params.id,
       userId: req.auth.userId,
     });
