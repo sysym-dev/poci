@@ -1,32 +1,12 @@
-# Collections
+# Poci
 
-- id
-- name
-- user_id
+```bash
+git clone git@github.com:sysym-dev/poci.git
+cp .env.example .env
+# set .env
+npm install
+npm run migrate
+npm run dev
+```
 
-# Collection Items
-
-- id
-- name
-- is_done
-- user_id
-
-- Bisa ditambahkan ke today activity
-- Bisa ditoggle done (otomatis mengubah is_done activity)
-- Jika sudah ditambahkan ke today activity maka tidak bisa ditambahkan lagi
-- Jika kemarin sudah ditambahkan ke activity dan belum selesai, maka bisa ditambahkan ke today activity (Activity yang kemarin jadi dismissed)
-
-# Activities
-
-- id
-- name
-- is_done
-- is_dismissed
-- due_at
-- user_id
-- collection_item_id
-
-- Bisa ditoggle done (otomatis mengubah is_done collection item)
-- Hanya today activity yang bisa di toggle is_done
-- Jika ada activity kemarin yang (tidak selesai, tidak diperpanjang, tidak didismiss) maka muncul alert
-- Activity kemarin yang tidak selesai bisa (ditandai sebagai selesai, diperpanjang ke hari ini, dan didismiss) selama masih dalam rentang kemarin, belum diperpanjang, belum didismiss, dan belum ditandai sebagai selesai.
+![screenshot](screenshot.png)
